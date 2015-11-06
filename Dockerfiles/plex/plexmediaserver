@@ -1,0 +1,18 @@
+# Default script for Plex Media Server
+
+# The number of plugins that can run at the same time
+PLEX_MEDIA_SERVER_MAX_PLUGIN_PROCS=10
+
+# ulimit -s $PLEX_MEDIA_SERVER_MAX_STACK_SIZE
+PLEX_MEDIA_SERVER_MAX_STACK_SIZE=3000
+
+# Where the mediaserver should store the transcodes
+PLEX_MEDIA_SERVER_TMPDIR=/tmp
+
+PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR="/config"
+
+# The user that PMS should run as, defaults to 'plex'
+# note that if you change this you might need to move
+# the Application Support directory to not lose your
+# media library
+PLEX_MEDIA_SERVER_USER=root

@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Make rtorrent session directory
+mkdir -p /config/rtorrent
+
+# Add default config if it does not exist
+cp -n /rtorrent.rc /config/rtorrent/rtorrent.rc
+
+# Remove rtorrent lock file if it exists so rtorrent can start
+rm /config/rtorrent/rtorrent.lock
+
+# Make folders for storing rutorrent data
+mkdir -p /config/rutorrent/settings /config/rutorrent/torrents \
+    /config/rutorrent/users /config/rutorrent/plugins
+
+# Symlink all plugins in /config/rutorrent/plugins to the rutorrent directory
+ln -fs $(ls -d1 /config/rutorrent/plugins/**) /opt/rutorrent/plugins/
+
+# Make php-fpm run as root
+# Everything is inside a docker container so this shouldn't
+# be a security problem
+sed -i "s/www-data/root/g" /etc/php5/fpm/pool.d/www.conf
+
+supervisord -c /supervisord.conf

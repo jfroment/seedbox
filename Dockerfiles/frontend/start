@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Make placeholder config directory
+mkdir -p /config/frontend
+
+# Set basic auth credentials
+htpasswd -cb /etc/nginx/.htpasswd $USERNAME $PASSWORD
+
+# Replace common.conf with default
+cp -f /etc/nginx/common_default.conf /etc/nginx/common.conf
+
+${USE_SSL:=false}
+if $USE_SSL ; then
+    echo "include ssl.conf;" >> /etc/nginx/common.conf
+fi
+
+nginx -g "daemon off;"

@@ -1,0 +1,52 @@
+frontend:
+    image: kelvinchen/seedbox:frontend
+    restart: always
+    net: seedbox
+    ports:
+        - "80:80"
+        - "443:443"
+    volumes:
+        - seedbox_config:/config
+    env_file:
+        - config
+
+rtorrent:
+    image: kelvinchen/seedbox:rtorrent
+    restart: always
+    net: seedbox
+    ports:
+        - "49161:49161"
+        - "49161:49161/udp"
+        - "6881:6881/udp"
+    volumes:
+        - seedbox_config:/config
+        - seedbox_torrents:/torrents
+
+plex:
+    image: kelvinchen/seedbox:plex
+    restart: always
+    net: seedbox
+    ports:
+        - "32400:32400"
+    volumes:
+        - seedbox_config:/config
+        - seedbox_torrents:/torrents
+
+sickrage:
+    image: kelvinchen/seedbox:sickrage
+    restart: always
+    net: seedbox
+    volumes:
+        - seedbox_config:/config
+        - seedbox_torrents:/torrents
+
+syncthing:
+    image: kelvinchen/seedbox:syncthing
+    restart: always
+    net: seedbox
+    ports:
+        - "22000:22000"
+        - "21027:21027/udp"
+    volumes:
+        - seedbox_config:/config
+        - seedbox_torrents:/torrents

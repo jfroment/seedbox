@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+mkdir -p "/config/Plex Media Server/"
+cp -n /Preferences.xml "/config/Plex Media Server/"
+
+start_pms > /dev/null 2>&1
