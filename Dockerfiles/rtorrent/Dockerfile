@@ -11,9 +11,12 @@ RUN apt-get update && \
         mediainfo \
         irssi \
         libxml-libxml-perl \
+        libxml-libxslt-perl \
         libjson-perl \
+        libjson-xs-perl \
         libnet-ssleay-perl \
         libdigest-perl \
+        libdigest-sha-perl \
         libhtml-parser-perl \
         libarchive-zip-perl && \
     apt-get clean && \
@@ -31,6 +34,7 @@ VOLUME /config /torrents
 COPY start rtorrent.rc supervisord.conf autodl.cfg /
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY rutorrent_config.php /opt/rutorrent/conf/config.php
+COPY irssi.cfg /root/.irssi/config
 EXPOSE 80 49161 49161/udp 6881/udp
 
 CMD ["/start"]
