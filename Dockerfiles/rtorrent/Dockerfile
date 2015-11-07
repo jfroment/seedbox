@@ -25,8 +25,7 @@ RUN ln -s /config/rtorrent/rtorrent.rc ~/.rtorrent.rc && \
     git clone --depth=1 --recursive \
     https://github.com/autodl-community/autodl-irssi.git ~/.irssi/scripts && \
     mkdir -p ~/.irssi/scripts/autorun && \
-    cp ~/.irssi/scripts/autodl-irssi.pl ~/.irssi/scripts/autorun && \
-    mkdir -p ~/.autodl
+    cp ~/.irssi/scripts/autodl-irssi.pl ~/.irssi/scripts/autorun
 
 VOLUME /config /torrents
 COPY start rtorrent.rc supervisord.conf autodl.cfg /
