@@ -1,10 +1,7 @@
 FROM kelvinchen/seedbox:base
 MAINTAINER Kelvin Chen <kelvin@kelvinchen.org>
 
-ARG PLEX_VER=0.9.12.18.1520-6833552
-ARG PLEX_DL="https://downloads.plex.tv/plex-media-server/$PLEX_VER/plexmediaserver_${PLEX_VER}_amd64.deb"
-
-RUN curl -sL "$PLEX_DL" > /tmp/plex.deb && \
+RUN curl -sL "https://plex.tv/downloads/latest/1?channel=8&build=linux-ubuntu-x86_64&distro=ubuntu&X-Plex-Token=" > /tmp/plex.deb && \
     dpkg -i /tmp/plex.deb && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
