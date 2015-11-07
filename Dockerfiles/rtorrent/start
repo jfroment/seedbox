@@ -13,8 +13,12 @@ rm /config/rtorrent/rtorrent.lock
 mkdir -p /config/rutorrent/settings /config/rutorrent/torrents \
     /config/rutorrent/users /config/rutorrent/plugins
 
-# Symlink all plugins in /config/rutorrent/plugins to the rutorrent directory
-ln -fs $(ls -d1 /config/rutorrent/plugins/**) /opt/rutorrent/plugins/
+# Copy all plugins in /config/rutorrent/plugins to the rutorrent directory
+cp -rf $(ls -d1 /config/rutorrent/plugins/**) /opt/rutorrent/plugins/
+
+# Set up autodl-irssi
+cp -n /autodl.cfg /config
+ln -s /config/autodl.cfg ~/.autodl/autodl.cfg
 
 # Make php-fpm run as root
 # Everything is inside a docker container so this shouldn't
