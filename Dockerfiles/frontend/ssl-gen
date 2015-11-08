@@ -5,5 +5,5 @@
 mkdir -p /config/frontend
 
 openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
-    -subj "/C=SB/ST=Seedbox/L=Seedbox/O=Seedbox/CN=*" \
+    -subj "/C=SB/ST=Seedbox/L=Seedbox/O=Seedbox/CN=$1" \
     -keyout /config/frontend/ssl.key  -out /config/frontend/ssl.crt
