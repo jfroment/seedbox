@@ -11,3 +11,4 @@ docker build -t kelvinchen/seedbox:plex      Dockerfiles/plex
 docker build -t kelvinchen/seedbox:rtorrent  Dockerfiles/rtorrent
 docker build -t kelvinchen/seedbox:sickrage  Dockerfiles/sickrage
 docker build -t kelvinchen/seedbox:syncthing Dockerfiles/syncthing
+docker build -t kelvinchen/seedbox:openvpn   Dockerfiles/openvpn

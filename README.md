@@ -47,3 +47,10 @@ certificates for you.
 ## Where is my data?
 All data are saved in the docker volumes `seedbox_config` or
 `seedbox_torrents`.
+
+## OpenVPN
+The OpenVPN container generates a single client key/cert pair by default.
+Run the `create-client CLIENT_NAME` tool in the openvpn container to generate
+the openvpn file. e.g. `create-client client >> client.ovpn`. You can transfer
+the file back using syncthing or scp. You can also create more certs by using
+easy-rsa.

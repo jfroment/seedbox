@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Make sure OpenVPN config directory exists.
+mkdir -p /config/openvpn/
+
+cp -n /openvpn.conf /config/openvpn/
+
+# Check if keys exist, if not, create with easy-rsa
+if [ ! -d "/config/openvpn/keys" ]; then
+    cd /usr/share/easy-rsa
+    source vars
+    ./clean-all
+    ./build-dh
+    ./pkitool --initca
+    ./pkitool --server server
+    ./pkitool client
+    openvpn --genkey --secret /config/openvpn/keys/ta.key
+fi
+
+# Make the tun device
+mkdir -p /dev/net
+if [ ! -c /dev/net/tun ]; then
+    mknod /dev/net/tun c 10 200
+fi
+
+iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+
+openvpn /config/openvpn/openvpn.conf

@@ -8,3 +8,4 @@ docker push kelvinchen/seedbox:plex
 docker push kelvinchen/seedbox:rtorrent
 docker push kelvinchen/seedbox:sickrage
 docker push kelvinchen/seedbox:syncthing
+docker push kelvinchen/seedbox:openvpn

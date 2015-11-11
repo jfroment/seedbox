@@ -50,3 +50,15 @@ syncthing:
     volumes:
         - seedbox_config:/config
         - seedbox_torrents:/torrents
+
+openvpn:
+    image: kelvinchen/seedbox:openvpn
+    restart: always
+    net: seedbox
+    ports:
+        - "1194:1194/udp"
+    volumes:
+        - seedbox_config:/config
+        - seedbox_torrents:/torrents
+    cap_add:
+        - NET_ADMIN

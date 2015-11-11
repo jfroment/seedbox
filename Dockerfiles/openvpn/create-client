@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+KEYDIR="/config/openvpn/keys"
+CLIENT=${1:-client}
+
+echo "
+$(cat /client.ovpn)
+<ca>
+$(cat $KEYDIR/ca.crt)
+</ca>
+<cert>
+$(cat $KEYDIR/$CLIENT.crt)
+</cert>
+<key>
+$(cat $KEYDIR/$CLIENT.key)
+</key>
+<tls-auth>
+$(cat $KEYDIR/ta.key)
+</tls-auth>
+key-direction 1
+"
