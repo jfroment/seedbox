@@ -8,7 +8,7 @@ RUN apt-get update \
         easy-rsa \
         iptables \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR /usr/share/easy-rsa
 
