@@ -31,7 +31,9 @@ RUN ln -s /config/rtorrent/rtorrent.rc ~/.rtorrent.rc \
         https://github.com/autodl-community/autodl-irssi.git \
         ~/.irssi/scripts \
     && mkdir -p ~/.irssi/scripts/autorun \
-    && cp ~/.irssi/scripts/autodl-irssi.pl ~/.irssi/scripts/autorun
+    && cp ~/.irssi/scripts/autodl-irssi.pl ~/.irssi/scripts/autorun \
+    && ln -s /config/autodl/ ~/.autodl \
+    && sed -i "s/www-data/root/g" /etc/php5/fpm/pool.d/www.conf
 
 VOLUME /config /torrents
 

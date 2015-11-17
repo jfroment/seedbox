@@ -19,12 +19,5 @@ cp -rf $(ls -d1 /config/rutorrent/plugins/**) /opt/rutorrent/plugins/
 # Set up autodl-irssi
 mkdir -p /config/autodl
 cp -n /autodl.cfg /config/autodl
-rm -rf ~/.autodl
-ln -fs /config/autodl/ ~/.autodl
-
-# Make php-fpm run as root
-# Everything is inside a docker container so this shouldn't
-# be a security problem
-sed -i "s/www-data/root/g" /etc/php5/fpm/pool.d/www.conf
 
 supervisord -c /supervisord.conf
