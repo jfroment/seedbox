@@ -50,7 +50,12 @@ All data are saved in the docker volumes `seedbox_config` or
 
 ## OpenVPN
 The OpenVPN container generates a single client key/cert pair by default.
-Run the `create-client CLIENT_NAME` tool in the openvpn container to generate
-the openvpn file. e.g. `create-client client >> client.ovpn`. You can transfer
-the file back using syncthing or scp. You can also create more certs by using
-easy-rsa.
+Run the command below to get your OpenVPN config file:
+```sh
+$ docker exec seedbox_openvpn_1 create-client client >> client.ovpn
+```
+Edit the `client.ovpn` and replace the line `remote MYSERVER_HOST 1194` with
+the hostname or IP address of your server.
+
+You can also create more certs by by docker exec-ing into the container and
+using easy-rsa.
