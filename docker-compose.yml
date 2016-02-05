@@ -1,64 +1,82 @@
-frontend:
-    image: kelvinchen/seedbox:frontend
-    restart: always
-    net: seedbox
-    ports:
-        - "80:80"
-        - "443:443"
-    volumes:
-        - seedbox_config:/config
-    env_file:
-        - config
+version: '2'
 
-rtorrent:
-    image: kelvinchen/seedbox:rtorrent
-    restart: always
-    net: seedbox
-    ports:
-        - "49161:49161"
-        - "49161:49161/udp"
-        - "6881:6881/udp"
-    volumes:
-        - seedbox_config:/config
-        - seedbox_torrents:/torrents
+networks:
+    main:
 
-plex:
-    image: kelvinchen/seedbox:plex
-    restart: always
-    net: seedbox
-    ports:
-        - "32400:32400"
-    volumes:
-        - seedbox_config:/config
-        - seedbox_torrents:/torrents
+volumes:
+    config:
+        driver: local
+    torrents:
+        driver: local
 
-sickrage:
-    image: kelvinchen/seedbox:sickrage
-    restart: always
-    net: seedbox
-    volumes:
-        - seedbox_config:/config
-        - seedbox_torrents:/torrents
+services:
+    frontend:
+        image: kelvinchen/seedbox:frontend
+        restart: always
+        networks:
+            - main
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - config:/config
+        env_file:
+            - config
 
-syncthing:
-    image: kelvinchen/seedbox:syncthing
-    restart: always
-    net: seedbox
-    ports:
-        - "22000:22000"
-        - "21027:21027/udp"
-    volumes:
-        - seedbox_config:/config
-        - seedbox_torrents:/torrents
+    rtorrent:
+        image: kelvinchen/seedbox:rtorrent
+        restart: always
+        networks:
+            - main
+        ports:
+            - "49161:49161"
+            - "49161:49161/udp"
+            - "6881:6881/udp"
+        volumes:
+            - config:/config
+            - torrents:/torrents
 
-openvpn:
-    image: kelvinchen/seedbox:openvpn
-    restart: always
-    net: seedbox
-    ports:
-        - "1194:1194/udp"
-    volumes:
-        - seedbox_config:/config
-        - seedbox_torrents:/torrents
-    cap_add:
-        - NET_ADMIN
+    plex:
+        image: kelvinchen/seedbox:plex
+        restart: always
+        networks:
+            - main
+        ports:
+            - "32400:32400"
+        volumes:
+            - config:/config
+            - torrents:/torrents
+
+    sickrage:
+        image: kelvinchen/seedbox:sickrage
+        restart: always
+        networks:
+            - main
+        volumes:
+            - config:/config
+            - torrents:/torrents
+
+    syncthing:
+        image: kelvinchen/seedbox:syncthing
+        restart: always
+        networks:
+            - main
+        ports:
+            - "22000:22000"
+            - "21027:21027/udp"
+        volumes:
+            - config:/config
+            - torrents:/torrents
+
+    openvpn:
+        image: kelvinchen/seedbox:openvpn
+        restart: always
+        networks:
+            - main
+        ports:
+            - "1194:1194/udp"
+        volumes:
+            - config:/config
+            - torrents:/torrents
+        cap_add:
+            - NET_ADMIN

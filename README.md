@@ -23,7 +23,7 @@ if you do this.
 ## Running
 ```sh
 $ docker-compose pull
-$ docker-compose --x-networking up -d
+$ docker-compose up -d
 ```
 Make sure you install the dependencies and finish configuration before doing
 this.
@@ -33,7 +33,7 @@ You may optionally build the images yourself instead of pulling by running
 
 ## Dependencies
 - [Docker](https://github.com/docker/docker)
-- [Docker Compose](https://github.com/docker/compose)
+- [Docker Compose](https://github.com/docker/compose) >=v1.6.0
 
 ## Configuration
 Copy the `config.default` file to `config` and change the variables as desired.
