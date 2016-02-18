@@ -20,20 +20,23 @@ Note: Plex is also available directly through the `32400` port without going
 through the reverse proxy. You will have to sign in with your plex.tv account
 if you do this.
 
+## Dependencies
+- [Docker](https://github.com/docker/docker) >= 1.10.0
+- [Docker Compose](https://github.com/docker/compose) >=v1.6.0
+
 ## Running
 ```sh
 $ docker-compose pull
 $ docker-compose up -d
 ```
+docker-compose should manage all the volumes and network setup for you. If it
+does not, verify that your docker and docker-compose version is updated.
+
 Make sure you install the dependencies and finish configuration before doing
 this.
 
 You may optionally build the images yourself instead of pulling by running
 `./build-all.sh`.
-
-## Dependencies
-- [Docker](https://github.com/docker/docker)
-- [Docker Compose](https://github.com/docker/compose) >=v1.6.0
 
 ## Configuration
 Copy the `config.default` file to `config` and change the variables as desired.
@@ -47,6 +50,9 @@ certificates for you.
 ## Where is my data?
 All data are saved in the docker volumes `seedbox_config` or
 `seedbox_torrents`.
+You can also replace these docker volumes with static path if you want to
+handle manually where files are stored on your server. You can do this by
+editing the volumes settings in the `docker-compose.yml` file.
 
 ## OpenVPN
 The OpenVPN container generates a single client key/cert pair by default.
