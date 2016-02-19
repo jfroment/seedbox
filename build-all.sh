@@ -24,11 +24,11 @@ done
 
 docker build -t kelvinchen/seedbox:base --pull Dockerfiles/base
 
-docker build -t kelvinchen/seedbox:frontend  $ARGS dockerfiles/frontend  &
-docker build -t kelvinchen/seedbox:plex      $ARGS dockerfiles/plex      &
-docker build -t kelvinchen/seedbox:rtorrent  $ARGS dockerfiles/rtorrent  &
-docker build -t kelvinchen/seedbox:sickrage  $ARGS dockerfiles/sickrage  &
-docker build -t kelvinchen/seedbox:syncthing $ARGS dockerfiles/syncthing &
-docker build -t kelvinchen/seedbox:openvpn   $ARGS dockerfiles/openvpn   &
+docker build -t kelvinchen/seedbox:frontend  $ARGS Dockerfiles/frontend  &
+docker build -t kelvinchen/seedbox:plex      $ARGS Dockerfiles/plex      &
+docker build -t kelvinchen/seedbox:rtorrent  $ARGS Dockerfiles/rtorrent  &
+docker build -t kelvinchen/seedbox:sickrage  $ARGS Dockerfiles/sickrage  &
+docker build -t kelvinchen/seedbox:syncthing $ARGS Dockerfiles/syncthing &
+docker build -t kelvinchen/seedbox:openvpn   $ARGS Dockerfiles/openvpn   &
 
 wait
