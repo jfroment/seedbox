@@ -2,7 +2,8 @@ FROM kelvinchen/seedbox:base
 MAINTAINER Kelvin Chen <kelvin@kelvinchen.org>
 
 # Install all dependencies
-RUN apt-get update \
+RUN echo "deb http://httpredir.debian.org/debian stretch main" >> /etc/apt/sources.list \
+    && apt-get update \
     && apt-get install -y --no-install-recommends \
         rtorrent \
         php5-fpm \
