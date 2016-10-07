@@ -7,17 +7,10 @@ mkdir -p /config/rtorrent
 cp -n /rtorrent.rc /config/rtorrent/rtorrent.rc
 
 # Remove rtorrent lock file if it exists so rtorrent can start
-rm /config/rtorrent/rtorrent.lock
+rm -f /config/rtorrent/rtorrent.lock
 
 # Make folders for storing rutorrent data
 mkdir -p /config/rutorrent/settings /config/rutorrent/torrents \
     /config/rutorrent/users /config/rutorrent/plugins
-
-# Copy all plugins in /config/rutorrent/plugins to the rutorrent directory
-cp -rf $(ls -d1 /config/rutorrent/plugins/**) /opt/rutorrent/plugins/
-
-# Set up autodl-irssi
-mkdir -p /config/autodl
-cp -n /autodl.cfg /config/autodl
 
 supervisord -c /supervisord.conf
