@@ -1,4 +1,4 @@
-FROM kelvinchen/seedbox:base
+FROM buildpack-deps:xenial-curl
 MAINTAINER Kelvin Chen <kelvin@kelvinchen.org>
 
 RUN curl -sL https://syncthing.net/release-key.txt | apt-key add - \
@@ -13,6 +13,6 @@ VOLUME /config
 
 EXPOSE 8384 22000 21027/udp
 
-COPY start config.xml /
+COPY init config.xml /
 
-CMD ["/start"]
+CMD ["/init"]
