@@ -1,4 +1,4 @@
-FROM kelvinchen/seedbox:base
+FROM ubuntu:xenial
 MAINTAINER Kelvin Chen <kelvin@kelvinchen.org>
 
 # Install OpenVPN
@@ -17,7 +17,7 @@ EXPOSE 1194/udp
 VOLUME /config
 
 COPY vars /usr/share/easy-rsa/
-COPY openvpn.conf start client.ovpn /
-COPY create-client /usr/local/bin/
+COPY openvpn.conf init client.ovpn /
+COPY export-client /usr/local/bin/
 
-CMD ["/start"]
+CMD ["/init"]
