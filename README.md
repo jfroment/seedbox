@@ -43,9 +43,16 @@ Copy the `config.default` file to `config` and change the variables as desired.
 The variables are all self-explanatory.
 
 If you want to enable SSL, you would need to have your certificate and key be
-at `/config/frontend/ssl.crt` and `/config/frontend/ssl.key` respectively.  The
+at `/config/frontend/ssl.crt` and `/config/frontend/ssl.key` respectively. The
 frontend image includes a command `ssl-gen` to automatically create self signed
 certificates for you.
+
+## PlexPass
+If you own PlexPass, you can get the docker image to auto-update to the latest
+PlexPass version when the container starts up. This is arguably bad docker
+practice since containers are supposed to be immutable, but in this case, I
+think the convenience outweighs that. All you have to do is set the
+`PLEX_EMAIL` and `PLEX_PASSWORD` variables in the config file.
 
 ## Where is my data?
 All data are saved in the docker volumes `seedbox_config` or
@@ -58,7 +65,7 @@ editing the volumes settings in the `docker-compose.yml` file.
 The OpenVPN container generates a single client key/cert pair by default.
 Run the command below to get your OpenVPN config file:
 ```sh
-$ docker exec seedbox_openvpn_1 create-client client >> client.ovpn
+$ docker-compose exec openvpn export-client client >> client.ovpn
 ```
 Edit the `client.ovpn` and replace the line `remote MYSERVER_HOST 1194` with
 the hostname or IP address of your server.
