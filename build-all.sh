@@ -22,8 +22,6 @@ while getopts ":nq" opt; do
     esac
 done
 
-docker build -t kelvinchen/seedbox:base --pull Dockerfiles/base
-
 docker build -t kelvinchen/seedbox:frontend  $ARGS Dockerfiles/frontend  &
 docker build -t kelvinchen/seedbox:plex      $ARGS Dockerfiles/plex      &
 docker build -t kelvinchen/seedbox:rtorrent  $ARGS Dockerfiles/rtorrent  &
