@@ -49,6 +49,8 @@ services:
         volumes:
             - config:/config
             - torrents:/torrents
+        env_file:
+            - config
 
     sickrage:
         image: kelvinchen/seedbox:sickrage
