@@ -1,10 +1,7 @@
-FROM kelvinchen/seedbox:base
+FROM nginx:1.11-alpine
 MAINTAINER Kelvin Chen <kelvin@kelvinchen.org>
 
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y apache2-utils \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apk add --no-cache apache2-utils openssl
 
 VOLUME /config
 
@@ -15,7 +12,7 @@ ENV USERNAME=user \
     USE_SSL=false
 
 COPY nginx.conf common_default.conf ssl.conf /etc/nginx/
-COPY start /
+COPY init /
 COPY ssl-gen /usr/local/bin
 
-CMD ["/start"]
+CMD ["/init"]

@@ -12,6 +12,7 @@ volumes:
 services:
     frontend:
         image: kelvinchen/seedbox:frontend
+        build: Dockerfiles/frontend
         restart: always
         networks:
             - main
@@ -25,6 +26,7 @@ services:
 
     rtorrent:
         image: kelvinchen/seedbox:rtorrent
+        build: Dockerfiles/rtorrent
         restart: always
         networks:
             - main
@@ -38,6 +40,7 @@ services:
 
     plex:
         image: kelvinchen/seedbox:plex
+        build: Dockerfiles/plex
         restart: always
         networks:
             - main
@@ -46,9 +49,12 @@ services:
         volumes:
             - config:/config
             - torrents:/torrents
+        env_file:
+            - config
 
     sickrage:
         image: kelvinchen/seedbox:sickrage
+        build: Dockerfiles/sickrage
         restart: always
         networks:
             - main
@@ -58,6 +64,7 @@ services:
 
     syncthing:
         image: kelvinchen/seedbox:syncthing
+        build: Dockerfiles/syncthing
         restart: always
         networks:
             - main
@@ -70,6 +77,7 @@ services:
 
     openvpn:
         image: kelvinchen/seedbox:openvpn
+        build: Dockerfiles/openvpn
         restart: always
         networks:
             - main

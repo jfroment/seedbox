@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Update to latest plexpass version
+if [[ "$PLEX_EMAIL" ]]; then
+    echo -e "EMAIL='$PLEX_EMAIL'\nPASS='$PLEX_PASSWORD'" > "$HOME/.plexupdate"
+    plexupdate -ad
+fi
+
+mkdir -p "/config/Plex Media Server/"
+cp -n /Preferences.xml "/config/Plex Media Server/"
+rm -f "/config/Plex Media Server/plexmediaserver.pid"
+
+start_pms > /dev/null 2>&1
