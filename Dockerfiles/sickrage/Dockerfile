@@ -1,4 +1,4 @@
-FROM kelvinchen/seedbox:base
+FROM buildpack-deps:xenial-scm
 MAINTAINER Kelvin Chen <kelvin@kelvinchen.org>
 
 RUN apt-get update \
