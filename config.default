@@ -2,6 +2,6 @@ USERNAME=username
 PASSWORD=hunter2
 USE_SSL=false
 
-# For Plex Pass downlaod
+# For Plex Pass download
 PLEX_EMAIL=
 PLEX_PASSWORD=

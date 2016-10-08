@@ -2,4 +2,6 @@
 
 mkdir -p /config/sonarr
 
+rm -f /config/sonarr/nzbdrone.pid
+
 mono /opt/NzbDrone/NzbDrone.exe -nobrowser -data=/config/sonarr
