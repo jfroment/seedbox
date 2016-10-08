@@ -1,12 +1,13 @@
 # Seedbox
-A collection of Dockerfiles and docker-compose configuration to set up a
-seedbox.
+A collection of Dockerfiles and a docker-compose configuration to set up a
+seedbox and personal media server.
 
-## Accessing the available WebUIs
-Go to `X.domain` where `X` is the item you want to access.
-Included items are:
+## Accessing a Service's Web Interface
+Go to `x.hostname` where `x` is the service you want to access.
+Included services are:
 - rtorrent
 - sickrage
+- sonarr
 - syncthing
 - plex
 

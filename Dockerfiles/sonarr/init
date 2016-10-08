@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+mkdir -p /config/sonarr
+
+mono /opt/NzbDrone/NzbDrone.exe -nobrowser -data=/config/sonarr

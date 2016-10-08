@@ -62,6 +62,16 @@ services:
             - config:/config
             - torrents:/torrents
 
+    sonarr:
+        image: kelvinchen/seedbox:sonarr
+        build: Dockerfiles/sonarr
+        restart: always
+        networks:
+            - main
+        volumes:
+            - config:/config
+            - torrents:/torrents
+
     syncthing:
         image: kelvinchen/seedbox:syncthing
         build: Dockerfiles/syncthing
