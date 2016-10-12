@@ -10,4 +10,4 @@ mkdir -p "/config/Plex Media Server/"
 cp -n /Preferences.xml "/config/Plex Media Server/"
 rm -f "/config/Plex Media Server/plexmediaserver.pid"
 
-start_pms > /dev/null 2>&1
+exec start_pms > /dev/null 2>&1

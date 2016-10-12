@@ -4,4 +4,4 @@ mkdir -p /config/syncthing
 
 cp -n /config.xml /config/syncthing
 
-syncthing -home /config/syncthing -no-browser >> /dev/null 2>&1
+exec syncthing -home /config/syncthing -no-browser >> /dev/null 2>&1

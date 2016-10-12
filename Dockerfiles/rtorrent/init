@@ -13,4 +13,4 @@ rm -f /config/rtorrent/rtorrent.lock
 mkdir -p /config/rutorrent/settings /config/rutorrent/torrents \
     /config/rutorrent/users /config/rutorrent/plugins
 
-supervisord -c /supervisord.conf
+exec supervisord -c /supervisord.conf

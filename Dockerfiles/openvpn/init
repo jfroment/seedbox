@@ -25,4 +25,4 @@ fi
 
 iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
 
-openvpn /config/openvpn/openvpn.conf
+exec openvpn /config/openvpn/openvpn.conf
