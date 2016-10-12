@@ -8,6 +8,7 @@ Included services are:
 - rtorrent
 - sickrage
 - sonarr
+- jackett (included in the sonarr image)
 - syncthing
 - plex
 
