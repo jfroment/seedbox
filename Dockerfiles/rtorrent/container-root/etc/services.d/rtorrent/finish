@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv sh
+
+# Make sure lock file is removed after end
+rm -f /config/rtorrent/rtorrent.lock

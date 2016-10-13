@@ -1,0 +1,6 @@
+#!/usr/bin/with-contenv sh
+
+# Remove rtorrent lock file if it exists so rtorrent can start
+rm -f /config/rtorrent/rtorrent.lock
+
+exec screen -D -m -S rtorrent rtorrent

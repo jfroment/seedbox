@@ -1,10 +1,15 @@
 FROM buildpack-deps:xenial-scm
 MAINTAINER Kelvin Chen <kelvin@kelvinchen.org>
 
+# For rtorrent
+ENV TERM=xterm
+
 # Install dependencies
-RUN apt-get update \
+RUN curl -sL "https://github.com/just-containers/s6-overlay/releases/download/v1.18.1.5/s6-overlay-amd64.tar.gz" \
+        | tar xz -C / \
+    && apt-get update \
     && apt-get install -y \
-        supervisor \
+        screen \
         rtorrent \
         mediainfo \
         php7.0-fpm \
@@ -28,8 +33,6 @@ VOLUME /config /torrents
 
 EXPOSE 80 49161 49161/udp 6881/udp
 
-COPY init rtorrent.rc supervisord.conf /
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY rutorrent_config.php /opt/rutorrent/conf/config.php
+COPY container-root/ /
 
 CMD ["/init"]

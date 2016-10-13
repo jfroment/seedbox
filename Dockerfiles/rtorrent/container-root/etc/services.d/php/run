@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv sh
+
+exec php-fpm7.0 -F -R
