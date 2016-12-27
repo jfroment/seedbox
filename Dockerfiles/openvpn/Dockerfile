@@ -1,12 +1,15 @@
-FROM ubuntu:xenial
+FROM buildpack-deps:xenial-curl
 MAINTAINER Kelvin Chen <kelvin@kelvinchen.org>
 
 # Install OpenVPN
-RUN apt-get update \
+RUN curl -sL "https://github.com/just-containers/s6-overlay/releases/download/v1.18.1.5/s6-overlay-amd64.tar.gz" \
+        | tar xz -C / \
+    && apt-get update \
     && apt-get install -y --no-install-recommends \
         openvpn \
         easy-rsa \
         iptables \
+        bridge-utils \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -16,8 +19,6 @@ EXPOSE 1194/udp
 
 VOLUME /config
 
-COPY vars /usr/share/easy-rsa/
-COPY openvpn.conf init client.ovpn /
-COPY export-client /usr/local/bin/
+COPY container-root/ /
 
 CMD ["/init"]

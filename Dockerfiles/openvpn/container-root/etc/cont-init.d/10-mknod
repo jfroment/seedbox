@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv bash
+
+mkdir -p /dev/net
+
+if [ ! -c /dev/net/tun ]; then
+    mknod /dev/net/tun c 10 200
+fi
+
+chmod 600 /dev/net/tun

@@ -4,7 +4,7 @@ KEYDIR="/config/openvpn/keys"
 CLIENT=${1:-client}
 
 echo "
-$(cat /client.ovpn)
+$(cat /etc/defaults/client.ovpn)
 <ca>
 $(cat $KEYDIR/ca.crt)
 </ca>
