@@ -23,8 +23,8 @@ through the reverse proxy. You will have to sign in with your plex.tv account
 if you do this.
 
 ## Dependencies
-- [Docker](https://github.com/docker/docker) >= 1.10.0
-- [Docker Compose](https://github.com/docker/compose) >=v1.6.0
+- [Docker](https://github.com/docker/docker) >= 1.13.0
+- [Docker Compose](https://github.com/docker/compose) >=v1.10.0
 
 ## Running
 ```sh
