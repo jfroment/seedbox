@@ -3,7 +3,7 @@ MAINTAINER Kelvin Chen <kelvin@kelvinchen.org>
 
 # Download plexupdate script and install Plex
 # This script can be later used to update Plex directly in the container
-RUN curl -sL "https://github.com/mrworf/plexupdate/raw/master/plexupdate.sh" \
+RUN curl -sL "https://raw.githubusercontent.com/Kelvin-Chen/plexupdate/master/plexupdate.sh" \
         > /usr/local/bin/plexupdate \
     && chmod +x /usr/local/bin/plexupdate \
     && plexupdate -pad \
