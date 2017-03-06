@@ -1,5 +1,5 @@
 FROM buildpack-deps:xenial-scm
-MAINTAINER Kelvin Chen <kelvin@kelvinchen.org>
+MAINTAINER Jean Froment <froment.je@gmail.com>
 
 # Download plexupdate script and install Plex
 # This script can be later used to update Plex directly in the container

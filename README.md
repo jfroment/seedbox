@@ -6,10 +6,8 @@ seedbox and personal media server.
 Go to `x.hostname` where `x` is the service you want to access.
 Included services are:
 - rtorrent
-- sickrage
 - sonarr
 - jackett (included in the sonarr image)
-- syncthing
 - plex
 
 The front-end reverse proxy routes based on the lowest level subdomain (e.g.
@@ -62,15 +60,3 @@ All data are saved in the docker volumes `seedbox_config` or
 You can also replace these docker volumes with static path if you want to
 handle manually where files are stored on your server. You can do this by
 editing the volumes settings in the `docker-compose.yml` file.
-
-## OpenVPN
-The OpenVPN container generates a single client key/cert pair by default.
-Run the command below to get your OpenVPN config file:
-```sh
-$ docker-compose exec openvpn export-client client >> client.ovpn
-```
-Edit the `client.ovpn` and replace the line `remote MYSERVER_HOST 1194` with
-the hostname or IP address of your server.
-
-You can also create more certs by by docker exec-ing into the container and
-using easy-rsa.

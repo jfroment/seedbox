@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-mkdir -p /config/syncthing
-
-cp -n /config.xml /config/syncthing
-
-exec syncthing -home /config/syncthing -no-browser >> /dev/null 2>&1

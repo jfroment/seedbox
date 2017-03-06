@@ -2,9 +2,7 @@
 
 # Push all images to the docker registry.
 
-docker push kelvinchen/seedbox:frontend
-docker push kelvinchen/seedbox:plex
-docker push kelvinchen/seedbox:rtorrent
-docker push kelvinchen/seedbox:sickrage
-docker push kelvinchen/seedbox:syncthing
-docker push kelvinchen/seedbox:openvpn
+docker push fromenje/seedbox:frontend
+docker push fromenje/seedbox:plex
+docker push fromenje/seedbox:rtorrent
+docker push fromenje/seedbox:sonarr

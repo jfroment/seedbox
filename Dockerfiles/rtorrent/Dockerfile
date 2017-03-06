@@ -1,5 +1,5 @@
 FROM buildpack-deps:xenial-scm
-MAINTAINER Kelvin Chen <kelvin@kelvinchen.org>
+MAINTAINER Jean Froment <froment.je@gmail.com>
 
 # For rtorrent
 ENV TERM=xterm
