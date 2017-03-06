@@ -38,6 +38,21 @@ services:
             - config:/config
             - torrents:/torrents
 
+    deluge:
+        image: fromenje/seedbox:deluge
+        build: Dockerfiles/deluge
+        restart: always
+        networks:
+            - main
+        ports:
+            - "8112:8112"
+            - "58846:58846"
+        volumes:
+            - torrents:/torrents
+            - config:/config
+        env_file:
+            - config
+
     plex:
         image: fromenje/seedbox:plex
         build: Dockerfiles/plex

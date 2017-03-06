@@ -25,6 +25,7 @@ done
 docker build -t fromenje/seedbox:frontend  $ARGS Dockerfiles/frontend  &
 docker build -t fromenje/seedbox:plex      $ARGS Dockerfiles/plex      &
 docker build -t fromenje/seedbox:rtorrent  $ARGS Dockerfiles/rtorrent  &
+docker build -t fromenje/seedbox:deluge    $ARGS Dockerfiles/deluge    &
 docker build -t fromenje/seedbox:sonarr	   $ARGS Dockerfiles/sonarr	   &
 
 wait
