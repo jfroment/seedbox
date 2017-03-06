@@ -6,9 +6,11 @@ seedbox and personal media server.
 Go to `x.hostname` where `x` is the service you want to access.
 Included services are:
 - rtorrent
+- deluge (supposed to replace rtorrent someday, seems to be more compatible with sonarr)
 - sonarr
 - jackett (included in the sonarr image)
 - plex
+- h5ai
 
 The front-end reverse proxy routes based on the lowest level subdomain (e.g.
 `rtorrent.example.com` would route to rtorrent). Since this is how the router

@@ -53,6 +53,20 @@ services:
         env_file:
             - config
 
+    h5ai:
+        image: fromenje/seedbox:h5ai
+        build: Dockerfiles/h5ai
+        restart: always
+        networks:
+            - main
+        ports:
+            - "12333:12333"
+        volumes:
+            - torrents:/var/www
+            - config:/config
+        env_file:
+            - config
+
     plex:
         image: fromenje/seedbox:plex
         build: Dockerfiles/plex
