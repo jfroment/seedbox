@@ -30,4 +30,4 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD supervisord -c /etc/supervisor/conf.d/supervisord.conf
 
 # expose only nginx HTTP port
-EXPOSE 12333
+EXPOSE 80

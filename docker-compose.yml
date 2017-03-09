@@ -62,7 +62,7 @@ services:
         networks:
             - main
         ports:
-            - "12333:12333"
+            - "12333:80"
         volumes:
             - torrents:/var/www
             - config:/config
