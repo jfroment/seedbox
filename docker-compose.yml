@@ -47,6 +47,8 @@ services:
         ports:
             - "8112:8112"
             - "58846:58846"
+            - "53160:53160"
+            - "53160:53160/udp"
         volumes:
             - torrents:/torrents
             - config:/config
