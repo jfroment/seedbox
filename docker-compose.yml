@@ -11,7 +11,7 @@ services:
         image: fromenje/seedbox:frontend
         build: Dockerfiles/frontend
         restart: always
-        networks: bridge
+        network_mode: "bridge"
         ports:
             - "80:80"
             - "443:443"
@@ -24,7 +24,7 @@ services:
         image: fromenje/seedbox:rtorrent
         build: Dockerfiles/rtorrent
         restart: always
-        networks: bridge
+        network_mode: "bridge"
         ports:
             - "49161:49161"
             - "49161:49161/udp"
@@ -37,7 +37,7 @@ services:
         image: fromenje/seedbox:deluge
         build: Dockerfiles/deluge
         restart: always
-        networks: bridge
+        network_mode: "bridge"
         ports:
             - "8112:8112"
             - "58846:58846"
@@ -51,7 +51,7 @@ services:
         image: fromenje/seedbox:h5ai
         build: Dockerfiles/h5ai
         restart: always
-        networks: bridge
+        network_mode: "bridge"
         ports:
             - "12333:12333"
         volumes:
@@ -64,7 +64,7 @@ services:
         image: fromenje/seedbox:plex
         build: Dockerfiles/plex
         restart: always
-        networks: bridge
+        network_mode: "bridge"
         ports:
             - "32400:32400"
         volumes:
@@ -77,7 +77,7 @@ services:
         image: fromenje/seedbox:sonarr
         build: Dockerfiles/sonarr
         restart: always
-        networks: bridge
+        network_mode: "bridge"
         volumes:
             - config:/config
             - torrents:/torrents
