@@ -62,7 +62,7 @@ services:
         networks:
             - main
         ports:
-            - "12333:80"
+            - "12333:12333"
         volumes:
             - torrents:/torrents
             - config:/config
