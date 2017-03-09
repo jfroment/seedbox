@@ -64,7 +64,7 @@ services:
         ports:
             - "12333:80"
         volumes:
-            - torrents:/var/www
+            - torrents:/torrents
             - config:/config
         env_file:
             - config
