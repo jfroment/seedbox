@@ -24,31 +24,12 @@ services:
         env_file:
             - config
 
-    rtorrent:
-        image: fromenje/seedbox:rtorrent
-        build: Dockerfiles/rtorrent
-        restart: always
-        networks:
-            - main
-        ports:
-            - "49161:49161"
-            - "49161:49161/udp"
-            - "6881:6881/udp"
-        volumes:
-            - config:/config
-            - torrents:/torrents
-
     deluge:
         image: fromenje/seedbox:deluge
         build: Dockerfiles/deluge
         restart: always
         networks:
             - main
-        ports:
-            - "8112:8112"
-            - "58846:58846"
-            - "53160:53160"
-            - "53160:53160/udp"
         volumes:
             - torrents:/torrents
             - config:/config
@@ -61,8 +42,6 @@ services:
         restart: always
         networks:
             - main
-        ports:
-            - "12333:12333"
         volumes:
             - torrents:/torrents
             - config:/config
