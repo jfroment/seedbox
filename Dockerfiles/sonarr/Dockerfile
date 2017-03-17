@@ -2,7 +2,7 @@ FROM buildpack-deps:xenial-scm
 MAINTAINER Jean Froment <froment.je@gmail.com>
 
 # Get latest path for Jackett
-jack_tag=$(curl -sX GET "https://api.github.com/repos/Jackett/Jackett/releases/latest" \
+RUN jack_tag=$(curl -sX GET "https://api.github.com/repos/Jackett/Jackett/releases/latest" \
     | awk '/tag_name/{print $4;exit}' FS='[""]')
 
 # Install Sonarr, S6, and Jackett
