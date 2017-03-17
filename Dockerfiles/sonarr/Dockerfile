@@ -10,7 +10,7 @@ RUN jack_tag=$(curl -sX GET "https://api.github.com/repos/Jackett/Jackett/releas
             > /etc/apt/sources.list.d/sonarr.list \
     && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FDA5DFFC \
     && apt-get update \
-    && apt-get install -y nzbdrone libcurl4-openssl-dev \
+    && apt-get install -y nzbdrone libcurl4-openssl-dev mono-devel \
     && curl -sL "https://github.com/just-containers/s6-overlay/releases/download/v1.18.1.5/s6-overlay-amd64.tar.gz" \
         | tar xz -C / \
     && curl -sL "https://github.com/Jackett/Jackett/releases/download/$jack_tag/Jackett.Binaries.Mono.tar.gz" \
