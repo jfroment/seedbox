@@ -5,9 +5,13 @@ networks:
 
 volumes:
     config:
-        driver: local
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config
     torrents:
-        driver: local
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/torrents
 
 services:
     frontend:

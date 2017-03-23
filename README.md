@@ -5,8 +5,7 @@ seedbox and personal media server.
 ## Accessing a Service's Web Interface
 Go to `x.hostname` where `x` is the service you want to access.
 Included services are:
-- rtorrent
-- deluge (supposed to replace rtorrent someday, seems to be more compatible with sonarr)
+- deluge
 - sonarr
 - jackett (included in the sonarr image)
 - plex
@@ -24,7 +23,18 @@ if you do this.
 
 ## Dependencies
 - [Docker](https://github.com/docker/docker) >= 1.13.0
+    + Install guidelines for Ubuntu 16.04: https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04
 - [Docker Compose](https://github.com/docker/compose) >=v1.10.0
+    + Install guidelines for Ubuntu 16.04: https://www.digitalocean.com/community/tutorials/how-to-install-docker-compose-on-ubuntu-16-04
+- [local-persist Docker plugin](https://github.com/CWSpear/local-persist): installed directly on host (not in container). This is a volume plugin that extends the default local driver’s functionality by allowing you specify a mountpoint anywhere on the host, which enables the files to always persist, even if the volume is removed via `docker volume rm. Use *systemd* install for Ubuntu 16.04.
+
+Before running, please create the volumes which will be statically mapped to the ones on the host:
+```sh
+$ sudo su
+# cd /; mkdir data; cd data; mkdir config; mkdir torrents
+# exit
+$ ls /data
+```
 
 ## Running
 ```sh
