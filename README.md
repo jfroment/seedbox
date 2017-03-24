@@ -2,6 +2,9 @@
 A collection of Dockerfiles and a docker-compose configuration to set up a
 seedbox and personal media server.
 
+# Credits
+Main credits go to [Kelvin Chen](https://github.com/Kelvin-Chen/seedbox) who started the development of its own seedbox using Docker. Mine was first a fork of Kelvin's one, but I made some serious changes in the code and plan to add even more tools and services that keeping this project as a fork started to have less sense as code diverged.
+
 ## Accessing a Service's Web Interface
 Go to `x.hostname` where `x` is the service you want to access.
 Included services are:
@@ -12,7 +15,7 @@ Included services are:
 - h5ai (service accessible via `explore.hostname`)
 
 The front-end reverse proxy routes based on the lowest level subdomain (e.g.
-`rtorrent.example.com` would route to rtorrent). Since this is how the router
+`deluge.example.com` would route to deluge). Since this is how the router
 works, it is recommended for you to get a top level domain. If you do not have
 one, you can edit your domains locally by changing your hosts file or use a
 browser plugin that changes the host header.
@@ -30,10 +33,7 @@ if you do this.
 
 Before running, please create the volumes which will be statically mapped to the ones on the host:
 ```sh
-$ sudo su
-# cd /; mkdir data; cd data; mkdir config; mkdir torrents
-# exit
-$ ls /data
+$ sudo su -c "cd /; mkdir data; cd data; mkdir config; mkdir torrents"
 ```
 
 ## Running
@@ -67,8 +67,7 @@ think the convenience outweighs that. All you have to do is set the
 `PLEX_EMAIL` and `PLEX_PASSWORD` variables in the config file.
 
 ## Where is my data?
-All data are saved in the docker volumes `seedbox_config` or
+All data is saved in the docker volumes `seedbox_config` or
 `seedbox_torrents`.
-You can also replace these docker volumes with static path if you want to
-handle manually where files are stored on your server. You can do this by
-editing the volumes settings in the `docker-compose.yml` file.
+These volumes are mapped to the `config` and `torrents` located in `/data` on the host. You can change these static path in the docker-compose.yml file.
+Thanks to the **local-persist** Docker plugin, the data located in these volumes is persistent, meaning that volumes are not deleted, even when using the ```docker-compose down``` command. It would be a shame to loose everything by running a simple docker command ;-)

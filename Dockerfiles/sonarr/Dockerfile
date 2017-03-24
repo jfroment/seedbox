@@ -23,6 +23,7 @@ ENV XDG_DATA_HOME="/config" \
 
 VOLUME /config
 
+# 8989 is Sonarr, 9117 is Jackett
 EXPOSE 8989 9117
 
 COPY services.d /etc/services.d
