@@ -1,13 +1,12 @@
-FROM alpine:3.5
+FROM buildpack-deps:xenial-scm
 MAINTAINER Jean Froment <froment.je@gmail.com>
 
-RUN apk update
-
-RUN apk add --update ca-certificates curl wget unzip && update-ca-certificates \
+RUN apt-get update \
+	&& apt-get install -y unzip libcurl4-openssl-dev \
 	&& wt_tag=$(curl -sX GET "https://api.github.com/repos/ukdtom/WebTools.bundle/releases/latest" \
     	| awk '/tag_name/{print $4;exit}' FS='[""]') \
-	&& curl -sL "https://github.com/ukdtom/WebTools.bundle/releases/download/$wt_tag/WebTools.bundle.zip" \
-        | tar xz -C /opt \
+	&& wget "https://github.com/ukdtom/WebTools.bundle/releases/download/$wt_tag/WebTools.bundle.zip" \
+    	-O /opt/WebTools.bundle.zip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
