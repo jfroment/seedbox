@@ -1,7 +1,7 @@
 FROM alpine:3.5
 MAINTAINER Jean Froment <froment.je@gmail.com>
 
-RUN apk updadate
+RUN apk update
 
 RUN apk add --update ca-certificates curl wget unzip && update-ca-certificates \
 	&& $wt_tag=$(curl -sX GET "https://api.github.com/repos/ukdtom/WebTools.bundle/releases/latest" \
