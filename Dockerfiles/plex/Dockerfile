@@ -7,12 +7,14 @@ RUN curl -sL "https://raw.githubusercontent.com/Kelvin-Chen/plexupdate/master/pl
         > /usr/local/bin/plexupdate \
     && chmod +x /usr/local/bin/plexupdate \
     && plexupdate -pad \
+    && apt-get install -y unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 VOLUME /config
 
-EXPOSE 32400
+# 32400 for Plex server, 33443 for Plex WebTools secure access
+EXPOSE 32400 33443
 
 COPY plexmediaserver /etc/default/plexmediaserver
 COPY init Preferences.xml /
