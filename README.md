@@ -2,7 +2,7 @@
 A collection of Dockerfiles and a docker-compose configuration to set up a
 seedbox and personal media server.
 
-# Credits
+## Credits
 Main credits go to [Kelvin Chen](https://github.com/Kelvin-Chen/seedbox) who started the development of its own seedbox using Docker. Mine was first a fork of Kelvin's one, but I made some serious changes in the code and plan to add even more tools and services that keeping this project as a fork started to have less sense as code diverged.
 
 ## Accessing a Service's Web Interface
@@ -69,5 +69,5 @@ think the convenience outweighs that. All you have to do is set the
 ## Where is my data?
 All data is saved in the docker volumes `seedbox_config` or
 `seedbox_torrents`.
-These volumes are mapped to the `config` and `torrents` located in `/data` on the host. You can change these static path in the docker-compose.yml file.
+These volumes are mapped to the `config` and `torrents` folders located in `/data` on the host. You can change these static paths in the docker-compose.yml file.
 Thanks to the **local-persist** Docker plugin, the data located in these volumes is persistent, meaning that volumes are not deleted, even when using the ```docker-compose down``` command. It would be a shame to loose everything by running a simple docker command ;-)

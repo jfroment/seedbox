@@ -66,6 +66,17 @@ services:
         env_file:
             - config
 
+    plex-webtools:
+        image: fromenje/seedbox:plex-webtools
+        build: Dockerfiles/plex-webtools
+        restart: always
+        networks:
+            - main
+        ports:
+            - 33443:33443
+        volumes:
+            - config:/config
+
     sonarr:
         image: fromenje/seedbox:sonarr
         build: Dockerfiles/sonarr
