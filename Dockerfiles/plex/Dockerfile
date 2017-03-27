@@ -7,6 +7,7 @@ RUN curl -sL "https://raw.githubusercontent.com/Kelvin-Chen/plexupdate/master/pl
         > /usr/local/bin/plexupdate \
     && chmod +x /usr/local/bin/plexupdate \
     && plexupdate -pad \
+    && apt-get update \
     && apt-get install -y unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
