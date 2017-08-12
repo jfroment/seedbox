@@ -12,6 +12,14 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/torrents
+    downloads:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/torrents/deluge
+    movies:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/torrents/Movies
 
 services:
     frontend:
@@ -84,7 +92,7 @@ services:
             - main
         volumes:
             - config:/config
-            - torrents/deluge:/downloads
-            - torrents/Movies:/movies
+            - downloads:/downloads
+            - movies:/movies
         env_file:
             - config
