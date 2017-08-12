@@ -75,3 +75,16 @@ services:
         volumes:
             - config:/config
             - torrents:/torrents
+
+    couchpotato:
+        image: fromenje/seedbox:couchpotato
+        build: Dockerfiles/couchpotato
+        restart: always
+        networks:
+            - main
+        volumes:
+            - config:/config
+            - torrents/deluge:/downloads
+            - torrents/Movies:/movies
+        env_file:
+            - config

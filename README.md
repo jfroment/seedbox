@@ -13,6 +13,7 @@ Included services are:
 - jackett (included in the sonarr image)
 - plex
 - h5ai (service accessible via `explore.hostname`)
+- couchpotato
 
 The front-end reverse proxy routes based on the lowest level subdomain (e.g.
 `deluge.example.com` would route to deluge). Since this is how the router

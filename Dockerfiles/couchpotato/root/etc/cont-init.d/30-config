@@ -1,0 +1,12 @@
+#!/usr/bin/with-contenv bash
+
+# create folders
+mkdir -p \
+	/var/log/couchpotato
+
+# permissions
+chown -R abc:abc \
+	/app
+
+chmod 777 \
+	/var/log/couchpotato
