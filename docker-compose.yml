@@ -96,3 +96,6 @@ services:
             - movies:/movies
         env_file:
             - config
+        environment:
+            - PGID=0
+            - PUID=0
