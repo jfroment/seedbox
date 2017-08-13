@@ -102,7 +102,7 @@ services:
 
     radarr:
        image: fromenje/seedbox:radarr
-       build: Dockerfile/radarr
+       build: Dockerfiles/radarr
        restart: always
        networks:
             - main
