@@ -108,8 +108,7 @@ services:
             - main
        volumes:
             - config:/config
-            - downloads:/downloads
-            - movies:/movies
+            - torrents:/torrents
        env_file:
            - config
        environment:
