@@ -99,3 +99,20 @@ services:
         environment:
             - PGID=0
             - PUID=0
+
+    radarr:
+       image: fromenje/seedbox:radarr
+       build: Dockerfile/radarr
+       restart: always
+       networks:
+            - main
+       volumes:
+            - config:/config
+            - downloads:/downloads
+            - movies:/movies
+       env_file:
+           - config
+       environment:
+           - PGID=0
+           - PUID=0
+           - TZ=Europe/Paris
