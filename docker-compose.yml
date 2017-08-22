@@ -12,14 +12,6 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/torrents
-    downloads:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/torrents/deluge
-    movies:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/torrents/Movies
 
 services:
     frontend:
@@ -84,23 +76,6 @@ services:
             - config:/config
             - torrents:/torrents
         environment:
-            - TZ=Europe/Paris
-
-    couchpotato:
-        image: fromenje/seedbox:couchpotato
-        build: Dockerfiles/couchpotato
-        restart: always
-        networks:
-            - main
-        volumes:
-            - config:/config
-            - downloads:/downloads
-            - movies:/movies
-        env_file:
-            - config
-        environment:
-            - PGID=0
-            - PUID=0
             - TZ=Europe/Paris
 
     radarr:
