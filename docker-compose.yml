@@ -59,8 +59,8 @@ services:
             - torrents:/var/www/html/data/admin/files
         networks:
             - main
-        orts:
-            - "7474:7474"
+        ports:
+            - "7474:80"
 
     plex:
         image: fromenje/seedbox:plex
