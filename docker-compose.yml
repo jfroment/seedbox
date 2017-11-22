@@ -59,12 +59,8 @@ services:
             - torrents:/var/www/html/data/admin/files
         networks:
             - main
-
-    mysql:
-        image: mariadb:latest
-        restart: always
-        env_file:
-            - config
+        orts:
+            - "7474:7474"
 
     plex:
         image: fromenje/seedbox:plex
