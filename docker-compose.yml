@@ -57,7 +57,6 @@ services:
         restart: always
         volumes:
             - torrents:/var/www/html/data
-            - config/owncloud:/var/www/html/config
         networks:
             - main
 
