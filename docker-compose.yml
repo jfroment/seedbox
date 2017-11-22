@@ -56,7 +56,7 @@ services:
         image: owncloud:latest
         restart: always
         volumes:
-            - torrents:/var/www/html/data
+            - torrents:/var/www/html/data/admin/files
         networks:
             - main
 
