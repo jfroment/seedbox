@@ -52,6 +52,21 @@ services:
         env_file:
             - config
 
+    owncloud:
+        image: owncloud:latest
+        restart: always
+        volumes:
+            - torrents:/var/www/html/data
+            - config/owncloud:/var/www/html/config
+        networks:
+            - main
+
+    mysql:
+        image: mariadb:latest
+        restart: always
+        env_file:
+            - config
+
     plex:
         image: fromenje/seedbox:plex
         build: Dockerfiles/plex

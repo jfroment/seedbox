@@ -1,6 +1,7 @@
 USERNAME=username
 PASSWORD=h4ckMePleAse
 USE_SSL=true
+MYSQL_ROOT_PASSWORD=h4ckMePleAse
 
 # For Plex Pass download only
 PLEX_EMAIL=
