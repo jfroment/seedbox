@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+##################################################################
+# Use : Rename me into "tunnel-options.sh" and change parameters #
+##################################################################
+
+# SSH Host to open tunnel on
+hostname="example.com"
+
+# "UNIX username for SSH access"
+username="bob"
+
+# Plex container name for WebTools IP fetching
+container="seedbox_plex_1"
+
+# Port for WebTools on the container
+port=33442
