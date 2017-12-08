@@ -89,17 +89,29 @@ services:
             - TZ=Europe/Paris
 
     radarr:
-       image: fromenje/seedbox:radarr
-       build: Dockerfiles/radarr
-       restart: always
-       networks:
+        image: fromenje/seedbox:radarr
+        build: Dockerfiles/radarr
+        restart: always
+        networks:
             - main
-       volumes:
+        volumes:
             - config:/config
             - torrents:/torrents
-       env_file:
-           - config
-       environment:
-           - PGID=0
-           - PUID=0
-           - TZ=Europe/Paris
+        env_file:
+            - config
+        environment:
+            - PGID=0
+            - PUID=0
+            - TZ=Europe/Paris
+
+    organizr:
+        image: lsiocommunity/organizr
+        restart: always
+        networks:
+            - main
+        volumes:
+            - config:/config
+        environment:
+            - PGID=0
+            - PUID=0
+            - TZ=Europe/Paris

@@ -14,6 +14,8 @@ Included services are:
 - plex
 - h5ai (service accessible via `explore.hostname`)
 - radarr
+- ownCloud (still in testing phase)
+- organizr
 
 The front-end reverse proxy routes based on the lowest level subdomain (e.g.
 `deluge.example.com` would route to deluge). Since this is how the router
