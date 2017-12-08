@@ -112,6 +112,6 @@ services:
         volumes:
             - config:/config
         environment:
-            - PGID=0
-            - PUID=0
+            - PGID=33
+            - PUID=33
             - TZ=Europe/Paris
