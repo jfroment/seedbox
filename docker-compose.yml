@@ -166,6 +166,7 @@ services:
             - config:/config
             - downloads:/downloads
             - movies:/movies
+            - torrents:/torrents
             - /etc/localtime:/etc/localtime:ro
         environment:
             - PGID=0
