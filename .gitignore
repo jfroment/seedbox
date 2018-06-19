@@ -3,3 +3,4 @@
 /config
 tunnel-options.sh
 traefik/.env
+.env

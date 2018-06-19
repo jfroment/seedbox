@@ -123,8 +123,8 @@ services:
         networks:
             - web
         env_file:
-            - config
-            - traefik/traefik.env
+            - .env
+            - traefik/.env
         command: --admin-password ${PORTAINER_ADMIN_PASSWORD} --host=unix:///var/run/docker.sock
         labels:
             - 'traefik.backend=portainer'
