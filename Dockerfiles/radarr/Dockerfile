@@ -16,10 +16,7 @@ RUN \
  tar ixzf \
  /tmp/radar.tar.gz -C \
 	/opt/radarr --strip-components=1 && \
-
-# clean up
- rm -rf \
-	/tmp/*
+ rm -rf	/tmp/*
 
 # add local files
 COPY /root /
