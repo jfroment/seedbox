@@ -32,7 +32,6 @@ services:
     #     env_file:
     #         - config
 
-    services:
     traefik:
         image: traefik
         container_name: traefik
