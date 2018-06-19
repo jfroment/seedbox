@@ -123,15 +123,15 @@ services:
             - PUID=0
             - TZ=Europe/Paris
         labels:
-            - 'traefik.backend=sonarr'
-            - 'traefik.port=8989'
-            - 'traefik.frontend.rule=Host:sonarr.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
+            - 'traefik.sonarr.backend=sonarr'
+            - 'traefik.sonarr.port=8989'
+            - 'traefik.sonarr.frontend.rule=Host:sonarr.${TRAEFIK_DOMAIN}'
+            - 'traefik.sonarr.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.jackett.backend=sonarr'
             - 'traefik.jackett.port=9117'
             - 'traefik.jackett.frontend.rule=Host:jackett.${TRAEFIK_DOMAIN}'
             - 'traefik.jackett.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.enable=true'
 
     radarr:
         image: fromenje/seedbox:radarr
