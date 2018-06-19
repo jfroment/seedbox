@@ -69,12 +69,16 @@ services:
         build: Dockerfiles/h5ai
         restart: always
         networks:
-            - main
+            - web
         volumes:
             - torrents:/torrents
             - config:/config
-        env_file:
-            - config
+        labels:
+            - 'traefik.backend=h5ai'
+            - 'traefik.port=12333'
+            - 'traefik.frontend.rule=Host:explore.${TRAEFIK_DOMAIN}'
+            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.enable=true'
 
     # owncloud:
     #     image: owncloud:latest
@@ -91,7 +95,7 @@ services:
         build: Dockerfiles/plex
         restart: always
         networks:
-            - main
+            - web
         ports:
             - "32400:32400"
         volumes:
@@ -99,6 +103,12 @@ services:
             - torrents:/torrents
         env_file:
             - config
+        labels:
+            - 'traefik.backend=plex'
+            - 'traefik.port=32400'
+            - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
+            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.enable=true'
 
     sonarr:
         image: fromenje/seedbox:sonarr
