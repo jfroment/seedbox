@@ -32,14 +32,18 @@ services:
             - /opt/traefik/acme.json:/acme.json
 
     deluge:
-        image: fromenje/seedbox:deluge
-        build: Dockerfiles/deluge
+        image: linuxserver/deluge
         restart: always
         networks:
             - web
         volumes:
             - torrents:/torrents
-            - config:/config
+            - configdeluge:/config
+            - downloads:/downloads
+        environment:
+            - PGID=0
+            - PUID=0
+            - TZ=Europe/Paris
         labels:
             - 'traefik.backend=deluge'
             - 'traefik.port=8112'
@@ -219,6 +223,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/sonarr
+    configdeluge: 
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/deluge
     torrents:
         driver: local-persist
         driver_opts:
