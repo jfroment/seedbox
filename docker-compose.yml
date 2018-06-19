@@ -15,6 +15,14 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/torrents
+    movies:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/torrents/Movies
+    downloads:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/torrents/deluge
 
 services:
     # frontend:
@@ -150,14 +158,15 @@ services:
             - 'traefik.enable=true'
 
     radarr:
-        image: fromenje/seedbox:radarr
-        build: Dockerfiles/radarr
+        image: linuxserver/radarr
         restart: always
         networks:
             - web
         volumes:
             - config:/config
-            - torrents:/torrents
+            - downloads:/downloads
+            - movies:/movies
+            - /etc/localtime:/etc/localtime:ro
         environment:
             - PGID=0
             - PUID=0
