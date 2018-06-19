@@ -6,7 +6,7 @@ services:
     container_name: traefik
     restart: always
     env_file:
-     - ./traefik.env
+     - ./.env
     networks:
       - webgateway
     command: --acme.email=${ACME_MAIL} --docker.domain=${TRAEFIK_DOMAIN}
