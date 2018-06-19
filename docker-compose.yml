@@ -73,46 +73,46 @@ services:
     #     ports:
     #         - "7474:80"
 
-    # plex:
-    #     image: fromenje/seedbox:plex
-    #     build: Dockerfiles/plex
-    #     restart: always
-    #     networks:
-    #         - web
-    #     ports:
-    #         - "32400:32400"
-    #     volumes:
-    #         - config:/config
-    #         - torrents:/torrents
-    #     env_file:
-    #         - config
-    #     labels:
-    #         - 'traefik.backend=plex'
-    #         - 'traefik.port=32400'
-    #         - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
-    #         - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
-    #         - 'traefik.enable=true'
-
     plex:
-        image: linuxserver/plex
+        image: fromenje/seedbox:plex
+        build: Dockerfiles/plex
         restart: always
-        network_mode: host
+        networks:
+            - web
         ports:
             - "32400:32400"
         volumes:
             - config:/config
             - torrents:/torrents
-        environment:
-            - PGID=0
-            - PUID=0
-            - TZ=Europe/Paris
-            - VERSION=latest
+        env_file:
+            - config
         labels:
             - 'traefik.backend=plex'
             - 'traefik.port=32400'
             - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
+
+    # plex:
+    #     image: linuxserver/plex
+    #     restart: always
+    #     network_mode: host
+    #     ports:
+    #         - "32400:32400"
+    #     volumes:
+    #         - config:/config
+    #         - torrents:/torrents
+    #     environment:
+    #         - PGID=0
+    #         - PUID=0
+    #         - TZ=Europe/Paris
+    #         - VERSION=latest
+    #     labels:
+    #         - 'traefik.backend=plex'
+    #         - 'traefik.port=32400'
+    #         - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
+    #         - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+    #         - 'traefik.enable=true'
 
 
     sonarr:
