@@ -128,6 +128,7 @@ services:
             - 'traefik.port=7878'
             - 'traefik.frontend.rule=Host:radarr.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.enable=true'
 
     organizr:
         image: lsiocommunity/organizr
