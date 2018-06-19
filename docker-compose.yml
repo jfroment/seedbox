@@ -1,20 +1,6 @@
 version: '3'
 
 services:
-    # frontend:
-    #     image: fromenje/seedbox:frontend
-    #     build: Dockerfiles/frontend
-    #     restart: always
-    #     networks:
-    #         - main
-    #     ports:
-    #         - "80:80"
-    #         - "443:443"
-    #     volumes:
-    #         - config:/config
-    #     env_file:
-    #         - config
-
     traefik:
         image: traefik
         container_name: traefik
@@ -182,18 +168,6 @@ services:
             - 'traefik.frontend.rule=Host:radarr.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
-
-    # organizr:
-    #     image: lsiocommunity/organizr
-    #     restart: always
-    #     networks:
-    #         - main
-    #     volumes:
-    #         - config:/config
-    #     environment:
-    #         - PGID=33
-    #         - PUID=33
-    #         - TZ=Europe/Paris
 
     portainer:
         image: portainer/portainer

@@ -17,18 +17,6 @@ defaultEntryPoints = ["http", "https"]
 
 [retry]
 
-# [acme]
-#   email = "email@company.com"
-#   storage = "acme.json"
-#   onDemande = true
-#   caServer = "https://acme-v02.api.letsencrypt.org/directory"
-#   entryPoint = "https"
-#   [acme.httpChallenge]
-#     entryPoint = "http"
-#   [[acme.domains]]
-#     main = "sub.domain.com"
-#     sans = ["sub.domain.com", "sub2.domain.com"]
-
 [acme]
 email = "overriden@in-traefik.yml"
 storage = "acme.json"
