@@ -19,6 +19,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/torrents/Movies
+    tvshows:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/torrents/TV\ Shows
     downloads:
         driver: local-persist
         driver_opts:
@@ -118,14 +122,16 @@ services:
             - 'traefik.enable=true'
 
     sonarr:
-        image: fromenje/seedbox:sonarr
-        build: Dockerfiles/sonarr
+        image: linuxserver/sonarr
         restart: always
         networks:
             - web
         volumes:
             - config:/config
             - torrents:/torrents
+            - tvshows:/tv
+            - downloads:/downloads
+            - /etc/localtime:/etc/localtime:ro
         environment:
             - PGID=0
             - PUID=0
