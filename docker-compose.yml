@@ -124,6 +124,8 @@ services:
             - TZ=Europe/Paris
         labels:
             - 'traefik.backend=sonarr'
+            - 'traefik.frontend.rule=Host:sonarr.${TRAEFIK_DOMAIN}'
+            - 'traefik.port=8989'
             - 'traefik.sonarr.port=8989'
             - 'traefik.sonarr.frontend.rule=Host:sonarr.${TRAEFIK_DOMAIN}'
             - 'traefik.sonarr.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
