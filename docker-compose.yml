@@ -72,15 +72,15 @@ services:
         env_file:
             - config
 
-    owncloud:
-        image: owncloud:latest
-        restart: always
-        volumes:
-            - torrents:/var/www/html/data/admin/files
-        networks:
-            - main
-        ports:
-            - "7474:80"
+    # owncloud:
+    #     image: owncloud:latest
+    #     restart: always
+    #     volumes:
+    #         - torrents:/var/www/html/data/admin/files
+    #     networks:
+    #         - main
+    #     ports:
+    #         - "7474:80"
 
     plex:
         image: fromenje/seedbox:plex
@@ -101,12 +101,20 @@ services:
         build: Dockerfiles/sonarr
         restart: always
         networks:
-            - main
+            - web
         volumes:
             - config:/config
             - torrents:/torrents
         environment:
+            - PGID=0
+            - PUID=0
             - TZ=Europe/Paris
+        labels:
+            - 'traefik.backend=sonarr'
+            - 'traefik.port=8989'
+            - 'traefik.frontend.rule=Host:sonarr.${TRAEFIK_DOMAIN}'
+            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.enable=true'
 
     radarr:
         image: fromenje/seedbox:radarr
@@ -117,8 +125,6 @@ services:
         volumes:
             - config:/config
             - torrents:/torrents
-        env_file:
-            - config
         environment:
             - PGID=0
             - PUID=0
@@ -130,17 +136,17 @@ services:
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
-    organizr:
-        image: lsiocommunity/organizr
-        restart: always
-        networks:
-            - main
-        volumes:
-            - config:/config
-        environment:
-            - PGID=33
-            - PUID=33
-            - TZ=Europe/Paris
+    # organizr:
+    #     image: lsiocommunity/organizr
+    #     restart: always
+    #     networks:
+    #         - main
+    #     volumes:
+    #         - config:/config
+    #     environment:
+    #         - PGID=33
+    #         - PUID=33
+    #         - TZ=Europe/Paris
 
     portainer:
         image: portainer/portainer
