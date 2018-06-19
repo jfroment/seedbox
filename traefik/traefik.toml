@@ -1,0 +1,61 @@
+#https://docs.traefik.io/toml/
+#https://docs.traefik.io/user-guide/examples/
+################################################################
+# Global configuration
+################################################################
+logLevel = "WARNING"
+defaultEntryPoints = ["http", "https"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+  [entryPoints.https.tls]
+
+[retry]
+
+# [acme]
+#   email = "email@company.com"
+#   storage = "acme.json"
+#   onDemande = true
+#   caServer = "https://acme-v02.api.letsencrypt.org/directory"
+#   entryPoint = "https"
+#   [acme.httpChallenge]
+#     entryPoint = "http"
+#   [[acme.domains]]
+#     main = "sub.domain.com"
+#     sans = ["sub.domain.com", "sub2.domain.com"]
+
+[acme]
+email = "overriden@in-traefik.yml"
+storage = "acme.json"
+entryPoint = "https"
+onHostRule = true
+acmeLogging = true
+[acme.httpChallenge]
+entryPoint = "http"
+
+################################################################
+# Web configuration backend
+################################################################
+[web]
+address = ":8080"
+
+################################################################
+# Traefik Config
+################################################################
+
+################################################################
+# Docker configuration backend
+################################################################
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "mydomain.com"
+watch = true
+exposedByDefault = false
+
+[file]
+watch = true

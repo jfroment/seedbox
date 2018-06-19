@@ -14,19 +14,19 @@ volumes:
             mountpoint: /data/torrents
 
 services:
-    frontend:
-        image: fromenje/seedbox:frontend
-        build: Dockerfiles/frontend
-        restart: always
-        networks:
-            - main
-        ports:
-            - "80:80"
-            - "443:443"
-        volumes:
-            - config:/config
-        env_file:
-            - config
+    # frontend:
+    #     image: fromenje/seedbox:frontend
+    #     build: Dockerfiles/frontend
+    #     restart: always
+    #     networks:
+    #         - main
+    #     ports:
+    #         - "80:80"
+    #         - "443:443"
+    #     volumes:
+    #         - config:/config
+    #     env_file:
+    #         - config
 
     deluge:
         image: fromenje/seedbox:deluge
@@ -115,3 +115,18 @@ services:
             - PGID=33
             - PUID=33
             - TZ=Europe/Paris
+
+    portainer:
+        image: portainer/portainer
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        networks:
+            - web
+        env_file:
+            - config
+            - traefik/traefik.env
+        command: --admin-password ${PORTAINER_ADMIN_PASSWORD} --host=unix:///var/run/docker.sock
+        labels:
+            - 'traefik.backend=portainer'
+            - 'traefik.port=9000'
+            - 'traefik.frontend.rule=Host:portainer.${TRAEFIK_DOMAIN}'

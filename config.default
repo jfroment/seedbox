@@ -6,3 +6,5 @@ MYSQL_ROOT_PASSWORD=h4ckMePleAse
 # For Plex Pass download only
 PLEX_EMAIL=
 PLEX_PASSWORD=
+
+PORTAINER_ADMIN_PASSWORD=h4ckMePleAse
