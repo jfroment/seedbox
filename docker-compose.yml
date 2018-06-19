@@ -6,7 +6,7 @@ networks:
         driver: bridge
     web:
         external:
-            name: traefik_webgateway
+            name: seedbox_webgateway
 volumes:
     config:
         driver: local-persist
