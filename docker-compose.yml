@@ -2,7 +2,11 @@ version: '3'
 
 networks:
     main:
-
+    webgateway:
+        driver: bridge
+    web:
+        external:
+            name: traefik_webgateway
 volumes:
     config:
         driver: local-persist
@@ -27,6 +31,23 @@ services:
     #         - config:/config
     #     env_file:
     #         - config
+
+    services:
+    traefik:
+        image: traefik
+        container_name: traefik
+        restart: always
+        networks:
+            - webgateway
+        command: --acme.email=${ACME_MAIL} --docker.domain=${TRAEFIK_DOMAIN}
+        ports:
+            - "80:80"
+            - "443:443"
+            - "8080:8080"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./traefik.toml:/traefik.toml
+            - /opt/traefik/acme.json:/acme.json
 
     deluge:
         image: fromenje/seedbox:deluge
@@ -122,13 +143,10 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
         networks:
             - web
-        env_file:
-            - .env
-            - traefik/.env
         command: --admin-password ${PORTAINER_ADMIN_PASSWORD} --host=unix:///var/run/docker.sock
         labels:
             - 'traefik.backend=portainer'
             - 'traefik.port=9000'
             - 'traefik.frontend.rule=Host:portainer.${TRAEFIK_DOMAIN}'
-            - "traefik.enable=true"
+            - 'traefik.enable=true'
 
