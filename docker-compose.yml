@@ -96,9 +96,7 @@ services:
     plex:
         image: linuxserver/plex
         restart: always
-        networks:
-            - host
-            - web
+        network_mode: host
         ports:
             - "32400:32400"
         volumes:
