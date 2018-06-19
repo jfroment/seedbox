@@ -113,7 +113,7 @@ services:
         build: Dockerfiles/radarr
         restart: always
         networks:
-            - main
+            - web
         volumes:
             - config:/config
             - torrents:/torrents
@@ -123,6 +123,11 @@ services:
             - PGID=0
             - PUID=0
             - TZ=Europe/Paris
+        labels:
+            - 'traefik.backend=radarr'
+            - 'traefik.port=7878'
+            - 'traefik.frontend.rule=Host:radarr.${TRAEFIK_DOMAIN}'
+            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
 
     organizr:
         image: lsiocommunity/organizr
