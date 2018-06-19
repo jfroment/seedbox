@@ -11,6 +11,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config
+    configsonarr: 
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/sonarr
     torrents:
         driver: local-persist
         driver_opts:
@@ -127,7 +131,7 @@ services:
         networks:
             - web
         volumes:
-            - config:/config
+            - configsonarr:/config
             - torrents:/torrents
             - tvshows:/tv
             - downloads:/downloads
