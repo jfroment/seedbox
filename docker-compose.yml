@@ -106,7 +106,7 @@ services:
             - PGID=0
             - PUID=0
             - TZ=Europe/Paris
-            - version=latest
+            - VERSION=latest
         labels:
             - 'traefik.backend=plex'
             - 'traefik.port=32400'
