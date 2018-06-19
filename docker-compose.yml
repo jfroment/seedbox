@@ -1,37 +1,5 @@
 version: '3'
 
-networks:
-    webgateway:
-        driver: bridge
-    web:
-        external:
-            name: seedbox_webgateway
-volumes:
-    config:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/config
-    configsonarr: 
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/config/sonarr
-    torrents:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/torrents
-    movies:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/torrents/Movies
-    tvshows:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/torrents/TV\ Shows
-    downloads:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/torrents/deluge
-
 services:
     # frontend:
     #     image: fromenje/seedbox:frontend
@@ -105,25 +73,49 @@ services:
     #     ports:
     #         - "7474:80"
 
+    # plex:
+    #     image: fromenje/seedbox:plex
+    #     build: Dockerfiles/plex
+    #     restart: always
+    #     networks:
+    #         - web
+    #     ports:
+    #         - "32400:32400"
+    #     volumes:
+    #         - config:/config
+    #         - torrents:/torrents
+    #     env_file:
+    #         - config
+    #     labels:
+    #         - 'traefik.backend=plex'
+    #         - 'traefik.port=32400'
+    #         - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
+    #         - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+    #         - 'traefik.enable=true'
+
     plex:
-        image: fromenje/seedbox:plex
-        build: Dockerfiles/plex
+        image: linuxserver/plex
         restart: always
         networks:
+            - host
             - web
         ports:
             - "32400:32400"
         volumes:
             - config:/config
             - torrents:/torrents
-        env_file:
-            - config
+        environment:
+            - PGID=0
+            - PUID=0
+            - TZ=Europe/Paris
+            - version=latest
         labels:
             - 'traefik.backend=plex'
             - 'traefik.port=32400'
             - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
+
 
     sonarr:
         image: linuxserver/sonarr:develop
@@ -214,3 +206,34 @@ services:
             - 'traefik.frontend.rule=Host:portainer.${TRAEFIK_DOMAIN}'
             - 'traefik.enable=true'
 
+networks:
+    webgateway:
+        driver: bridge
+    web:
+        external:
+            name: seedbox_webgateway
+volumes:
+    config:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config
+    configsonarr: 
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/sonarr
+    torrents:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/torrents
+    movies:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/torrents/Movies
+    tvshows:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/torrents/TV\ Shows
+    downloads:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/torrents/deluge
