@@ -130,3 +130,5 @@ services:
             - 'traefik.backend=portainer'
             - 'traefik.port=9000'
             - 'traefik.frontend.rule=Host:portainer.${TRAEFIK_DOMAIN}'
+            - "traefik.enable=true"
+
