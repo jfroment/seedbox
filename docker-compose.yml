@@ -241,6 +241,7 @@ volumes:
         driver_opts:
             mountpoint: /data/torrents/deluge
     plexlogs:
-        driver: local-persist
+        driver: local
         driver_opts:
-            mountpoint: "/data/config/Plex\ Media\ Server/Logs"
+            device: "/data/config/Plex\ Media\ Server/Logs"
+            
