@@ -169,6 +169,25 @@ services:
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
+    tautulli:
+        image: linuxserver/tautulli
+        restart: always
+        networks:
+            - web
+        volumes:
+            - config:/config
+            - plexlogs/logs:ro
+        environment:
+            - PGID=0
+            - PUID=0
+            - TZ=Europe/Paris
+        labels:
+            - 'traefik.backend=tautulli'
+            - 'traefik.port=8181'
+            - 'traefik.frontend.rule=Host:tautulli.${TRAEFIK_DOMAIN}'
+            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.enable=true'
+
     portainer:
         image: portainer/portainer
         volumes:
@@ -217,3 +236,7 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/torrents/deluge
+    plexlogs:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/Plex\ Media\ Server/Logs
