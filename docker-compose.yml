@@ -206,6 +206,8 @@ services:
             - RTORRENT_SCGI=9000
             - PUID=0
             - PGID=0
+        ports:
+            - "3000:3000"
         labels:
             - 'traefik.backend=rtorrent'
             - 'traefik.port=3000'
@@ -213,7 +215,7 @@ services:
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
             #- 'traefik.default.protocol=http'
-            - 'traefik.frontend.headers.SSLRedirect=true'
+            - 'traefik.frontend.headers.SSLRedirect=false'
             #- 'traefik.frontend.entryPoints=http,https'
 
     portainer:
