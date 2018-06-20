@@ -176,7 +176,7 @@ services:
             - web
         volumes:
             - configtautulli:/config
-            - plexlogs:/logs:ro
+            - config:/logs:ro # Inside of tautulli, bind to logs via "/logs/Plex\ Media\ Server/Logs"
         environment:
             - PGID=0
             - PUID=0
@@ -240,8 +240,3 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/torrents/deluge
-    plexlogs:
-        driver: local
-        driver_opts:
-            device: "/data/config/Plex\ Media\ Server/Logs"
-            
