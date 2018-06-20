@@ -205,13 +205,16 @@ services:
             - FLOOD_SECRET="mzxgMcYuTcNAhJcON4cLAI0dyniPIE2F"
             - RTORRENT_SCGI=9000
             - PUID=0
-            - PGID=0     
+            - PGID=0
         labels:
             - 'traefik.backend=rtorrent'
             - 'traefik.port=3000'
             - 'traefik.frontend.rule=Host:rtorrent.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
+            #- 'traefik.default.protocol=http'
+            - 'traefik.frontend.headers.SSLRedirect=true'
+            #- 'traefik.frontend.entryPoints=http,https'
 
     portainer:
         image: portainer/portainer
