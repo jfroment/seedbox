@@ -64,8 +64,8 @@ services:
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
             MYSQL_DATABASE: filerun
-        volumes:
-            - /data/config/filerun/db:/var/lib/mysql
+        #volumes:
+        #    - /data/config/filerun/db:/var/lib/mysql
         labels:
             - 'traefik.enable=false'
 
