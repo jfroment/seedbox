@@ -175,7 +175,7 @@ services:
         networks:
             - web
         volumes:
-            - config:/config
+            - configtautulli:/config
             - plexlogs:/logs:ro
         environment:
             - PGID=0
@@ -220,6 +220,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/deluge
+    configtautulli:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/tautulli
     torrents:
         driver: local-persist
         driver_opts:
