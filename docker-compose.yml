@@ -82,6 +82,8 @@ services:
             FR_DB_PASS: ${MYSQL_PASSWORD}
         depends_on:
             - filerun-db
+        links:
+            - filerun-db:db
         volumes:
             - /data/config/filerun/web:/var/www/html
             - alldata:/user-files
