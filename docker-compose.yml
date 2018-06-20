@@ -243,4 +243,4 @@ volumes:
     plexlogs:
         driver: local-persist
         driver_opts:
-            mountpoint: /data/config/Plex Media Server/Logs
+            mountpoint: /data/config/Plex\\ Media\\ Server/Logs
