@@ -11,7 +11,7 @@ services:
         ports:
             - "80:80"
             - "443:443"
-            - "8080:8080"
+            #- "8080:8080"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./traefik.toml:/traefik.toml
@@ -37,23 +37,6 @@ services:
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
-    # h5ai:
-    #     image: fromenje/seedbox:h5ai
-    #     build: Dockerfiles/h5ai
-    #     restart: always
-    #     networks:
-    #         - web
-    #     volumes:
-    #         - torrents:/torrents
-    #         - config:/config
-    #     labels:
-    #         - 'traefik.backend=h5ai'
-    #         - 'traefik.port=12333'
-    #         - 'traefik.frontend.rule=Host:explore.${TRAEFIK_DOMAIN}'
-    #         - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
-    #         - 'traefik.enable=true'
-    #         - com.centurylinklabs.watchtower.enable=false
-
     filerun-db:
         image: mariadb:10.1
         restart: always
@@ -64,8 +47,6 @@ services:
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
             MYSQL_DATABASE: filerun
-        #volumes:
-        #    - /data/config/filerun/db:/var/lib/mysql
         labels:
             - 'traefik.enable=false'
 
@@ -93,16 +74,6 @@ services:
             - 'traefik.frontend.rule=Host:explore.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
-
-    # owncloud:
-    #     image: owncloud:latest
-    #     restart: always
-    #     volumes:
-    #         - torrents:/var/www/html/data/admin/files
-    #     networks:
-    #         - main
-    #     ports:
-    #         - "7474:80"
 
     plex:
         image: fromenje/seedbox:plex
@@ -155,7 +126,6 @@ services:
         volumes:
             - configsonarr:/config
             - torrents:/torrents
-            - tvshows:/tv
             - downloads:/downloads
             - /etc/localtime:/etc/localtime:ro
         environment:
@@ -296,10 +266,6 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/torrents/Movies
-    tvshows:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/torrents/TV\ Shows
     downloads:
         driver: local-persist
         driver_opts:

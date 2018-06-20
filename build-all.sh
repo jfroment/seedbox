@@ -23,6 +23,5 @@ while getopts ":nq" opt; do
 done
 
 docker build -t fromenje/seedbox:plex         $ARGS Dockerfiles/plex        &
-docker build -t fromenje/seedbox:h5ai	        $ARGS Dockerfiles/h5ai	      &
 
 wait

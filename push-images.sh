@@ -3,4 +3,3 @@
 # Push all images to the docker registry.
 
 docker push fromenje/seedbox:plex
-docker push fromenje/seedbox:h5ai
