@@ -11,7 +11,7 @@ services:
         ports:
             - "80:80"
             - "443:443"
-            #- "8080:8080"
+            - "8080:8080"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./traefik.toml:/traefik.toml
@@ -52,7 +52,7 @@ services:
             - 'traefik.frontend.rule=Host:explore.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
-            - 'com.centurylinklabs.watchtower.enable=false'
+            - com.centurylinklabs.watchtower.enable=false
 
     # owncloud:
     #     image: owncloud:latest
@@ -83,7 +83,7 @@ services:
             - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
-            - 'com.centurylinklabs.watchtower.enable=false'
+            - com.centurylinklabs.watchtower.enable=false
 
     # plex:
     #     image: linuxserver/plex
