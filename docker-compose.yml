@@ -176,7 +176,7 @@ services:
             - web
         volumes:
             - config:/config
-            - plexlogs/logs:ro
+            - plexlogs:/logs:ro
         environment:
             - PGID=0
             - PUID=0
