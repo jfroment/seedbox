@@ -15,15 +15,29 @@ Included services are:
 - h5ai (service accessible via `explore.hostname`)
 - radarr
 
+## Included Applications
+| Application          | Web Interface            |
+-----------------------|--------------------------|
+| Organizr             | yourdomain.com           |
+| Plex                 | plex.yourdomain.com      |
+| Deluge               | deluge.yourdomain.com    |
+| Sonarr               | sonarr.yourdomain.com    |
+| Radarr               | radarr.yourdomain.com    |
+| Filerun              | explore.yourdomain.com   |
+| Tautulli  (plexPy)   | tautulli.yourdomain.com  |
+| Portainer            | portainer.yourdomain.com |
+| Jackett              | jackett.yourdomain.co    |
+
 The front-end reverse proxy (Traefik) routes based on the lowest level subdomain (e.g.
 `deluge.example.com` would route to deluge). Since this is how the router
 works, it is recommended for you to get a top level domain. If you do not have
 one, you can edit your domains locally by changing your hosts file or use a
 browser plugin that changes the host header.
 
+Traefik takes care of valid Let's Encrypt certificates and auto-renewal.
+
 Note: Plex is also available directly through the `32400` port without going
-through the reverse proxy. You will have to sign in with your plex.tv account
-if you do this.
+through the reverse proxy.
 
 ## Dependencies
 - [Docker](https://github.com/docker/docker) >= 1.13.0
@@ -39,8 +53,7 @@ $ sudo su -c "cd /; mkdir data; cd data; mkdir config; mkdir torrents"
 
 ## Running
 ```sh
-$ docker-compose pull
-$ docker-compose up -d
+$ ./update-all.sh
 ```
 docker-compose should manage all the volumes and network setup for you. If it
 does not, verify that your docker and docker-compose version is updated.

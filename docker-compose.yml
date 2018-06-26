@@ -231,14 +231,14 @@ services:
             - 'traefik.frontend.rule=Host:portainer.${TRAEFIK_DOMAIN}'
             - 'traefik.enable=true'
     
-    watchtower:
-        image: v2tec/watchtower
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-            - /etc/localtime:/etc/localtime:ro
-        restart: always
-        environment:
-            - TZ=Europe/Paris
+    # watchtower:
+    #     image: v2tec/watchtower
+    #     volumes:
+    #         - /var/run/docker.sock:/var/run/docker.sock
+    #         - /etc/localtime:/etc/localtime:ro
+    #     restart: always
+    #     environment:
+    #         - TZ=Europe/Paris
 
 
 networks:
