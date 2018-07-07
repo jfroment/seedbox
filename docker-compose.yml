@@ -65,6 +65,8 @@ services:
             - filerun-db
         links:
             - filerun-db:db
+        ports:
+            - "7474:7474"
         volumes:
             - /data/config/filerun/web:/var/www/html
             - alldata:/user-files
