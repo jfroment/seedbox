@@ -94,7 +94,7 @@ services:
             - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
-            - com.centurylinklabs.watchtower.enable=false
+            #- com.centurylinklabs.watchtower.enable=false
 
     # plex:
     #     image: linuxserver/plex
@@ -178,6 +178,24 @@ services:
             - 'traefik.backend=radarr'
             - 'traefik.port=7878'
             - 'traefik.frontend.rule=Host:radarr.${TRAEFIK_DOMAIN}'
+            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.enable=true'
+
+    bazarr:
+        image: morpheus65535/bazarr
+        restart: always
+        networks:
+            - web
+        volumes:
+            - torrents:/torrents
+        environment:
+            - PGID=0
+            - PUID=0
+            - TZ=Europe/Paris
+        labels:
+            - 'traefik.backend=bazarr'
+            - 'traefik.port=6767'
+            - 'traefik.frontend.rule=Host:bazarr.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
