@@ -18,7 +18,7 @@ services:
             - /opt/traefik/acme.json:/acme.json
 
     deluge:
-        image: linuxserver/deluge
+        image: linuxserver/deluge:136
         restart: always
         networks:
             - web
