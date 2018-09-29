@@ -18,7 +18,7 @@ services:
             - /opt/traefik/acme.json:/acme.json
 
     deluge:
-        image: linuxserver/deluge:136
+        image: linuxserver/deluge
         restart: always
         networks:
             - web
@@ -94,7 +94,6 @@ services:
             - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
-            #- com.centurylinklabs.watchtower.enable=false
 
     # plex:
     #     image: linuxserver/plex
@@ -182,7 +181,7 @@ services:
             - 'traefik.enable=true'
 
     bazarr:
-        image: morpheus65535/bazarr
+        image: linuxserver/bazarr
         restart: always
         networks:
             - web
@@ -218,24 +217,6 @@ services:
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
-    organizr:
-        image: lsiocommunity/organizr
-        restart: always
-        networks:
-            - web
-        volumes:
-            - configorganizr:/config
-        environment:
-            - PGID=1000
-            - PUID=1000
-            - TZ=Europe/Paris
-        labels:
-            - 'traefik.backend=organizr'
-            - 'traefik.port=80'
-            - 'traefik.frontend.rule=Host:${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
-
     portainer:
         image: portainer/portainer
         volumes:
@@ -248,16 +229,6 @@ services:
             - 'traefik.port=9000'
             - 'traefik.frontend.rule=Host:portainer.${TRAEFIK_DOMAIN}'
             - 'traefik.enable=true'
-    
-    # watchtower:
-    #     image: v2tec/watchtower
-    #     volumes:
-    #         - /var/run/docker.sock:/var/run/docker.sock
-    #         - /etc/localtime:/etc/localtime:ro
-    #     restart: always
-    #     environment:
-    #         - TZ=Europe/Paris
-
 
 networks:
     webgateway:
@@ -286,10 +257,6 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/tautulli
-    configorganizr:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/config/organizr
     configrtorrent:
         driver: local-persist
         driver_opts:
