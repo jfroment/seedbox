@@ -5,6 +5,7 @@
 ################################################################
 logLevel = "WARNING"
 defaultEntryPoints = ["http", "https"]
+InsecureSkipVerify = true
 
 [entryPoints]
   [entryPoints.http]
