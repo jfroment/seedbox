@@ -199,24 +199,23 @@ services:
             - 'traefik.enable=true'
 
     flood:
-        image: wonderfall/rtorrent-flood
+        image: romancin/rutorrent-flood
         restart: always
         tty: true
         networks:
             - web
         volumes:
-            - configflood:/data
-            - flooddb:/flood-db
+            - configflood:/config
+            - flooddl:/downloads
             - torrents:/torrents
         environment:
-            - GID=0
-            - UID=0
-            - FLOOD_SECRET=${FLOODSECRET}
+            - PGID=0
+            - PUID=0
             - TZ=Europe/Paris
             - RTORRENT_SCGI=49184
         labels:
             - 'traefik.backend=flood'
-            - 'traefik.port=3000'
+            - 'traefik.port=443'
             - 'traefik.frontend.rule=Host:flood.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
@@ -281,18 +280,14 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/tautulli
-    configrtorrent:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/config/rtorrent
     configflood:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/flood
-    flooddb:
+    flooddl:
         driver: local-persist
         driver_opts:
-            mountpoint: /data/config/flood/flood-db
+            mountpoint: /data/torrents/flood
     torrents:
         driver: local-persist
         driver_opts:
