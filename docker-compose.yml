@@ -199,17 +199,21 @@ services:
             - 'traefik.enable=true'
 
     flood:
-        image: linuxserver/flood
+        image: wonderfall/rtorrent-flood
         restart: always
+        tty: true
         networks:
             - web
         volumes:
-            - configflood:/config
+            - configflood:/data
+            - flooddb:/flood-db
             - torrents:/torrents
         environment:
-            - PGID=0
-            - PUID=0
+            - GID=0
+            - UID=0
+            - FLOOD_SECRET=${FLOODSECRET}
             - TZ=Europe/Paris
+            - RTORRENT_SCGI=11679
         labels:
             - 'traefik.backend=flood'
             - 'traefik.port=3000'
@@ -285,6 +289,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/flood
+    flooddb:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/flood/flood-db
     torrents:
         driver: local-persist
         driver_opts:
