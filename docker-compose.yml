@@ -213,7 +213,7 @@ services:
             - UID=0
             - FLOOD_SECRET=${FLOODSECRET}
             - TZ=Europe/Paris
-            - RTORRENT_SCGI=11679
+            - RTORRENT_SCGI=49184
         labels:
             - 'traefik.backend=flood'
             - 'traefik.port=3000'
