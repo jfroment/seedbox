@@ -212,13 +212,13 @@ services:
             - PGID=0
             - PUID=0
             - TZ=Europe/Paris
-            - RTORRENT_SCGI=49184
         labels:
             - 'traefik.backend=flood'
             - 'traefik.port=443'
             - 'traefik.frontend.rule=Host:flood.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
+            - 'traefik.protocol=https'
 
     tautulli:
         image: linuxserver/tautulli
