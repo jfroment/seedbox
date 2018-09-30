@@ -213,12 +213,17 @@ services:
             - PUID=0
             - TZ=Europe/Paris
         labels:
-            - 'traefik.backend=flood'
-            - 'traefik.port=443'
-            - 'traefik.frontend.rule=Host:flood.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
-            - 'traefik.protocol=https'
+            - 'traefik.flood.frontend.backend=flood'
+            - 'traefik.flood.port=3000'
+            - 'traefik.flood.frontend.rule=Host:flood.${TRAEFIK_DOMAIN}'
+            - 'traefik.flood.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.flood.protocol=https'
+            - 'traefik.rutorrent.frontend.backend=flood'
+            - 'traefik.rutorrent.port=443'
+            - 'traefik.rutorrent.frontend.rule=Host:rutorrent.${TRAEFIK_DOMAIN}'
+            - 'traefik.rutorrent.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.rutorrent.protocol=https'
 
     tautulli:
         image: linuxserver/tautulli
