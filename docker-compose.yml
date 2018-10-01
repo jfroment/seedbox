@@ -204,6 +204,8 @@ services:
         tty: true
         networks:
             - web
+        ports:
+            - "51415:51415"
         volumes:
             - configflood:/config
             - flooddl:/downloads
