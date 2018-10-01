@@ -206,6 +206,7 @@ services:
             - web
         ports:
             - "51415:51415"
+            - "6881:6881"
         volumes:
             - configflood:/config
             - flooddl:/downloads
