@@ -247,6 +247,24 @@ services:
             - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
+    jdownloader:
+        image: jlesage/jdownloader-2
+        networks:
+            - web
+        volumes:
+            - configjdownloader:/config
+            - downloads:/output
+        environment:
+            - USER_ID=0
+            - GROUP_ID=0
+            - TZ=Europe/Paris
+        labels:
+            - 'traefik.backend=jdownloader'
+            - 'traefik.port=5800'
+            - 'traefik.frontend.rule=Host:jdownloader.${TRAEFIK_DOMAIN}'
+            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.enable=true'
+
     portainer:
         image: portainer/portainer
         restart: always
@@ -292,6 +310,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/flood
+    configjdownloader:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/jdownloader
     flooddl:
         driver: local-persist
         driver_opts:
