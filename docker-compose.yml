@@ -26,6 +26,7 @@ services:
             - torrents:/torrents
             - configdeluge:/config
             - downloads:/downloads
+            - flooddl:/downloads
         environment:
             - PGID=0
             - PUID=0
@@ -125,7 +126,7 @@ services:
         volumes:
             - configsonarr:/config
             - torrents:/torrents
-            - downloads:/downloads
+            - flooddl:/downloads
             - /etc/localtime:/etc/localtime:ro
         environment:
             - PGID=0
@@ -165,7 +166,7 @@ services:
             - web
         volumes:
             - config:/config
-            - downloads:/downloads
+            - flooddl:/downloads
             - movies:/movies
             - torrents:/torrents
             - /etc/localtime:/etc/localtime:ro
