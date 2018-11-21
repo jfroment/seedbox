@@ -18,7 +18,7 @@ services:
             - /opt/traefik/acme.json:/acme.json
 
     deluge:
-        image: linuxserver/deluge:136
+        image: linuxserver/deluge
         restart: always
         networks:
             - web
@@ -35,7 +35,7 @@ services:
             - 'traefik.backend=deluge'
             - 'traefik.port=8112'
             - 'traefik.frontend.rule=Host:deluge.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
     filerun-db:
@@ -73,7 +73,7 @@ services:
             - 'traefik.backend=filerun'
             - 'traefik.port=80'
             - 'traefik.frontend.rule=Host:explore.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
     plex:
@@ -93,7 +93,7 @@ services:
             - 'traefik.backend=plex'
             - 'traefik.port=32400'
             - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
     # plex:
@@ -117,7 +117,26 @@ services:
     #         - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
     #         - 'traefik.enable=true'
 
-
+    jackett:
+        image: linuxserver/jackett
+        restart: always
+        networks:
+            - web
+        volumes:
+            - config:/config
+            - torrents:/downloads
+            - /etc/localtime:/etc/localtime:ro
+        environment:
+            - PGID=0
+            - PUID=0
+            - TZ=Europe/Paris
+        labels:
+            - 'traefik.backend=jackett'
+            - 'traefik.port=9117'
+            - 'traefik.frontend.rule=Host:jackett.${TRAEFIK_DOMAIN}'
+            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.enable=true'
+    
     sonarr:
         image: linuxserver/sonarr:develop
         restart: always
@@ -136,27 +155,7 @@ services:
             - 'traefik.backend=sonarr'
             - 'traefik.port=8989'
             - 'traefik.frontend.rule=Host:sonarr.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
-
-    jackett:
-        image: linuxserver/jackett
-        restart: always
-        networks:
-            - web
-        volumes:
-            - config:/config
-            - torrents:/downloads
-            - /etc/localtime:/etc/localtime:ro
-        environment:
-            - PGID=0
-            - PUID=0
-            - TZ=Europe/Paris
-        labels:
-            - 'traefik.backend=jackett'
-            - 'traefik.port=9117'
-            - 'traefik.frontend.rule=Host:jackett.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
     radarr:
@@ -178,7 +177,7 @@ services:
             - 'traefik.backend=radarr'
             - 'traefik.port=7878'
             - 'traefik.frontend.rule=Host:radarr.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
     bazarr:
@@ -196,7 +195,7 @@ services:
             - 'traefik.backend=bazarr'
             - 'traefik.port=6767'
             - 'traefik.frontend.rule=Host:bazarr.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
     flood:
@@ -221,12 +220,12 @@ services:
             - 'traefik.flood.frontend.backend=flood'
             - 'traefik.flood.port=3000'
             - 'traefik.flood.frontend.rule=Host:flood.${TRAEFIK_DOMAIN}'
-            - 'traefik.flood.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.flood.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.flood.protocol=https'
             - 'traefik.rutorrent.frontend.backend=flood'
             - 'traefik.rutorrent.port=443'
             - 'traefik.rutorrent.frontend.rule=Host:rutorrent.${TRAEFIK_DOMAIN}'
-            - 'traefik.rutorrent.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.rutorrent.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.rutorrent.protocol=https'
 
     tautulli:
@@ -245,7 +244,7 @@ services:
             - 'traefik.backend=tautulli'
             - 'traefik.port=8181'
             - 'traefik.frontend.rule=Host:tautulli.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
     jdownloader:
@@ -263,7 +262,7 @@ services:
             - 'traefik.backend=jdownloader'
             - 'traefik.port=5800'
             - 'traefik.frontend.rule=Host:jdownloader.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
     portainer:
