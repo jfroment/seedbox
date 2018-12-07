@@ -241,10 +241,13 @@ services:
             - PUID=0
             - TZ=Europe/Paris
         labels:
-            - 'traefik.backend=tautulli'
-            - 'traefik.port=8181'
-            - 'traefik.frontend.rule=Host:tautulli.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.tautulli.backend=tautulli'
+            - 'traefik.tautulli.port=8181'
+            - 'traefik.tautulli.frontend.rule=Host:tautulli.${TRAEFIK_DOMAIN}'
+            - 'traefik.tautulli.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.tautulliapi.backend=tautulli'
+            - 'traefik.tautulliapi.port=8181'
+            - 'traefik.tautulliapi.frontend.rule=Host:tautulli.${TRAEFIK_DOMAIN};Path:/api'
             - 'traefik.enable=true'
 
     jdownloader:
