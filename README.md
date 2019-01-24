@@ -5,28 +5,19 @@ seedbox and personal media server.
 ## Credits
 Main credits go to [Kelvin Chen](https://github.com/Kelvin-Chen/seedbox) who started the development of its own seedbox using Docker. Mine was first a fork of Kelvin's one, but I made some serious changes in the code and plan to add even more tools and services that keeping this project as a fork started to have less sense as code diverged.
 
-## Accessing a Service's Web Interface
-Go to `x.hostname` where `x` is the service you want to access.
-Included services are:
-- deluge
-- sonarr
-- jackett
-- plex
-- h5ai (service accessible via `explore.hostname`)
-- radarr
-
 ## Included Applications
-| Application          | Web Interface            |
------------------------|--------------------------|
-| Organizr             | yourdomain.com           |
-| Plex                 | plex.yourdomain.com      |
-| Deluge               | deluge.yourdomain.com    |
-| Sonarr               | sonarr.yourdomain.com    |
-| Radarr               | radarr.yourdomain.com    |
-| Filerun              | explore.yourdomain.com   |
-| Tautulli  (plexPy)   | tautulli.yourdomain.com  |
-| Portainer            | portainer.yourdomain.com |
-| Jackett              | jackett.yourdomain.co    |
+| Application          | Web Interface              |
+-----------------------|----------------------------|
+| Plex                 | plex.yourdomain.com        |
+| Deluge               | deluge.yourdomain.com      |
+| Sonarr               | sonarr.yourdomain.com      |
+| Radarr               | radarr.yourdomain.com      |
+| Bazaar               | bazaar.yourdomain.com      |
+| Jackett              | jackett.yourdomain.com     |
+| JDownloader          | jdownloader.yourdomain.com |
+| Filerun              | explore.yourdomain.com     |
+| Tautulli (plexPy)    | tautulli.yourdomain.com    |
+| Portainer            | portainer.yourdomain.com   |
 
 The front-end reverse proxy (Traefik) routes based on the lowest level subdomain (e.g.
 `deluge.example.com` would route to deluge). Since this is how the router
@@ -49,6 +40,7 @@ through the reverse proxy.
 Before running, please create the volumes which will be statically mapped to the ones on the host:
 ```sh
 $ sudo su -c "cd /; mkdir data; cd data; mkdir config; mkdir torrents"
+$ sudo ./init-traefik.sh
 ```
 
 ## Running
@@ -61,12 +53,12 @@ does not, verify that your docker and docker-compose version is updated.
 Make sure you install the dependencies and finish configuration before doing
 this.
 
-You may optionally build the images yourself instead of pulling by running
-`./build-all.sh`.
-
 ## Configuration
 Copy the `.env.sample` file to `.env` and change the variables as desired.
 The variables are all self-explanatory.
+Sames goes for `tunnel-options.sh.sample` which will enable the `open-tunnel.sh`
+script to open a tunnel with port forwarding in order to access Plex Tools directly in
+your browser.
 
 ## PlexPass
 More info soon.

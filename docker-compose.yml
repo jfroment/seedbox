@@ -26,7 +26,6 @@ services:
             - torrents:/torrents
             - configdeluge:/config
             - downloads:/downloads
-            - flooddl:/downloads
         environment:
             - PGID=0
             - PUID=0
@@ -145,7 +144,6 @@ services:
         volumes:
             - configsonarr:/config
             - torrents:/torrents
-            - flooddl:/downloads
             - /etc/localtime:/etc/localtime:ro
         environment:
             - PGID=0
@@ -165,7 +163,6 @@ services:
             - web
         volumes:
             - config:/config
-            - flooddl:/downloads
             - movies:/movies
             - torrents:/torrents
             - /etc/localtime:/etc/localtime:ro
@@ -197,36 +194,6 @@ services:
             - 'traefik.frontend.rule=Host:bazarr.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
-
-    # flood:
-    #     image: romancin/rutorrent-flood
-    #     restart: always
-    #     tty: true
-    #     networks:
-    #         - web
-    #     ports:
-    #         - "51415:51415"
-    #         - "6881:6881"
-    #     volumes:
-    #         - configflood:/config
-    #         - flooddl:/downloads
-    #         - torrents:/torrents
-    #     environment:
-    #         - PGID=0
-    #         - PUID=0
-    #         - TZ=Europe/Paris
-    #     labels:
-    #         - 'traefik.enable=true'
-    #         - 'traefik.flood.frontend.backend=flood'
-    #         - 'traefik.flood.port=3000'
-    #         - 'traefik.flood.frontend.rule=Host:flood.${TRAEFIK_DOMAIN}'
-    #         - 'traefik.flood.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-    #         - 'traefik.flood.protocol=https'
-    #         - 'traefik.rutorrent.frontend.backend=flood'
-    #         - 'traefik.rutorrent.port=443'
-    #         - 'traefik.rutorrent.frontend.rule=Host:rutorrent.${TRAEFIK_DOMAIN}'
-    #         - 'traefik.rutorrent.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-    #         - 'traefik.rutorrent.protocol=https'
 
     tautulli:
         image: linuxserver/tautulli
@@ -305,18 +272,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/tautulli
-    configflood:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/config/flood
     configjdownloader:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/jdownloader
-    flooddl:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/torrents/flood
     torrents:
         driver: local-persist
         driver_opts:
