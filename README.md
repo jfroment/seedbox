@@ -2,9 +2,6 @@
 A collection of Dockerfiles and a docker-compose configuration to set up a
 seedbox and personal media server.
 
-## Credits
-Main credits go to [Kelvin Chen](https://github.com/Kelvin-Chen/seedbox) who started the development of its own seedbox using Docker. Mine was first a fork of Kelvin's one, but I made some serious changes in the code and plan to add even more tools and services that keeping this project as a fork started to have less sense as code diverged.
-
 ## Included Applications
 | Application          | Web Interface              |
 -----------------------|----------------------------|
@@ -17,7 +14,7 @@ Main credits go to [Kelvin Chen](https://github.com/Kelvin-Chen/seedbox) who sta
 | JDownloader          | jdownloader.yourdomain.com |
 | Filerun              | explore.yourdomain.com     |
 | Tautulli (plexPy)    | tautulli.yourdomain.com    |
-| NextCloud            | nextcloud.yourdomain.com   |
+| NextCloud (WIP)      | nextcloud.yourdomain.com   |
 | Portainer            | portainer.yourdomain.com   |
 
 The front-end reverse proxy (Traefik) routes based on the lowest level subdomain (e.g.
@@ -62,7 +59,8 @@ script to open a tunnel with port forwarding in order to access Plex Tools direc
 your browser.
 
 ## PlexPass
-More info soon.
+Just set the `VERSION` environment variable to `latest` on the Plex service (enabled by default).
+See https://hub.docker.com/r/linuxserver/plex.
 
 ## Where is my data?
 All data is saved in the docker volumes `seedbox_config` or
