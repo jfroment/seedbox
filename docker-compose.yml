@@ -27,8 +27,8 @@ services:
             - configdeluge:/config
             - downloads:/downloads
         environment:
-            - PGID=0
-            - PUID=0
+            - PGID=${PGID}
+            - PUID=${PUID}
             - TZ=Europe/Paris
         labels:
             - 'traefik.backend=deluge'
@@ -105,8 +105,8 @@ services:
     #         - config:/config
     #         - torrents:/torrents
     #     environment:
-    #         - PGID=0
-    #         - PUID=0
+    #         - PGID=${PGID}
+    #         - PUID=${PUID}
     #         - TZ=Europe/Paris
     #         - VERSION=latest
     #     labels:
@@ -126,8 +126,8 @@ services:
             - torrents:/downloads
             - /etc/localtime:/etc/localtime:ro
         environment:
-            - PGID=0
-            - PUID=0
+            - PGID=${PGID}
+            - PUID=${PUID}
             - TZ=Europe/Paris
         labels:
             - 'traefik.backend=jackett'
@@ -146,8 +146,8 @@ services:
             - torrents:/torrents
             - /etc/localtime:/etc/localtime:ro
         environment:
-            - PGID=0
-            - PUID=0
+            - PGID=${PGID}
+            - PUID=${PUID}
             - TZ=Europe/Paris
         labels:
             - 'traefik.backend=sonarr'
@@ -167,8 +167,8 @@ services:
             - torrents:/torrents
             - /etc/localtime:/etc/localtime:ro
         environment:
-            - PGID=0
-            - PUID=0
+            - PGID=${PGID}
+            - PUID=${PUID}
             - TZ=Europe/Paris
         labels:
             - 'traefik.backend=radarr'
@@ -185,8 +185,8 @@ services:
         volumes:
             - torrents:/torrents
         environment:
-            - PGID=0
-            - PUID=0
+            - PGID=${PGID}
+            - PUID=${PUID}
             - TZ=Europe/Paris
         labels:
             - 'traefik.backend=bazarr'
@@ -204,8 +204,8 @@ services:
             - configtautulli:/config
             - config:/logs:ro # Inside of tautulli, bind to logs via "/logs/Plex Media Server/Logs"
         environment:
-            - PGID=0
-            - PUID=0
+            - PGID=${PGID}
+            - PUID=${PUID}
             - TZ=Europe/Paris
         labels:
             - 'traefik.tautulli.backend=tautulli'
@@ -221,8 +221,8 @@ services:
             - configjdownloader:/config
             - downloads:/output
         environment:
-            - USER_ID=0
-            - GROUP_ID=0
+            - USER_ID=${PUID}
+            - GROUP_ID=${PGID}
             - TZ=Europe/Paris
         labels:
             - 'traefik.backend=jdownloader'
@@ -240,8 +240,8 @@ services:
             - confignextcloud:/config
             - alldata:/data
         environment:
-            - PGID=0
-            - PUID=0
+            - PGID=${PGID}
+            - PUID=${PUID}
             - TZ=Europe/Paris
         labels:
             - 'traefik.backend=nextcloud'
