@@ -217,7 +217,7 @@ services:
             - 'traefik.enable=true'
 
     nextcloud:
-        image: linuxserver/nextcloud
+        image: wonderfall/nextcloud
         restart: always
         networks:
             - web
@@ -225,14 +225,12 @@ services:
             - confignextcloud:/config
             - alldata:/data
         environment:
-            - PGID=${PGID}
-            - PUID=${PUID}
+            - GID=${PGID}
+            - UID=${PUID}
             - TZ=Europe/Paris
         labels:
             - 'traefik.backend=nextcloud'
-            - "traefik.port=443"
-            - "traefik.protocol=https"
-            - "traefik.frontend.headers.SSLRedirect=true"
+            - 'traefik.port=8888'
             - 'traefik.frontend.rule=Host:nextcloud.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
