@@ -204,7 +204,6 @@ services:
             - 'traefik.backend=nextcloud'
             - 'traefik.port=8888'
             - 'traefik.frontend.rule=Host:nextcloud.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
     nextcloud-db:
