@@ -75,39 +75,40 @@ services:
             - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
-    plex:
-        image: fromenje/seedbox:plex
-        build: Dockerfiles/plex
-        restart: always
-        networks:
-            - web
-        ports:
-            - "32400:32400"
-        volumes:
-            - config:/config
-            - torrents:/torrents
-        env_file:
-            - config
-        labels:
-            - 'traefik.backend=plex'
-            - 'traefik.port=32400'
-            - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
-
     # plex:
-    #     image: linuxserver/plex
+    #     image: fromenje/seedbox:plex
+    #     build: Dockerfiles/plex
     #     restart: always
+    #     networks:
+    #         - web
     #     ports:
     #         - "32400:32400"
     #     volumes:
     #         - config:/config
     #         - torrents:/torrents
-    #     environment:
-    #         - PGID=${PGID}
-    #         - PUID=${PUID}
-    #         - TZ=Europe/Paris
-    #         - VERSION=latest
+    #     env_file:
+    #         - config
+    #     labels:
+    #         - 'traefik.backend=plex'
+    #         - 'traefik.port=32400'
+    #         - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
+    #         - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
+    #         - 'traefik.enable=true'
+
+    plex:
+        image: linuxserver/plex
+        restart: always
+        network_mode: host
+        ports:
+            - "32400:32400"
+        volumes:
+            - configplex:/config
+            - torrents:/torrents
+        environment:
+            - PGID=${PGID}
+            - PUID=${PUID}
+            - TZ=Europe/Paris
+            - VERSION=latest
     #     labels:
     #         - 'traefik.backend=plex'
     #         - 'traefik.port=32400'
@@ -288,6 +289,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config
+    configplex:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/Plex
     configsonarr: 
         driver: local-persist
         driver_opts:
