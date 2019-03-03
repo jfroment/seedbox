@@ -225,7 +225,7 @@ services:
             - confignextcloud:/config
             - nextclouddata:/data
             - torrents:/torrents
-            - config:/config
+            - config:/seedbox-config
         environment:
             - GID=${PGID}
             - UID=${PUID}
