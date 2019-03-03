@@ -247,7 +247,15 @@ services:
             - 'traefik.tautulli.backend=nextcloud'
             - "traefik.basic.port=443"
             - "traefik.basic.protocol=https"
-            - "traefik.basic.frontend.headers.STSSeconds=15552000"
+            - "traefik.frontend.headers.SSLRedirect=true"
+            - "traefik.frontend.headers.STSSeconds=315360000"
+            - "traefik.frontend.headers.browserXSSFilter=true"
+            - "traefik.frontend.headers.contentTypeNosniff=true"
+            - "traefik.frontend.headers.forceSTSHeader=true"
+            - "traefik.frontend.headers.SSLHost=${TRAEFIK_DOMAIN}"
+            - "traefik.frontend.headers.STSIncludeSubdomains=true"
+            - "traefik.frontend.headers.STSPreload=true"
+            - "traefik.frontend.headers.frameDeny=true"
             - "traefik.basic.frontend.headers.referrerPolicy=no-referrer"
             - 'traefik.tautulli.frontend.rule=Host:nextcloud.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
