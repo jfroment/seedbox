@@ -223,17 +223,42 @@ services:
             - web
         volumes:
             - confignextcloud:/config
-            - alldata:/data
+            - nextclouddata:/data
+            - torrents:/torrents
+            - config:/config
         environment:
             - GID=${PGID}
             - UID=${PUID}
             - TZ=Europe/Paris
+            - ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
+            - ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
+            - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
+            - DB_TYPE=mysql
+            - DB_NAME=${NEXTCLOUD_DB_NAME}
+            - DB_USER=${NEXTCLOUD_DB_USER}
+            - DB_PASSWORD=${NEXTCLOUD_DB_PASSWORD}
+            - DB_HOST=nextcloud-db
         labels:
             - 'traefik.backend=nextcloud'
             - 'traefik.port=8888'
             - 'traefik.frontend.rule=Host:nextcloud.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
+
+    nextcloud-db:
+        image: mariadb:10
+        restart: always
+        volumes:
+            - nextclouddb:/var/lib/mysql
+        networks:
+            - web
+        environment:
+            MYSQL_ROOT_PASSWORD: ${NEXTCLOUD_DB_ROOT_PASSWORD}
+            MYSQL_USER: ${NEXTCLOUD_DB_USER}
+            MYSQL_PASSWORD: ${NEXTCLOUD_DB_PASSWORD}
+            MYSQL_DATABASE: ${NEXTCLOUD_DB_NAME}
+        labels:
+            - 'traefik.enable=false'
 
     portainer:
         image: portainer/portainer
@@ -292,6 +317,14 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/nextcloud
+    nextclouddb:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/nextcloud-db
+    nextclouddata:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/nextcloud-data
     torrents:
         driver: local-persist
         driver_opts:
