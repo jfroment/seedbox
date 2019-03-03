@@ -235,6 +235,29 @@ services:
             - 'traefik.frontend.rule=Host:portainer.${TRAEFIK_DOMAIN}'
             - 'traefik.enable=true'
 
+    netdata:
+        image: netdata/netdata
+        restart: always
+        hostname: netdata.${TRAEFIK_DOMAIN}
+        network:
+            - web
+        environment:
+            PGID: 999
+        cap_add:
+            - SYS_PTRACE
+        security_opt:
+            - apparmor:unconfined
+        volumes:
+            - /proc:/host/proc:ro
+            - /sys:/host/sys:ro
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+        labels:
+            - 'traefik.backend=netdata'
+            - 'traefik.port=19999'
+            - 'traefik.frontend.rule=Host:netdata.${TRAEFIK_DOMAIN}'
+            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.enable=true'
+
 networks:
     webgateway:
         driver: bridge
