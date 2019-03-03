@@ -239,7 +239,7 @@ services:
         image: netdata/netdata
         restart: always
         hostname: netdata.${TRAEFIK_DOMAIN}
-        network:
+        networks:
             - web
         environment:
             PGID: 999
