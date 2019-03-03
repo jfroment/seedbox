@@ -98,7 +98,8 @@ services:
     plex:
         image: linuxserver/plex
         restart: always
-        network_mode: host
+        networks:
+            - web
         ports:
             - "32400:32400"
         volumes:
@@ -109,12 +110,12 @@ services:
             - PUID=${PUID}
             - TZ=Europe/Paris
             - VERSION=latest
-    #     labels:
-    #         - 'traefik.backend=plex'
-    #         - 'traefik.port=32400'
-    #         - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
-    #         - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
-    #         - 'traefik.enable=true'
+        labels:
+            - 'traefik.backend=plex'
+            - 'traefik.port=32400'
+            - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
+            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.enable=true'
 
     jackett:
         image: linuxserver/jackett
