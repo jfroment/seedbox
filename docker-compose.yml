@@ -98,7 +98,6 @@ services:
     # plex:
     #     image: linuxserver/plex
     #     restart: always
-    #     network_mode: host
     #     ports:
     #         - "32400:32400"
     #     volumes:
@@ -162,8 +161,7 @@ services:
         networks:
             - web
         volumes:
-            - config:/config
-            - movies:/movies
+            - configradarr:/config
             - torrents:/torrents
             - /etc/localtime:/etc/localtime:ro
         environment:
@@ -294,6 +292,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/sonarr
+    configradarr: 
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/radarr
     configdeluge: 
         driver: local-persist
         driver_opts:
@@ -314,10 +316,6 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/torrents
-    movies:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/torrents/Movies
     downloads:
         driver: local-persist
         driver_opts:
