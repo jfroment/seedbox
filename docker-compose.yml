@@ -245,7 +245,10 @@ services:
             - TZ=Europe/Paris
         labels:
             - 'traefik.tautulli.backend=nextcloud'
-            - 'traefik.tautulli.port=80'
+            - "traefik.basic.port=443"
+            - "traefik.basic.protocol=https"
+            - "traefik.basic.frontend.headers.STSSeconds=15552000"
+            - "traefik.basic.frontend.headers.referrerPolicy=no-referrer"
             - 'traefik.tautulli.frontend.rule=Host:nextcloud.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
