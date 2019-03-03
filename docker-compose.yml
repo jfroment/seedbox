@@ -37,44 +37,6 @@ services:
             - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
-    filerun-db:
-        image: mariadb:10.1
-        restart: always
-        networks:
-            - web
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-            MYSQL_DATABASE: filerun
-        labels:
-            - 'traefik.enable=false'
-
-    filerun-web:
-        image: afian/filerun
-        restart: always
-        networks: 
-            - web
-        environment:
-            FR_DB_HOST: filerun-db
-            FR_DB_PORT: 3306
-            FR_DB_NAME: filerun
-            FR_DB_USER: ${MYSQL_USER}
-            FR_DB_PASS: ${MYSQL_PASSWORD}
-        depends_on:
-            - filerun-db
-        links:
-            - filerun-db:db
-        volumes:
-            - /data/config/filerun/web:/var/www/html
-            - alldata:/user-files
-        labels:
-            - 'traefik.backend=filerun'
-            - 'traefik.port=80'
-            - 'traefik.frontend.rule=Host:explore.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
-
     plex:
         image: linuxserver/plex
         restart: always

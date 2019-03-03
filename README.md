@@ -12,9 +12,8 @@ seedbox and personal media server.
 | Bazaar               | bazaar.yourdomain.com      |
 | Jackett              | jackett.yourdomain.com     |
 | JDownloader          | jdownloader.yourdomain.com |
-| Filerun              | explore.yourdomain.com     |
 | Tautulli (plexPy)    | tautulli.yourdomain.com    |
-| NextCloud (WIP)      | nextcloud.yourdomain.com   |
+| NextCloud            | nextcloud.yourdomain.com   |
 | Portainer            | portainer.yourdomain.com   |
 
 The front-end reverse proxy (Traefik) routes based on the lowest level subdomain (e.g.
