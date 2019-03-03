@@ -231,6 +231,25 @@ services:
             - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
+    nextcloud:
+        image: linuxserver/nextcloud
+        restart: always
+        networks:
+            - web
+        volumes:
+            - confignextcloud:/config
+            - alldata:/data
+        environment:
+            - PGID=0
+            - PUID=0
+            - TZ=Europe/Paris
+        labels:
+            - 'traefik.tautulli.backend=nextcloud'
+            - 'traefik.tautulli.port=443'
+            - 'traefik.tautulli.frontend.rule=Host:nextcloud.${TRAEFIK_DOMAIN}'
+            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.enable=true'
+
     portainer:
         image: portainer/portainer
         restart: always
@@ -276,6 +295,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/jdownloader
+    confignextcloud:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/nextcloud
     torrents:
         driver: local-persist
         driver_opts:

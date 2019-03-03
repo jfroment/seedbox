@@ -17,6 +17,7 @@ Main credits go to [Kelvin Chen](https://github.com/Kelvin-Chen/seedbox) who sta
 | JDownloader          | jdownloader.yourdomain.com |
 | Filerun              | explore.yourdomain.com     |
 | Tautulli (plexPy)    | tautulli.yourdomain.com    |
+| NextCloud            | nextcloud.yourdomain.com   |
 | Portainer            | portainer.yourdomain.com   |
 
 The front-end reverse proxy (Traefik) routes based on the lowest level subdomain (e.g.
