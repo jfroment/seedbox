@@ -99,7 +99,7 @@ services:
             - 'traefik.backend=plex'
             - 'traefik.port=32400'
             - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
     jackett:
@@ -233,15 +233,6 @@ services:
             - "traefik.port=443"
             - "traefik.protocol=https"
             - "traefik.frontend.headers.SSLRedirect=true"
-            - "traefik.frontend.headers.STSSeconds=315360000"
-            - "traefik.frontend.headers.browserXSSFilter=true"
-            - "traefik.frontend.headers.contentTypeNosniff=true"
-            - "traefik.frontend.headers.forceSTSHeader=true"
-            - "traefik.frontend.headers.SSLHost=${TRAEFIK_DOMAIN}"
-            - "traefik.frontend.headers.STSIncludeSubdomains=true"
-            - "traefik.frontend.headers.STSPreload=true"
-            - "traefik.frontend.headers.frameDeny=true"
-            - "traefik.frontend.headers.referrerPolicy=no-referrer"
             - 'traefik.frontend.rule=Host:nextcloud.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
