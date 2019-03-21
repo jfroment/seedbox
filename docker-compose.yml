@@ -131,6 +131,7 @@ services:
             - web
         volumes:
             - torrents:/torrents
+            - configbazarr:/config
         environment:
             - PGID=${PGID}
             - PUID=${PUID}
@@ -285,6 +286,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/radarr
+    configbazarr:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/bazarr
     configdeluge: 
         driver: local-persist
         driver_opts:
