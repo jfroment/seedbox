@@ -1,7 +1,8 @@
 #!/bin/bash
 
+echo "[$0] Initializing..."
+sudo mkdir /opt/traefik
 sudo touch /opt/traefik/acme.json && sudo chmod 600 /opt/traefik/acme.json
 cp .env.sample .env
-cp tunnel-options.sh.sample tunnel-options.sh
-echo "Please edit .env file and tunnel-options.sh"
+echo "[$0] Please edit .env file"
 exit 0
