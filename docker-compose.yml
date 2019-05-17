@@ -38,7 +38,7 @@ services:
             - 'traefik.enable=true'
 
     plex:
-        image: linuxserver/plex:168
+        image: linuxserver/plex:1.14.1.5488-cc260c476-ls8
         restart: always
         networks:
             - web
