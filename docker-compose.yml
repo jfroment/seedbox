@@ -57,7 +57,7 @@ services:
             - PUID=${PUID}
             - TZ=Europe/Paris
             #- VERSION=latest
-            - version=1.14.1.5488-cc260c476
+            - VERSION=1.14.1.5488-cc260c476
         labels:
             - 'traefik.backend=plex'
             - 'traefik.port=32400'
