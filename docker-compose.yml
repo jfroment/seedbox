@@ -38,7 +38,7 @@ services:
             - 'traefik.enable=true'
 
     plex:
-        image: linuxserver/plex:1.14.1.5488-cc260c476-ls9
+        image: linuxserver/plex:168
         restart: always
         networks:
             - web
@@ -57,7 +57,7 @@ services:
             - PUID=${PUID}
             - TZ=Europe/Paris
             #- VERSION=latest
-            - VERSION=1.14.1.5488-cc260c476
+            - VERSION=1.14.0.5470-9d51fdfaa
         labels:
             - 'traefik.backend=plex'
             - 'traefik.port=32400'
