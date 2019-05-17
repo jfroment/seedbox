@@ -57,6 +57,7 @@ services:
             - PUID=${PUID}
             - TZ=Europe/Paris
             #- VERSION=latest
+            - PLEX_DOWNLOAD=https://downloads.plex.tv/plex-media-server
             - VERSION=1.14.0.5470-9d51fdfaa
         labels:
             - 'traefik.backend=plex'
