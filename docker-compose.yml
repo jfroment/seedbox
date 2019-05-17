@@ -38,7 +38,7 @@ services:
             - 'traefik.enable=true'
 
     plex:
-        image: linuxserver/plex
+        image: linuxserver/plex:168
         restart: always
         networks:
             - web
@@ -57,7 +57,6 @@ services:
             - PUID=${PUID}
             - TZ=Europe/Paris
             #- VERSION=latest
-            - PLEX_DOWNLOAD=https://downloads.plex.tv/plex-media-server
             - VERSION=1.14.0.5470-9d51fdfaa
         labels:
             - 'traefik.backend=plex'
