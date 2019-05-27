@@ -58,11 +58,14 @@ services:
             - TZ=Europe/Paris
             #- VERSION=latest
             - VERSION=1.14.0.5470-9d51fdfaa
+        devices:
+            - /dev/dri:/dev/dri
+        privileged: true
         labels:
             - 'traefik.backend=plex'
             - 'traefik.port=32400'
             - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
+            #- 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
     jackett:
