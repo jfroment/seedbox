@@ -19,6 +19,7 @@ services:
 
     deluge:
         image: linuxserver/deluge
+        container_name: deluge
         restart: always
         networks:
             - web
@@ -40,6 +41,7 @@ services:
     plex:
         #image: linuxserver/plex:1.14.1.5488-cc260c476-ls8
         image: linuxserver/plex
+        container_name: plex
         restart: always
         networks:
             - web
@@ -68,6 +70,7 @@ services:
 
     jackett:
         image: linuxserver/jackett
+        container_name: jackett
         restart: always
         networks:
             - web
@@ -88,6 +91,7 @@ services:
     
     sonarr:
         image: linuxserver/sonarr:develop
+        container_name: sonarr
         restart: always
         networks:
             - web
@@ -108,6 +112,7 @@ services:
 
     radarr:
         image: linuxserver/radarr
+        container_name: radarr
         restart: always
         networks:
             - web
@@ -128,6 +133,7 @@ services:
 
     bazarr:
         image: linuxserver/bazarr
+        container_name: bazarr
         restart: always
         networks:
             - web
@@ -147,6 +153,7 @@ services:
 
     tautulli:
         image: linuxserver/tautulli
+        container_name: tautulli
         restart: always
         networks:
             - web
@@ -165,6 +172,7 @@ services:
 
     jdownloader:
         image: jlesage/jdownloader-2
+        container_name: jdownloader
         networks:
             - web
         volumes:
@@ -183,6 +191,7 @@ services:
 
     nextcloud:
         image: wonderfall/nextcloud
+        container_name: nextcloud
         restart: always
         networks:
             - web
@@ -210,6 +219,7 @@ services:
 
     portainer:
         image: portainer/portainer
+        container_name: portainer
         restart: always
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
@@ -225,6 +235,7 @@ services:
     netdata:
         image: netdata/netdata
         restart: always
+        container_name: netdata
         hostname: netdata.${TRAEFIK_DOMAIN}
         networks:
             - web
@@ -244,6 +255,29 @@ services:
             - 'traefik.frontend.rule=Host:netdata.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
+
+    duplicati:
+        image: linuxserver/duplicati
+        container_name: duplicati
+        restart: unless-stopped
+        networks:
+            - web
+        environment:
+            - PUID=${PUID}
+            - PGID=${PGID}
+            - TZ=Europe/Paris
+        volumes:
+            - configduplicati:/config
+            - backups:/backups
+            - alldata:/source
+        labels:
+            - 'traefik.backend=duplicati'
+            - 'traefik.port=8200'
+            - 'traefik.frontend.rule=Host:duplicati.${TRAEFIK_DOMAIN}'
+            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
+            - 'traefik.frontend.entryPoints=http,https'
+            - 'traefik.frontend.redirect.entryPoint=https'
+            - 'traefik.default.protocol=http'
 
 networks:
     webgateway:
@@ -304,3 +338,11 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/torrents/deluge
+    configduplicati:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/duplicati
+    backups:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/backups

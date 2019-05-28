@@ -18,6 +18,7 @@ seedbox and personal media server.
 | NextCloud            | nextcloud.yourdomain.com   |
 | Portainer            | portainer.yourdomain.com   |
 | Netdata              | netdata.yourdomain.com     |
+| Duplicati            | duplicati.yourdomain.com   |
 
 The front-end reverse proxy (Traefik) routes based on the lowest level subdomain (e.g.
 `deluge.example.com` would route to deluge). Since this is how the router
