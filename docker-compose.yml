@@ -275,9 +275,7 @@ services:
             - 'traefik.port=8200'
             - 'traefik.frontend.rule=Host:duplicati.${TRAEFIK_DOMAIN}'
             - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.frontend.entryPoints=http,https'
-            - 'traefik.frontend.redirect.entryPoint=https'
-            - 'traefik.default.protocol=http'
+            - 'traefik.enable=true'
 
 networks:
     webgateway:
