@@ -2,7 +2,7 @@ version: '3'
 
 services:
     traefik:
-        image: traefik
+        image: traefik:v1.7-alpine
         container_name: traefik
         restart: always
         networks:
