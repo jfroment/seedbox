@@ -11,7 +11,7 @@ hostname="example.com"
 username="bob"
 
 # Plex container name for WebTools IP fetching
-container="seedbox_plex_1"
+container="plex"
 
 # Port for WebTools on the container
 port=33442

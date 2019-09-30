@@ -24,8 +24,11 @@ storage = "acme.json"
 entryPoint = "https"
 onHostRule = true
 acmeLogging = true
-[acme.httpChallenge]
-entryPoint = "http"
+[acme.dnsChallenge]
+  dnsProvider = "cloudflare"
+  delayBeforeCheck = 300
+#[acme.httpChallenge]
+#entryPoint = "http"
 
 ################################################################
 # Web configuration backend
