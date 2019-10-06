@@ -7,7 +7,7 @@ services:
         restart: always
         networks:
             - webgateway
-        command: --acme.email=${ACME_MAIL} --docker.domain=${TRAEFIK_DOMAIN}
+        command: --acme.email=${ACME_MAIL} --docker.domain=${TRAEFIK_DOMAIN} --acme.dnschallenge=true --acme.dnschallenge.provider="cloudflare" --acme.dnschallenge.delaybeforecheck=300
         ports:
             - "80:80"
             - "443:443"

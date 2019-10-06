@@ -24,21 +24,6 @@ storage = "acme.json"
 entryPoint = "https"
 onHostRule = true
 acmeLogging = true
-[acme.dnsChallenge]
-  dnsProvider = "cloudflare"
-  delayBeforeCheck = 300
-#[acme.httpChallenge]
-#entryPoint = "http"
-
-################################################################
-# Web configuration backend
-################################################################
-[web]
-address = ":8080"
-
-################################################################
-# Traefik Config
-################################################################
 
 ################################################################
 # Docker configuration backend
