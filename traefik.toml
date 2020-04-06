@@ -24,6 +24,8 @@ storage = "acme.json"
 entryPoint = "https"
 onHostRule = true
 acmeLogging = true
+[acme.httpChallenge]
+  entryPoint = "http"
 
 ################################################################
 # Docker configuration backend

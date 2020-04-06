@@ -7,14 +7,14 @@ services:
         restart: always
         networks:
             - webgateway
-        command: --acme.email=${ACME_MAIL} --docker.domain=${TRAEFIK_DOMAIN} --acme.dnschallenge=true --acme.dnschallenge.provider="cloudflare" --acme.dnschallenge.delaybeforecheck=300
+        command: --acme.email=${ACME_MAIL} --docker.domain=${TRAEFIK_DOMAIN} #--acme.dnschallenge=true --acme.dnschallenge.provider="cloudflare" --acme.dnschallenge.delaybeforecheck=300
         ports:
             - "80:80"
             - "443:443"
             #- "8080:8080"
-        environment:
-            - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
-            - CF_API_KEY=${CLOUDFLARE_API_KEY}
+        # environment:
+        #     - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
+        #     - CF_API_KEY=${CLOUDFLARE_API_KEY}
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./traefik.toml:/traefik.toml
