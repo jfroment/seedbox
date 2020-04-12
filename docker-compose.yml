@@ -281,8 +281,8 @@ services:
             - 'traefik.enable=true'
 
     attestation:
-        image: fromenje/generateur-attestation
-        container_name: generateur-attestation
+        image: fromenje/attestation-covid-19
+        container_name: attestation-covid-19
         restart: always
         networks:
             - web
