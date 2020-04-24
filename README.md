@@ -12,6 +12,7 @@ seedbox and personal media server.
 | Sonarr               | sonarr.yourdomain.com      |
 | Radarr               | radarr.yourdomain.com      |
 | Bazarr               | bazarr.yourdomain.com      |
+| Lidarr               | lidarr.yourdomain.com      |
 | Jackett              | jackett.yourdomain.com     |
 | JDownloader          | jdownloader.yourdomain.com |
 | Tautulli (plexPy)    | tautulli.yourdomain.com    |
