@@ -42,7 +42,6 @@ services:
             - 'traefik.enable=true'
 
     plex:
-        #image: linuxserver/plex:1.14.1.5488-cc260c476-ls8
         image: linuxserver/plex
         container_name: plex
         restart: always

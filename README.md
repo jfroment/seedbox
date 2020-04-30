@@ -5,24 +5,25 @@ seedbox and personal media server.
 
 ## Included Applications
 
-| Application          | Web Interface              |
------------------------|----------------------------|
-| Plex                 | plex.yourdomain.com        |
-| Deluge               | deluge.yourdomain.com      |
-| Sonarr               | sonarr.yourdomain.com      |
-| Radarr               | radarr.yourdomain.com      |
-| Bazarr               | bazarr.yourdomain.com      |
-| Lidarr               | lidarr.yourdomain.com      |
-| Jackett              | jackett.yourdomain.com     |
-| JDownloader          | jdownloader.yourdomain.com |
-| Tautulli (plexPy)    | tautulli.yourdomain.com    |
-| NextCloud            | nextcloud.yourdomain.com   |
-| Portainer            | portainer.yourdomain.com   |
-| Netdata              | netdata.yourdomain.com     |
-| Duplicati            | duplicati.yourdomain.com   |
+| Application          | Web Interface              | Docker image                                                           | Version (image tag) | Notes               |
+-----------------------|----------------------------|------------------------------------------------------------------------|-------------------------|---------------------|
+| Plex                 | plex.yourdomain.com        | [linuxserver/plex](https://hub.docker.com/r/linuxserver/plex)          | *latest*                | Media Streaming     |
+| Deluge               | deluge.yourdomain.com      | [linuxserver/deluge](https://hub.docker.com/r/linuxserver/deluge)      | *latest*                | Torrents downloader |
+| Sonarr               | sonarr.yourdomain.com      | [linuxserver/sonarr](https://hub.docker.com/r/linuxserver/sonarr)      | *develop*               | TV Shows monitor    |
+| Radarr               | radarr.yourdomain.com      | [linuxserver/radarr](https://hub.docker.com/r/linuxserver/radarr)      | *latest*                | Movies monitor      |
+| Bazarr               | bazarr.yourdomain.com      | [linuxserver/bazarr](https://hub.docker.com/r/linuxserver/bazarr)      | *latest*                | Subtitles monitor   |
+| Lidarr               | lidarr.yourdomain.com      | [linuxserver/lidarr](https://hub.docker.com/r/linuxserver/lidarr)      | *preview*               | Music monitor       |
+| Jackett              | jackett.yourdomain.com     | [linuxserver/jackett](https://hub.docker.com/r/linuxserver/jackett)    | *latest*                | Tracker indexer     |
+| JDownloader          | jdownloader.yourdomain.com | [jlesage/jdownloader-2](https://hub.docker.com/r/jlesage/jdownloader-2)| *latest*                | Direct downloader   |
+| Tautulli (plexPy)    | tautulli.yourdomain.com    | [linuxserver/tautulli](https://hub.docker.com/r/linuxserver/tautulli)  | *latest*                | Plex stats and admin|
+| NextCloud            | nextcloud.yourdomain.com   | [wonderfall/nextcloud](https://hub.docker.com/r/wonderfall/nextcloud)  | *latest*                | Files management    |
+| Portainer            | portainer.yourdomain.com   | [portainer/portainer](https://hub.docker.com/r/portainer/portainer)    | *latest*                | Container management|
+| Netdata              | netdata.yourdomain.com     | [netdata/netdata](https://hub.docker.com/r/netdata/netdata)            | *latest*                | Server monitoring   |
+| Duplicati            | duplicati.yourdomain.com   | [linuxserver/duplicati](https://hub.docker.com/r/linuxserver/duplicati)| *latest*                | Backups             |
+| Attestation COVID-19 | attestation.yourdomain.com | [fromenje/attestation-covid-19](https://hub.docker.com/r/fromenje/attestation-covid-19) | *latest* | (France) Attestation de déplacement, mémorise les champs dans le navigateur |
 
-The front-end reverse proxy (Traefik) routes based on the lowest level subdomain (e.g.
-`deluge.example.com` would route to deluge). Since this is how the router
+The front-end reverse proxy (Traefik - *version1 **v1.7-alpine***) routes based on the lowest level subdomain
+ (e.g. `deluge.example.com` would route to deluge). Since this is how the router
 works, it is recommended for you to get a top level domain. If you do not have
 one, you can edit your domains locally by changing your hosts file or use a
 browser plugin that changes the host header.
@@ -38,7 +39,7 @@ through the reverse proxy.
     + Install guidelines for Ubuntu 16.04: https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04
 - [Docker Compose](https://github.com/docker/compose) >=v1.10.0
     + Install guidelines for Ubuntu 16.04: https://www.digitalocean.com/community/tutorials/how-to-install-docker-compose-on-ubuntu-16-04
-- [local-persist Docker plugin](https://github.com/CWSpear/local-persist): installed directly on host (not in container). This is a volume plugin that extends the default local driver’s functionality by allowing you specify a mountpoint anywhere on the host, which enables the files to always persist, even if the volume is removed via `docker volume rm. Use *systemd* install for Ubuntu 16.04.
+- [local-persist Docker plugin](https://github.com/CWSpear/local-persist): installed directly on host (not in container). This is a volume plugin that extends the default local driver’s functionality by allowing you specify a mountpoint anywhere on the host, which enables the files to always persist, even if the volume is removed via `docker volume rm`. Use *systemd* install for Ubuntu 16.04.
 
 ## Configuration
 

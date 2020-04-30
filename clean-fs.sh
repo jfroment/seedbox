@@ -3,6 +3,8 @@
 # Usage: ./clean-fs.sh DIRECTORY
 # Where DIRECTORY is the path of the directory to clean
 
+##### THIS IS STILL WIP
+
 if [ -z "${1}" ] ;then
  echo "[$0] Missing DIRECTORY parameter. Exiting..."
  exit 1
