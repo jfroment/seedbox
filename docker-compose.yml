@@ -92,7 +92,7 @@ services:
             - 'traefik.enable=true'
     
     sonarr:
-        image: linuxserver/sonarr:develop
+        image: linuxserver/sonarr:preview
         container_name: sonarr
         restart: always
         networks:
