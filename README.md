@@ -20,7 +20,6 @@ seedbox and personal media server.
 | Portainer            | portainer.yourdomain.com   | [portainer/portainer](https://hub.docker.com/r/portainer/portainer)    | *latest*                | Container management|
 | Netdata              | netdata.yourdomain.com     | [netdata/netdata](https://hub.docker.com/r/netdata/netdata)            | *latest*                | Server monitoring   |
 | Duplicati            | duplicati.yourdomain.com   | [linuxserver/duplicati](https://hub.docker.com/r/linuxserver/duplicati)| *latest*                | Backups             |
-| Attestation COVID-19 | attestation.yourdomain.com | [fromenje/attestation-covid-19](https://hub.docker.com/r/fromenje/attestation-covid-19) | *latest* | (France) Attestation de déplacement, mémorise les champs dans le navigateur |
 
 The front-end reverse proxy (Traefik - *version1 **v1.7-alpine***) routes based on the lowest level subdomain
  (e.g. `deluge.example.com` would route to deluge). Since this is how the router

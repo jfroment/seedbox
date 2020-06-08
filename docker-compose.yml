@@ -299,18 +299,6 @@ services:
             - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
             - 'traefik.enable=true'
 
-    attestation:
-        image: fromenje/attestation-covid-19
-        container_name: attestation-covid-19
-        restart: always
-        networks:
-            - web
-        labels:
-            - 'traefik.backend=attestation'
-            - 'traefik.port=80'
-            - 'traefik.frontend.rule=Host:attestation.${TRAEFIK_DOMAIN}'
-            - 'traefik.enable=true'
-
 networks:
     webgateway:
         driver: bridge
