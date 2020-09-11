@@ -25,7 +25,7 @@ services:
             - "traefik.http.routers.traefik.entrypoints=secure"
             - "traefik.http.routers.traefik.service=api@internal"
             - "traefik.http.routers.traefik.tls.certresolver=le"
-            - "traefik.http.routers.traefik.middlewares=common-auth"
+            - "traefik.http.routers.traefik.middlewares=common-auth@file"
 
     deluge:
         image: linuxserver/deluge
@@ -44,7 +44,7 @@ services:
             - "traefik.http.routers.deluge.rule=Host(`deluge.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.deluge.entrypoints=secure"
             - "traefik.http.routers.deluge.tls.certresolver=le"
-            - "traefik.http.routers.deluge.middlewares=common-auth"
+            - "traefik.http.routers.deluge.middlewares=common-auth@file"
 
     plex:
         image: linuxserver/plex
@@ -88,7 +88,7 @@ services:
             - "traefik.http.routers.jackett.rule=Host(`jackett.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.jackett.entrypoints=secure"
             - "traefik.http.routers.jackett.tls.certresolver=le"
-            - "traefik.http.routers.jackett.middlewares=common-auth"
+            - "traefik.http.routers.jackett.middlewares=common-auth@file"
     
     sonarr:
         image: linuxserver/sonarr:preview
@@ -107,7 +107,7 @@ services:
             - "traefik.http.routers.sonarr.rule=Host(`sonarr.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.sonarr.entrypoints=secure"
             - "traefik.http.routers.sonarr.tls.certresolver=le"
-            - "traefik.http.routers.sonarr.middlewares=common-auth"
+            - "traefik.http.routers.sonarr.middlewares=common-auth@file"
 
     radarr:
         image: linuxserver/radarr
@@ -126,7 +126,7 @@ services:
             - "traefik.http.routers.radarr.rule=Host(`radarr.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.radarr.entrypoints=secure"
             - "traefik.http.routers.radarr.tls.certresolver=le"
-            - "traefik.http.routers.radarr.middlewares=common-auth"
+            - "traefik.http.routers.radarr.middlewares=common-auth@file"
 
     bazarr:
         image: linuxserver/bazarr
@@ -144,7 +144,7 @@ services:
             - "traefik.http.routers.bazarr.rule=Host(`bazarr.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.bazarr.entrypoints=secure"
             - "traefik.http.routers.bazarr.tls.certresolver=le"
-            - "traefik.http.routers.bazarr.middlewares=common-auth"
+            - "traefik.http.routers.bazarr.middlewares=common-auth@file"
 
     lidarr:
         image: linuxserver/lidarr:preview
@@ -162,7 +162,7 @@ services:
             - "traefik.http.routers.lidarr.rule=Host(`lidarr.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.lidarr.entrypoints=secure"
             - "traefik.http.routers.lidarr.tls.certresolver=le"
-            - "traefik.http.routers.lidarr.middlewares=common-auth"
+            - "traefik.http.routers.lidarr.middlewares=common-auth@file"
 
     tautulli:
         image: linuxserver/tautulli
@@ -197,7 +197,7 @@ services:
             - "traefik.http.routers.jdownloader.rule=Host(`jdownloader.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.jdownloader.entrypoints=secure"
             - "traefik.http.routers.jdownloader.tls.certresolver=le"
-            - "traefik.http.routers.jdownloader.middlewares=common-auth"
+            - "traefik.http.routers.jdownloader.middlewares=common-auth@file"
 
     nextcloud:
         image: wonderfall/nextcloud
@@ -258,7 +258,7 @@ services:
             - "traefik.http.routers.netdata.rule=Host(`netdata.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.netdata.entrypoints=secure"
             - "traefik.http.routers.netdata.tls.certresolver=le"
-            - "traefik.http.routers.netdata.middlewares=common-auth"
+            - "traefik.http.routers.netdata.middlewares=common-auth@file"
 
     duplicati:
         image: linuxserver/duplicati
@@ -277,7 +277,7 @@ services:
             - "traefik.http.routers.duplicati.rule=Host(`duplicati.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.duplicati.entrypoints=secure"
             - "traefik.http.routers.duplicati.tls.certresolver=le"
-            - "traefik.http.routers.duplicati.middlewares=common-auth"
+            - "traefik.http.routers.duplicati.middlewares=common-auth@file"
 
 networks: 
   default: 
