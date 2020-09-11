@@ -2,30 +2,37 @@ version: '3'
 
 services:
     traefik:
-        image: traefik:v1.7-alpine
+        image: traefik:v2
         container_name: traefik
         restart: always
-        networks:
-            - webgateway
-        command: --acme.email=${ACME_MAIL} --docker.domain=${TRAEFIK_DOMAIN} #--acme.dnschallenge=true --acme.dnschallenge.provider="cloudflare" --acme.dnschallenge.delaybeforecheck=300
+        command: --certificatesresolvers.le.acme.email=${ACME_MAIL}
         ports:
             - "80:80"
             - "443:443"
-            #- "8080:8080"
-        # environment:
-        #     - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
-        #     - CF_API_KEY=${CLOUDFLARE_API_KEY}
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - ./traefik.toml:/traefik.toml
+            - ./traefik.yml:/etc/traefik/traefik.yaml:ro
             - /opt/traefik/acme.json:/acme.json
+            - ./http_auth:/http_auth
+        labels:
+            - "traefik.enable=true"
+            # HTTP to HTTPS redirection
+            - "traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)"
+            - "traefik.http.routers.http_catchall.entrypoints=insecure"
+            - "traefik.http.routers.http_catchall.middlewares=https_redirect"
+            - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+            - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
+            # Docker labels for enabling Traefik dashboard
+            - "traefik.http.routers.traefik.rule=Host(`traefik.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.traefik.entrypoints=secure"
+            - "traefik.http.routers.traefik.service=api@internal"
+            - "traefik.http.routers.traefik.tls.certresolver=le"
+            - "traefik.http.routers.traefik.middlewares=common-auth"
 
     deluge:
         image: linuxserver/deluge
         container_name: deluge
         restart: always
-        networks:
-            - web
         volumes:
             - torrents:/torrents
             - configdeluge:/config
@@ -35,18 +42,16 @@ services:
             - PUID=${PUID}
             - TZ=Europe/Paris
         labels:
-            - 'traefik.backend=deluge'
-            - 'traefik.port=8112'
-            - 'traefik.frontend.rule=Host:deluge.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
+            - "traefik.enable=true"
+            - "traefik.http.routers.deluge.rule=Host(`deluge.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.deluge.entrypoints=secure"
+            - "traefik.http.routers.deluge.tls.certresolver=le"
+            - "traefik.http.routers.deluge.middlewares=common-auth"
 
     plex:
         image: linuxserver/plex
         container_name: plex
         restart: always
-        networks:
-            - web
         ports:
             - "32400:32400"
             - "32400:32400/udp"
@@ -62,20 +67,16 @@ services:
             - PUID=${PUID}
             - TZ=Europe/Paris
             - VERSION=latest
-            #- VERSION=1.14.0.5470-9d51fdfaa
         labels:
-            - 'traefik.backend=plex'
-            - 'traefik.port=32400'
-            - 'traefik.frontend.rule=Host:plex.${TRAEFIK_DOMAIN}'
-            #- 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
+            - "traefik.enable=true"
+            - "traefik.http.routers.plex.rule=Host(`plex.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.plex.entrypoints=secure"
+            - "traefik.http.routers.plex.tls.certresolver=le"
 
     jackett:
         image: linuxserver/jackett
         container_name: jackett
         restart: always
-        networks:
-            - web
         volumes:
             - config:/config
             - torrents:/downloads
@@ -85,18 +86,16 @@ services:
             - PUID=${PUID}
             - TZ=Europe/Paris
         labels:
-            - 'traefik.backend=jackett'
-            - 'traefik.port=9117'
-            - 'traefik.frontend.rule=Host:jackett.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
+            - "traefik.enable=true"
+            - "traefik.http.routers.jackett.rule=Host(`jackett.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.jackett.entrypoints=secure"
+            - "traefik.http.routers.jackett.tls.certresolver=le"
+            - "traefik.http.routers.jackett.middlewares=common-auth"
     
     sonarr:
         image: linuxserver/sonarr:preview
         container_name: sonarr
         restart: always
-        networks:
-            - web
         volumes:
             - configsonarr:/config
             - torrents:/torrents
@@ -106,18 +105,16 @@ services:
             - PUID=${PUID}
             - TZ=Europe/Paris
         labels:
-            - 'traefik.backend=sonarr'
-            - 'traefik.port=8989'
-            - 'traefik.frontend.rule=Host:sonarr.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
+            - "traefik.enable=true"
+            - "traefik.http.routers.sonarr.rule=Host(`sonarr.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.sonarr.entrypoints=secure"
+            - "traefik.http.routers.sonarr.tls.certresolver=le"
+            - "traefik.http.routers.sonarr.middlewares=common-auth"
 
     radarr:
         image: linuxserver/radarr
         container_name: radarr
         restart: always
-        networks:
-            - web
         volumes:
             - configradarr:/config
             - torrents:/torrents
@@ -127,18 +124,16 @@ services:
             - PUID=${PUID}
             - TZ=Europe/Paris
         labels:
-            - 'traefik.backend=radarr'
-            - 'traefik.port=7878'
-            - 'traefik.frontend.rule=Host:radarr.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
+            - "traefik.enable=true"
+            - "traefik.http.routers.radarr.rule=Host(`radarr.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.radarr.entrypoints=secure"
+            - "traefik.http.routers.radarr.tls.certresolver=le"
+            - "traefik.http.routers.radarr.middlewares=common-auth"
 
     bazarr:
         image: linuxserver/bazarr
         container_name: bazarr
         restart: always
-        networks:
-            - web
         volumes:
             - torrents:/torrents
             - configbazarr:/config
@@ -147,18 +142,16 @@ services:
             - PUID=${PUID}
             - TZ=Europe/Paris
         labels:
-            - 'traefik.backend=bazarr'
-            - 'traefik.port=6767'
-            - 'traefik.frontend.rule=Host:bazarr.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
+            - "traefik.enable=true"
+            - "traefik.http.routers.bazarr.rule=Host(`bazarr.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.bazarr.entrypoints=secure"
+            - "traefik.http.routers.bazarr.tls.certresolver=le"
+            - "traefik.http.routers.bazarr.middlewares=common-auth"
 
     lidarr:
         image: linuxserver/lidarr:preview
         container_name: lidarr
         restart: always
-        networks:
-            - web
         volumes:
             - configlidarr:/config
             - torrents:/torrents
@@ -167,18 +160,16 @@ services:
             - PUID=${PUID}
             - TZ=Europe/Paris
         labels:
-            - 'traefik.backend=lidarr'
-            - 'traefik.port=8686'
-            - 'traefik.frontend.rule=Host:lidarr.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
+            - "traefik.enable=true"
+            - "traefik.http.routers.lidarr.rule=Host(`lidarr.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.lidarr.entrypoints=secure"
+            - "traefik.http.routers.lidarr.tls.certresolver=le"
+            - "traefik.http.routers.lidarr.middlewares=common-auth"
 
     tautulli:
         image: linuxserver/tautulli
         container_name: tautulli
         restart: always
-        networks:
-            - web
         volumes:
             - configtautulli:/config
             - config:/logs:ro # Inside of tautulli, bind to logs via "/logs/Plex Media Server/Logs"
@@ -187,16 +178,15 @@ services:
             - PUID=${PUID}
             - TZ=Europe/Paris
         labels:
-            - 'traefik.tautulli.backend=tautulli'
-            - 'traefik.tautulli.port=8181'
-            - 'traefik.tautulli.frontend.rule=Host:tautulli.${TRAEFIK_DOMAIN}'
-            - 'traefik.enable=true'
+            - "traefik.enable=true"
+            - "traefik.http.routers.tautulli.rule=Host(`tautulli.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.tautulli.entrypoints=secure"
+            - "traefik.http.routers.tautulli.tls.certresolver=le"
 
     jdownloader:
         image: jlesage/jdownloader-2
         container_name: jdownloader
-        networks:
-            - web
+        restart: unless-stopped
         volumes:
             - configjdownloader:/config
             - downloads:/output
@@ -205,18 +195,16 @@ services:
             - GROUP_ID=${PGID}
             - TZ=Europe/Paris
         labels:
-            - 'traefik.backend=jdownloader'
-            - 'traefik.port=5800'
-            - 'traefik.frontend.rule=Host:jdownloader.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
+            - "traefik.enable=true"
+            - "traefik.http.routers.jdownloader.rule=Host(`jdownloader.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.jdownloader.entrypoints=secure"
+            - "traefik.http.routers.jdownloader.tls.certresolver=le"
+            - "traefik.http.routers.jdownloader.middlewares=common-auth"
 
     nextcloud:
         image: wonderfall/nextcloud
         container_name: nextcloud
         restart: always
-        networks:
-            - web
         volumes:
             - confignextcloud:/config
             - nextclouddata:/data
@@ -234,10 +222,10 @@ services:
             - DB_USER=${NEXTCLOUD_DB_USER}
             - DB_PASSWORD=${NEXTCLOUD_DB_PASSWORD}
         labels:
-            - 'traefik.backend=nextcloud'
-            - 'traefik.port=8888'
-            - 'traefik.frontend.rule=Host:nextcloud.${TRAEFIK_DOMAIN}'
-            - 'traefik.enable=true'
+            - "traefik.enable=true"
+            - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.nextcloud.entrypoints=secure"
+            - "traefik.http.routers.nextcloud.tls.certresolver=le"
 
     portainer:
         image: portainer/portainer
@@ -245,22 +233,18 @@ services:
         restart: always
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-        networks:
-            - web
         command: --admin-password ${PORTAINER_ADMIN_PASSWORD} --host=unix:///var/run/docker.sock
         labels:
-            - 'traefik.backend=portainer'
-            - 'traefik.port=9000'
-            - 'traefik.frontend.rule=Host:portainer.${TRAEFIK_DOMAIN}'
-            - 'traefik.enable=true'
+            - "traefik.enable=true"
+            - "traefik.http.routers.portainer.rule=Host(`portainer.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.portainer.entrypoints=secure"
+            - "traefik.http.routers.portainer.tls.certresolver=le"
 
     netdata:
         image: netdata/netdata
         restart: always
         container_name: netdata
         hostname: netdata.${TRAEFIK_DOMAIN}
-        networks:
-            - web
         environment:
             PGID: 999
         cap_add:
@@ -272,18 +256,16 @@ services:
             - /sys:/host/sys:ro
             - /var/run/docker.sock:/var/run/docker.sock:rw
         labels:
-            - 'traefik.backend=netdata'
-            - 'traefik.port=19999'
-            - 'traefik.frontend.rule=Host:netdata.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
+            - "traefik.enable=true"
+            - "traefik.http.routers.netdata.rule=Host(`netdata.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.netdata.entrypoints=secure"
+            - "traefik.http.routers.netdata.tls.certresolver=le"
+            - "traefik.http.routers.netdata.middlewares=common-auth"
 
     duplicati:
         image: linuxserver/duplicati
         container_name: duplicati
         restart: unless-stopped
-        networks:
-            - web
         environment:
             - PUID=${PUID}
             - PGID=${PGID}
@@ -293,18 +275,17 @@ services:
             - backups:/backups
             - alldata:/source
         labels:
-            - 'traefik.backend=duplicati'
-            - 'traefik.port=8200'
-            - 'traefik.frontend.rule=Host:duplicati.${TRAEFIK_DOMAIN}'
-            - 'traefik.frontend.auth.basic.users=${HTTP_USER}:${HTTP_PASSWORD}'
-            - 'traefik.enable=true'
+            - "traefik.enable=true"
+            - "traefik.http.routers.duplicati.rule=Host(`duplicati.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.duplicati.entrypoints=secure"
+            - "traefik.http.routers.duplicati.tls.certresolver=le"
+            - "traefik.http.routers.duplicati.middlewares=common-auth"
 
-networks:
-    webgateway:
-        driver: bridge
-    web:
-        external:
-            name: seedbox_webgateway
+networks: 
+  default: 
+    external:
+      name: "traefik-network"
+
 volumes:
     alldata:
         driver: local-persist

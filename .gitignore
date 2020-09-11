@@ -3,4 +3,5 @@
 /config
 tunnel-options.sh
 .env
+http_auth
 backup/

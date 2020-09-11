@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Create/update http_auth file according to values in .env file
+source .env
+echo "${HTTP_USER}:${HTTP_PASSWORD}" > http_auth
+
 echo "[$0] ***** Pulling all images... *****"
 docker-compose pull
 echo "[$0] ***** Recreating containers if required... *****"

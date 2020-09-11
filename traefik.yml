@@ -1,0 +1,29 @@
+api:
+  dashboard: true
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    network: "traefik-network"
+    exposedByDefault: false # Only expose explicitly enabled containers
+
+entryPoints:
+  insecure:
+    address: ":80"
+  secure:
+    address: ":443"
+
+certificatesResolvers:
+  le:
+    acme:
+      email: overriden@in-dockercompose.yml
+      storage: acme.json
+      httpChallenge:
+        # used during the challenge
+        entryPoint: insecure
+
+http:
+  middlewares:
+    common-auth:
+      basicAuth:
+        usersFile: "/http_auth"
