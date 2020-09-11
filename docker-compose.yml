@@ -11,8 +11,7 @@ services:
             - "443:443"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - ./traefik.yml:/etc/traefik/traefik.yaml:ro
-            - ./http_auth:/http_auth
+            - ./traefik:/etc/traefik
         labels:
             - "traefik.enable=true"
             # HTTP to HTTPS redirection

@@ -6,6 +6,8 @@ providers:
     endpoint: "unix:///var/run/docker.sock"
     network: "traefik-network"
     exposedByDefault: false # Only expose explicitly enabled containers
+  file:
+    filename: /etc/traefik/file-provider.yml
 
 entryPoints:
   insecure:
@@ -20,9 +22,3 @@ certificatesResolvers:
       httpChallenge:
         # used during the challenge
         entryPoint: insecure
-
-http:
-  middlewares:
-    common-auth:
-      basicAuth:
-        usersFile: "/http_auth"

@@ -2,7 +2,7 @@
 
 # Create/update http_auth file according to values in .env file
 source .env
-echo "${HTTP_USER}:${HTTP_PASSWORD}" > http_auth
+echo "${HTTP_USER}:${HTTP_PASSWORD}" > traefik/http_auth
 docker network create traefik-network || true
 
 echo "[$0] ***** Pulling all images... *****"

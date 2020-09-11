@@ -1,0 +1,5 @@
+http:
+  middlewares:
+    common-auth:
+      basicAuth:
+        usersFile: "http_auth"
