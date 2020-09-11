@@ -12,7 +12,6 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./traefik.yml:/etc/traefik/traefik.yaml:ro
-            - /opt/traefik/acme.json:/acme.json
             - ./http_auth:/http_auth
         labels:
             - "traefik.enable=true"
