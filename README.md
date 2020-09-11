@@ -37,6 +37,7 @@ through the reverse proxy.
 Before upgrading Traefik to version 2, please check the following:
 
 - In this repo, Traefik v2 upgrade is as seamless as possible (same environment variables than before, out-of-the-box config file...).
+- **First, ``git pull`` to grab the latest code.**
 - The ``HTTP_PASSWORD`` variable now must be simple-quoted in the .env file. See the updated ``.env.sample`` file (which has also been reorganized)
 - Run ``init.sh`` in order to create required Docker objects (network name has changed).
 - You can update your acme.json to a Traefik v2-compliant one by doing the following (before launching Traefik v2):
