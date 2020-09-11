@@ -68,6 +68,7 @@ services:
             - VERSION=latest
         labels:
             - "traefik.enable=true"
+            - "traefik.http.services.plex-seedbox.loadbalancer.server.port=32400"
             - "traefik.http.routers.plex.rule=Host(`plex.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.plex.entrypoints=secure"
             - "traefik.http.routers.plex.tls.certresolver=le"
@@ -195,6 +196,7 @@ services:
             - TZ=Europe/Paris
         labels:
             - "traefik.enable=true"
+            - "traefik.http.services.jdownloader-seedbox.loadbalancer.server.port=5800"
             - "traefik.http.routers.jdownloader.rule=Host(`jdownloader.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.jdownloader.entrypoints=secure"
             - "traefik.http.routers.jdownloader.tls.certresolver=le"
