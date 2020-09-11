@@ -2,4 +2,4 @@ http:
   middlewares:
     common-auth:
       basicAuth:
-        usersFile: "http_auth"
+        usersFile: "/etc/traefik/http_auth"
