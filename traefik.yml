@@ -16,7 +16,6 @@ entryPoints:
 certificatesResolvers:
   le:
     acme:
-      email: overriden@in-dockercompose.yml
       storage: acme.json
       httpChallenge:
         # used during the challenge
