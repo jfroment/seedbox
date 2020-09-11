@@ -12,6 +12,7 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./traefik:/etc/traefik
+            - configtraefik:/config
         labels:
             - "traefik.enable=true"
             # HTTP to HTTPS redirection
@@ -293,6 +294,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config
+    configtraefik:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/traefik
     configplex:
         driver: local-persist
         driver_opts:

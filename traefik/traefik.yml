@@ -18,7 +18,7 @@ entryPoints:
 certificatesResolvers:
   le:
     acme:
-      storage: acme.json
+      storage: /config/acme.json
       httpChallenge:
         # used during the challenge
         entryPoint: insecure
