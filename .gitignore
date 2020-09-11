@@ -3,5 +3,5 @@
 /config
 tunnel-options.sh
 .env
-http_auth
+traefik/http_auth
 backup/
