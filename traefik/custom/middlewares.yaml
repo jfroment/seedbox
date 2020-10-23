@@ -1,0 +1,13 @@
+http:
+  middlewares:
+    common-auth:
+      basicAuth:
+        usersFile: "/etc/traefik/http_auth"
+    security-headers:
+      headers:
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsSeconds: 31536000
