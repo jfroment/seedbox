@@ -196,31 +196,72 @@ services:
             - "traefik.http.routers.jdownloader.tls.certresolver=le"
             - "traefik.http.routers.jdownloader.middlewares=common-auth@file"
 
+    # nextcloud:
+    #     image: wonderfall/nextcloud
+    #     container_name: nextcloud
+    #     restart: always
+    #     volumes:
+    #         - confignextcloud:/config
+    #         - nextclouddata:/data
+    #         - torrents:/torrents
+    #         - config:/seedbox-config
+    #     environment:
+    #         - GID=${PGID}
+    #         - UID=${PUID}
+    #         - TZ=Europe/Paris
+    #         - ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
+    #         - ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
+    #         - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
+    #         - DB_TYPE=sqlite3
+    #         - DB_NAME=${NEXTCLOUD_DB_NAME}
+    #         - DB_USER=${NEXTCLOUD_DB_USER}
+    #         - DB_PASSWORD=${NEXTCLOUD_DB_PASSWORD}
+    #     labels:
+    #         - "traefik.enable=true"
+    #         - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${TRAEFIK_DOMAIN}`)"
+    #         - "traefik.http.routers.nextcloud.entrypoints=secure"
+    #         - "traefik.http.routers.nextcloud.tls.certresolver=le"
+
+    nextcloud-db:
+        image: mariadb:10
+        container_name: nextcloud-db
+        command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+        restart: always
+        environment:
+            - MYSQL_RANDOM_ROOT_PASSWORD="yes"
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD} 
+            - TZ=Europe/Paris
+            - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
+        volumes: 
+            - nextclouddb:/var/lib/mysql
+        labels:
+            - "traefik.enable=false"
+
     nextcloud:
-        image: wonderfall/nextcloud
+        depends_on:
+            - nextcloud-db
+        image: nextcloud:20
         container_name: nextcloud
         restart: always
+        environment:
+            - MYSQL_HOST="nextcloud-db"
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
+            - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
+            - NEXTCLOUD_TRUSTED_DOMAINS="nextcloud.${TRAEFIK_DOMAIN}"
         volumes:
-            - confignextcloud:/config
-            - nextclouddata:/data
+            - confignextcloud:/var/www/html/
             - torrents:/torrents
             - config:/seedbox-config
-        environment:
-            - GID=${PGID}
-            - UID=${PUID}
-            - TZ=Europe/Paris
-            - ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
-            - ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
-            - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
-            - DB_TYPE=sqlite3
-            - DB_NAME=${NEXTCLOUD_DB_NAME}
-            - DB_USER=${NEXTCLOUD_DB_USER}
-            - DB_PASSWORD=${NEXTCLOUD_DB_PASSWORD}
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.nextcloud.entrypoints=secure"
-            - "traefik.http.routers.nextcloud.tls.certresolver=le"
+            - "traefik.http.services.nextcloud-seedbox.loadbalancer.server.port=80"
 
     portainer:
         image: portainer/portainer
@@ -232,8 +273,6 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.portainer.rule=Host(`portainer.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.portainer.entrypoints=secure"
-            - "traefik.http.routers.portainer.tls.certresolver=le"
 
     netdata:
         image: netdata/netdata
@@ -253,8 +292,6 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.netdata.rule=Host(`netdata.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.netdata.entrypoints=secure"
-            - "traefik.http.routers.netdata.tls.certresolver=le"
             - "traefik.http.routers.netdata.middlewares=common-auth@file"
 
     duplicati:
@@ -272,8 +309,6 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.duplicati.rule=Host(`duplicati.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.duplicati.entrypoints=secure"
-            - "traefik.http.routers.duplicati.tls.certresolver=le"
             - "traefik.http.routers.duplicati.middlewares=common-auth@file"
 
 networks: 
@@ -326,14 +361,14 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/jdownloader
+    nextclouddb:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/nextcloud-db
     confignextcloud:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/nextcloud
-    nextclouddata:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/config/nextcloud-data
     torrents:
         driver: local-persist
         driver_opts:
