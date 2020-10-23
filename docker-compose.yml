@@ -224,14 +224,14 @@ services:
         container_name: nextcloud
         restart: always
         environment:
-            - MYSQL_HOST="nextcloud-db"
-            - MYSQL_DATABASE=${MYSQL_DATABASE}
-            - MYSQL_USER=${MYSQL_USER}
-            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-            - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
-            - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
-            - NEXTCLOUD_TRUSTED_DOMAINS="nextcloud.${TRAEFIK_DOMAIN}"
-            - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
+            # - MYSQL_HOST="nextcloud-db"
+            # - MYSQL_DATABASE=${MYSQL_DATABASE}
+            # - MYSQL_USER=${MYSQL_USER}
+            # - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            # - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
+            # - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
+            # - NEXTCLOUD_TRUSTED_DOMAINS="nextcloud.${TRAEFIK_DOMAIN}"
+            # - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
             - PGID=${PGID}
             - PUID=${PUID}
             - TZ=Europe/Paris
@@ -240,7 +240,6 @@ services:
             - nextclouddata:/data
             - torrents:/torrents
             - config:/seedbox-config
-            - nextcloudcertificates:/config/keys
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${TRAEFIK_DOMAIN}`)"
@@ -256,18 +255,18 @@ services:
             # - "traefik.tcp.routers.nextcloud-tcp.service=nextcloud-tcp-svc"
             # - "traefik.tcp.services.nextcloud-tcp-svc.loadbalancer.server.port=443"
 
-    certdumper:
-        image: humenius/traefik-certs-dumper:latest
-        container_name: traefik_certdumper
-        command: --restart-containers nextcloud
-        volumes:
-            - configtraefik:/traefik:ro
-            - nextcloudcertificates:/output:rw
-            - /var/run/docker.sock:/var/run/docker.sock:ro
-        environment:
-            - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
-            - OVERRIDE_UID=${PUID}
-            - OVERRIDE_GID=${PGID}
+    # certdumper:
+    #     image: humenius/traefik-certs-dumper:latest
+    #     container_name: traefik_certdumper
+    #     command: --restart-containers nextcloud
+    #     volumes:
+    #         - configtraefik:/traefik:ro
+    #         - nextcloudcertificates:/output:rw
+    #         - /var/run/docker.sock:/var/run/docker.sock:ro
+    #     environment:
+    #         - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
+    #         - OVERRIDE_UID=${PUID}
+    #         - OVERRIDE_GID=${PGID}
 
     portainer:
         image: portainer/portainer
@@ -379,10 +378,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/nextcloud-data
-    nextcloudcertificates:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /data/config/nextcloud-certs
+    # nextcloudcertificates:
+    #     driver: local-persist
+    #     driver_opts:
+    #         mountpoint: /data/config/nextcloud-certs
     torrents:
         driver: local-persist
         driver_opts:
