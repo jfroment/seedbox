@@ -246,7 +246,7 @@ services:
             #- "traefik.http.services.nextcloud-seedbox.loadbalancer.server.scheme=https"
             #- "traefik.http.services.nextcloud-seedbox.loadbalancer.server.port=443"
             ## TCP Routers
-            - "traefik.tcp.routers.nextcloud-tcp.entrypoints=https"
+            - "traefik.tcp.routers.nextcloud-tcp.entrypoints=secure"
             - "traefik.tcp.routers.nextcloud-tcp.rule=HostSNI(`nextcloud.${TRAEFIK_DOMAIN}`)"
             - "traefik.tcp.routers.nextcloud-tcp.tls=true"
             - "traefik.tcp.routers.nextcloud-tcp.tls.certresolver=le"
