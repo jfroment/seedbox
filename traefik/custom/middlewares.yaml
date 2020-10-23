@@ -5,9 +5,18 @@ http:
         usersFile: "/etc/traefik/http_auth"
     security-headers:
       headers:
-        frameDeny: true
-        contentTypeNosniff: true
-        browserXssFilter: true
         forceSTSHeader: true
         stsIncludeSubdomains: true
         stsSeconds: 31536000
+
+        sslRedirect: true
+        sslForceHost: true
+        sslHost: '{{env "TRAEFIK_DOMAIN"}}'
+
+        contentSecurityPolicy: "script-src 'self'; img-src 'self'"
+        referrerPolicy: "same-origin"
+        featurePolicy: "vibrate 'self'; geolocation 'self'; midi 'self'; notifications 'self'; push 'self'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'self'; fullscreen 'self'"
+
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
