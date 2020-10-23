@@ -220,12 +220,9 @@ services:
     nextcloud:
         depends_on:
             - nextcloud-db
-        image: nextcloud:20
+        image: linuxserver/nextcloud
         container_name: nextcloud
-        user: ${PUID}:${PGID}
         restart: always
-        sysctls:
-            - net.ipv4.ip_unprivileged_port_start=0
         environment:
             - MYSQL_HOST="nextcloud-db"
             - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -234,18 +231,18 @@ services:
             - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
             - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
             - NEXTCLOUD_TRUSTED_DOMAINS="nextcloud.${TRAEFIK_DOMAIN}"
-            - APACHE_RUN_USER=${PUID}
-            - APACHE_RUN_GROUP=${PGID}
-            - TZ=Europe/Paris
             - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
+            - GID=${PGID}
+            - UID=${PUID}
+            - TZ=Europe/Paris
         volumes:
-            - confignextcloud:/var/www/html/
+            - confignextcloud:/config
+            - nextclouddata:/data
             - torrents:/torrents
             - config:/seedbox-config
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.services.nextcloud-seedbox.loadbalancer.server.port=80"
 
     portainer:
         image: portainer/portainer
@@ -353,6 +350,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/nextcloud
+    netclouddata:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/nextcloud-data
     torrents:
         driver: local-persist
         driver_opts:
