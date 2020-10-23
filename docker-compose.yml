@@ -17,9 +17,7 @@ services:
             - "traefik.enable=true"
             # Docker labels for enabling Traefik dashboard
             - "traefik.http.routers.traefik.rule=Host(`traefik.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.traefik.entrypoints=secure"
             - "traefik.http.routers.traefik.service=api@internal"
-            - "traefik.http.routers.traefik.tls.certresolver=le"
             - "traefik.http.routers.traefik.middlewares=common-auth@file"
 
     deluge:
@@ -37,8 +35,6 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.deluge.rule=Host(`deluge.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.deluge.entrypoints=secure"
-            - "traefik.http.routers.deluge.tls.certresolver=le"
             - "traefik.http.routers.deluge.middlewares=common-auth@file"
 
     plex:
@@ -64,8 +60,6 @@ services:
             - "traefik.enable=true"
             - "traefik.http.services.plex-seedbox.loadbalancer.server.port=32400"
             - "traefik.http.routers.plex.rule=Host(`plex.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.plex.entrypoints=secure"
-            - "traefik.http.routers.plex.tls.certresolver=le"
 
     jackett:
         image: linuxserver/jackett
@@ -82,8 +76,6 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.jackett.rule=Host(`jackett.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.jackett.entrypoints=secure"
-            - "traefik.http.routers.jackett.tls.certresolver=le"
             - "traefik.http.routers.jackett.middlewares=common-auth@file"
     
     sonarr:
@@ -101,8 +93,6 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.sonarr.rule=Host(`sonarr.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.sonarr.entrypoints=secure"
-            - "traefik.http.routers.sonarr.tls.certresolver=le"
             - "traefik.http.routers.sonarr.middlewares=common-auth@file"
 
     radarr:
@@ -120,8 +110,6 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.radarr.rule=Host(`radarr.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.radarr.entrypoints=secure"
-            - "traefik.http.routers.radarr.tls.certresolver=le"
             - "traefik.http.routers.radarr.middlewares=common-auth@file"
 
     bazarr:
@@ -138,8 +126,6 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.bazarr.rule=Host(`bazarr.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.bazarr.entrypoints=secure"
-            - "traefik.http.routers.bazarr.tls.certresolver=le"
             - "traefik.http.routers.bazarr.middlewares=common-auth@file"
 
     lidarr:
@@ -156,8 +142,6 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.lidarr.rule=Host(`lidarr.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.lidarr.entrypoints=secure"
-            - "traefik.http.routers.lidarr.tls.certresolver=le"
             - "traefik.http.routers.lidarr.middlewares=common-auth@file"
 
     tautulli:
@@ -174,8 +158,6 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.tautulli.rule=Host(`tautulli.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.tautulli.entrypoints=secure"
-            - "traefik.http.routers.tautulli.tls.certresolver=le"
 
     jdownloader:
         image: jlesage/jdownloader-2
@@ -192,8 +174,6 @@ services:
             - "traefik.enable=true"
             - "traefik.http.services.jdownloader-seedbox.loadbalancer.server.port=5800"
             - "traefik.http.routers.jdownloader.rule=Host(`jdownloader.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.jdownloader.entrypoints=secure"
-            - "traefik.http.routers.jdownloader.tls.certresolver=le"
             - "traefik.http.routers.jdownloader.middlewares=common-auth@file"
 
     # nextcloud:
@@ -228,13 +208,10 @@ services:
         command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
         restart: always
         environment:
-            - MYSQL_RANDOM_ROOT_PASSWORD="yes"
             - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
             - MYSQL_DATABASE=${MYSQL_DATABASE}
             - MYSQL_USER=${MYSQL_USER}
             - MYSQL_PASSWORD=${MYSQL_PASSWORD} 
-            - TZ=Europe/Paris
-            - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
         volumes: 
             - nextclouddb:/var/lib/mysql
         labels:
@@ -254,6 +231,8 @@ services:
             - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
             - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
             - NEXTCLOUD_TRUSTED_DOMAINS="nextcloud.${TRAEFIK_DOMAIN}"
+            - TZ=Europe/Paris
+            - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
         volumes:
             - confignextcloud:/var/www/html/
             - torrents:/torrents
