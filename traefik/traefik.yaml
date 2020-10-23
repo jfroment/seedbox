@@ -7,13 +7,24 @@ providers:
     network: "traefik-network"
     exposedByDefault: false # Only expose explicitly enabled containers
   file:
-    filename: /etc/traefik/file-provider.yml
+    directory: /etc/traefik/custom
+    watch: true
 
 entryPoints:
   insecure:
     address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: secure
+          scheme: https
   secure:
     address: ":443"
+    http:
+      tls:
+        certResolver: le
+      middlewares:
+      - security-headers@file
 
 certificatesResolvers:
   le:

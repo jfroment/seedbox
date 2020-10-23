@@ -1,4 +1,4 @@
-version: '3'
+version: "3.7"
 
 services:
     traefik:
@@ -11,16 +11,10 @@ services:
             - "443:443"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - ./traefik:/etc/traefik
-            - configtraefik:/config
+            - ./traefik:/etc/traefik:ro
+            - configtraefik:/config:ro
         labels:
             - "traefik.enable=true"
-            # HTTP to HTTPS redirection
-            - "traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)"
-            - "traefik.http.routers.http_catchall.entrypoints=insecure"
-            - "traefik.http.routers.http_catchall.middlewares=https_redirect"
-            - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
-            - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
             # Docker labels for enabling Traefik dashboard
             - "traefik.http.routers.traefik.rule=Host(`traefik.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.traefik.entrypoints=secure"
