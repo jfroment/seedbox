@@ -222,6 +222,7 @@ services:
             - nextcloud-db
         image: nextcloud:20
         container_name: nextcloud
+        user: ${PUID}:${PGID}
         restart: always
         environment:
             - MYSQL_HOST="nextcloud-db"
