@@ -26,6 +26,9 @@ entryPoints:
       middlewares:
       - security-headers@file
 
+serversTransport:
+  insecureSkipVerify: true
+
 certificatesResolvers:
   le:
     acme:
