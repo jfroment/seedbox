@@ -350,7 +350,7 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/nextcloud
-    netclouddata:
+    nextclouddata:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/nextcloud-data
