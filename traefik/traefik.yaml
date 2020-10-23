@@ -1,6 +1,12 @@
 api:
   dashboard: true
 
+# Set Access logs timezone
+accessLog:
+  fields:
+    names:
+      StartUTC: drop
+
 providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
@@ -25,6 +31,10 @@ entryPoints:
         certResolver: le
       middlewares:
       - security-headers@file
+
+# Allow self-signed certificates for https backends (nextcloud for example)
+serversTransport:
+  insecureSkipVerify: true
 
 certificatesResolvers:
   le:
