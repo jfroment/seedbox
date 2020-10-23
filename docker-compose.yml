@@ -243,6 +243,8 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.services.nextcloud-seedbox.loadbalancer.server.scheme=https"
+            - "traefik.http.services.nextcloud-seedbox.loadbalancer.server.port=443"
 
     portainer:
         image: portainer/portainer
