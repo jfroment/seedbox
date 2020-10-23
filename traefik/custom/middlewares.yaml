@@ -9,7 +9,6 @@ http:
         stsIncludeSubdomains: true
         stsSeconds: 31536000
 
-        contentSecurityPolicy: "script-src 'self'; img-src 'self'"
         referrerPolicy: "same-origin"
         featurePolicy: "vibrate 'self'; geolocation 'self'; midi 'self'; notifications 'self'; push 'self'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'self'; fullscreen 'self'"
 
