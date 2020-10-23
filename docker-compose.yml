@@ -5,7 +5,8 @@ services:
         image: traefik
         container_name: traefik
         restart: always
-        command: --certificatesresolvers.le.acme.email=${ACME_MAIL}
+        command: 
+            - --certificatesresolvers.le.acme.email=${ACME_MAIL}
         ports:
             - "80:80"
             - "443:443"
@@ -13,6 +14,8 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./traefik:/etc/traefik:ro
             - configtraefik:/config:ro
+        environment:
+            - TZ=${TZ}
         labels:
             - "traefik.enable=true"
             # Docker labels for enabling Traefik dashboard
@@ -31,7 +34,7 @@ services:
         environment:
             - PGID=${PGID}
             - PUID=${PUID}
-            - TZ=Europe/Paris
+            - TZ=${TZ}
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.deluge.rule=Host(`deluge.${TRAEFIK_DOMAIN}`)"
@@ -54,7 +57,7 @@ services:
         environment:
             - PGID=${PGID}
             - PUID=${PUID}
-            - TZ=Europe/Paris
+            - TZ=${TZ}
             - VERSION=latest
         labels:
             - "traefik.enable=true"
@@ -72,7 +75,7 @@ services:
         environment:
             - PGID=${PGID}
             - PUID=${PUID}
-            - TZ=Europe/Paris
+            - TZ=${TZ}
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.jackett.rule=Host(`jackett.${TRAEFIK_DOMAIN}`)"
@@ -89,7 +92,7 @@ services:
         environment:
             - PGID=${PGID}
             - PUID=${PUID}
-            - TZ=Europe/Paris
+            - TZ=${TZ}
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.sonarr.rule=Host(`sonarr.${TRAEFIK_DOMAIN}`)"
@@ -106,7 +109,7 @@ services:
         environment:
             - PGID=${PGID}
             - PUID=${PUID}
-            - TZ=Europe/Paris
+            - TZ=${TZ}
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.radarr.rule=Host(`radarr.${TRAEFIK_DOMAIN}`)"
@@ -122,7 +125,7 @@ services:
         environment:
             - PGID=${PGID}
             - PUID=${PUID}
-            - TZ=Europe/Paris
+            - TZ=${TZ}
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.bazarr.rule=Host(`bazarr.${TRAEFIK_DOMAIN}`)"
@@ -138,7 +141,7 @@ services:
         environment:
             - PGID=${PGID}
             - PUID=${PUID}
-            - TZ=Europe/Paris
+            - TZ=${TZ}
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.lidarr.rule=Host(`lidarr.${TRAEFIK_DOMAIN}`)"
@@ -154,7 +157,7 @@ services:
         environment:
             - PGID=${PGID}
             - PUID=${PUID}
-            - TZ=Europe/Paris
+            - TZ=${TZ}
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.tautulli.rule=Host(`tautulli.${TRAEFIK_DOMAIN}`)"
@@ -169,38 +172,12 @@ services:
         environment:
             - USER_ID=${PUID}
             - GROUP_ID=${PGID}
-            - TZ=Europe/Paris
+            - TZ=${TZ}
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.jdownloader-seedbox.loadbalancer.server.port=5800"
             - "traefik.http.routers.jdownloader.rule=Host(`jdownloader.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.jdownloader.middlewares=common-auth@file"
-
-    # nextcloud:
-    #     image: wonderfall/nextcloud
-    #     container_name: nextcloud
-    #     restart: always
-    #     volumes:
-    #         - confignextcloud:/config
-    #         - nextclouddata:/data
-    #         - torrents:/torrents
-    #         - config:/seedbox-config
-    #     environment:
-    #         - GID=${PGID}
-    #         - UID=${PUID}
-    #         - TZ=Europe/Paris
-    #         - ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
-    #         - ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
-    #         - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
-    #         - DB_TYPE=sqlite3
-    #         - DB_NAME=${NEXTCLOUD_DB_NAME}
-    #         - DB_USER=${NEXTCLOUD_DB_USER}
-    #         - DB_PASSWORD=${NEXTCLOUD_DB_PASSWORD}
-    #     labels:
-    #         - "traefik.enable=true"
-    #         - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${TRAEFIK_DOMAIN}`)"
-    #         - "traefik.http.routers.nextcloud.entrypoints=secure"
-    #         - "traefik.http.routers.nextcloud.tls.certresolver=le"
 
     nextcloud-db:
         image: mariadb:10
@@ -212,11 +189,13 @@ services:
             - MYSQL_DATABASE=${MYSQL_DATABASE}
             - MYSQL_USER=${MYSQL_USER}
             - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - TZ=${TZ}
         volumes: 
             - nextclouddb:/var/lib/mysql
         labels:
             - "traefik.enable=false"
 
+    # See init-setup-nextcloud.sh for first install
     nextcloud:
         depends_on:
             - nextcloud-db
@@ -224,17 +203,9 @@ services:
         container_name: nextcloud
         restart: always
         environment:
-            # - MYSQL_HOST="nextcloud-db"
-            # - MYSQL_DATABASE=${MYSQL_DATABASE}
-            # - MYSQL_USER=${MYSQL_USER}
-            # - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-            # - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
-            # - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
-            # - NEXTCLOUD_TRUSTED_DOMAINS="nextcloud.${TRAEFIK_DOMAIN}"
-            # - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
             - PGID=${PGID}
             - PUID=${PUID}
-            - TZ=Europe/Paris
+            - TZ=${TZ}
         volumes:
             - confignextcloud:/config
             - nextclouddata:/data
@@ -245,28 +216,6 @@ services:
             - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.services.nextcloud-seedbox.loadbalancer.server.scheme=https"
             - "traefik.http.services.nextcloud-seedbox.loadbalancer.server.port=443"
-            # ## TCP Routers
-            # - "traefik.tcp.routers.nextcloud-tcp.entrypoints=secure"
-            # - "traefik.tcp.routers.nextcloud-tcp.rule=HostSNI(`nextcloud.${TRAEFIK_DOMAIN}`)"
-            # - "traefik.tcp.routers.nextcloud-tcp.tls=true"
-            # - "traefik.tcp.routers.nextcloud-tcp.tls.certresolver=le"
-            # - "traefik.tcp.routers.nextcloud-tcp.tls.passthrough=true"
-            # ## TCP Services
-            # - "traefik.tcp.routers.nextcloud-tcp.service=nextcloud-tcp-svc"
-            # - "traefik.tcp.services.nextcloud-tcp-svc.loadbalancer.server.port=443"
-
-    # certdumper:
-    #     image: humenius/traefik-certs-dumper:latest
-    #     container_name: traefik_certdumper
-    #     command: --restart-containers nextcloud
-    #     volumes:
-    #         - configtraefik:/traefik:ro
-    #         - nextcloudcertificates:/output:rw
-    #         - /var/run/docker.sock:/var/run/docker.sock:ro
-    #     environment:
-    #         - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
-    #         - OVERRIDE_UID=${PUID}
-    #         - OVERRIDE_GID=${PGID}
 
     portainer:
         image: portainer/portainer
@@ -306,7 +255,7 @@ services:
         environment:
             - PUID=${PUID}
             - PGID=${PGID}
-            - TZ=Europe/Paris
+            - TZ=${TZ}
         volumes:
             - configduplicati:/config
             - backups:/backups
@@ -378,10 +327,6 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/nextcloud-data
-    # nextcloudcertificates:
-    #     driver: local-persist
-    #     driver_opts:
-    #         mountpoint: /data/config/nextcloud-certs
     torrents:
         driver: local-persist
         driver_opts:

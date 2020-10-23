@@ -1,6 +1,12 @@
 api:
   dashboard: true
 
+# Set Access logs timezone
+accessLog:
+  fields:
+    names:
+      StartUTC: drop
+
 providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
