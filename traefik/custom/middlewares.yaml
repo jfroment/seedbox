@@ -11,7 +11,7 @@ http:
 
         sslRedirect: true
         sslForceHost: true
-        sslHost: '{{env "TRAEFIK_DOMAIN"}}'
+        sslHost: '*.{{env "TRAEFIK_DOMAIN"}}'
 
         contentSecurityPolicy: "script-src 'self'; img-src 'self'"
         referrerPolicy: "same-origin"
