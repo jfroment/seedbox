@@ -15,6 +15,7 @@ services:
             - ./traefik:/etc/traefik:ro
             - configtraefik:/config:ro
         environment:
+            - TRAEFIK_DOMAIN=${TRAEFIK_DOMAIN}
             - TZ=${TZ}
         labels:
             - "traefik.enable=true"
