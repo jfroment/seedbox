@@ -211,7 +211,7 @@ services:
             - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
             - MYSQL_DATABASE=${MYSQL_DATABASE}
             - MYSQL_USER=${MYSQL_USER}
-            - MYSQL_PASSWORD=${MYSQL_PASSWORD} 
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
         volumes: 
             - nextclouddb:/var/lib/mysql
         labels:
@@ -224,6 +224,8 @@ services:
         container_name: nextcloud
         user: ${PUID}:${PGID}
         restart: always
+        sysctls:
+            - net.ipv4.ip_unprivileged_port_start=0
         environment:
             - MYSQL_HOST="nextcloud-db"
             - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -232,6 +234,8 @@ services:
             - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
             - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
             - NEXTCLOUD_TRUSTED_DOMAINS="nextcloud.${TRAEFIK_DOMAIN}"
+            - APACHE_RUN_USER=${PUID}
+            - APACHE_RUN_GROUP=${PGID}
             - TZ=Europe/Paris
             - DOMAIN=nextcloud.${TRAEFIK_DOMAIN}
         volumes:
