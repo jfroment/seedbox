@@ -11,8 +11,8 @@ services:
             - "443:443"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - ./traefik:/etc/traefik
-            - configtraefik:/config
+            - ./traefik:/etc/traefik:ro
+            - configtraefik:/config:ro
         labels:
             - "traefik.enable=true"
             # Docker labels for enabling Traefik dashboard
