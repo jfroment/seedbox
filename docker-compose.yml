@@ -6,7 +6,7 @@ services:
         container_name: traefik
         restart: always
         command: 
-            - --certificatesresolvers.le.acme.email=${ACME_MAIL} --pilot.token=${PILOT_TOKEN}
+            - --certificatesresolvers.le.acme.email=${ACME_MAIL}
         ports:
             - "80:80"
             - "443:443"
@@ -17,6 +17,7 @@ services:
         environment:
             - TRAEFIK_DOMAIN=${TRAEFIK_DOMAIN}
             - TZ=${TZ}
+            - PILOT_TOKEN=${PILOT_TOKEN}
         labels:
             - "traefik.enable=true"
             # Docker labels for enabling Traefik dashboard

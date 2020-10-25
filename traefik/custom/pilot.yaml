@@ -1,0 +1,2 @@
+pilot:
+  token: "{{env "PILOT_TOKEN"}}"
