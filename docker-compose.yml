@@ -101,7 +101,7 @@ services:
             - "traefik.http.routers.sonarr.middlewares=common-auth@file"
 
     radarr:
-        image: linuxserver/radarr
+        image: linuxserver/radarr:nightly
         container_name: radarr
         restart: always
         volumes:
