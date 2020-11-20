@@ -181,6 +181,25 @@ services:
             - "traefik.http.routers.jdownloader.rule=Host(`jdownloader.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.jdownloader.middlewares=common-auth@file"
 
+
+    mkvtoolnix:
+        image: jlesage/mkvtoolnix
+        container_name: mkvtoolnix
+        restart: always
+        volumes:
+            - configmkvtoolnix:/config
+            - torrents:/storage
+        environment:
+            - USER_ID=${PUID}
+            - GROUP_ID=${PGID}
+            - TZ=${TZ}
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.mkvtoolnix-seedbox.loadbalancer.server.port=5800"
+            - "traefik.http.routers.mkvtoolnix.rule=Host(`mkvtoolnix.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.mkvtoolnix.middlewares=common-auth@file"
+    
+
     nextcloud-db:
         image: mariadb:10
         container_name: nextcloud-db
@@ -317,6 +336,10 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/jdownloader
+    configmkvtoolnix:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/mkvtoolnix
     nextclouddb:
         driver: local-persist
         driver_opts:
