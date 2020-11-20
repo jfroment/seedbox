@@ -208,7 +208,7 @@ services:
             - PGID=${PGID}
             - TZ=${TZ}
         volumes:
-            - /torrents:/home/Tdarr/Media
+            - torrents:/home/Tdarr/Media
             - ./appdata/:/home/Tdarr/Documents/Tdarr
             - ./appdata/TdarrDB:/var/lib/mongodb
         labels:
