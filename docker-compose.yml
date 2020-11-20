@@ -192,13 +192,27 @@ services:
         environment:
             - USER_ID=${PUID}
             - GROUP_ID=${PGID}
-            - TZ=${TZ}
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.mkvtoolnix-seedbox.loadbalancer.server.port=5800"
             - "traefik.http.routers.mkvtoolnix.rule=Host(`mkvtoolnix.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.mkvtoolnix.middlewares=common-auth@file"
     
+    tdarr:
+        image: haveagitgat/tdarr
+        container_name: tdarr
+        restart: always
+        environment:
+            - PUID=${PUID}
+            - PGID=${PGID}
+            - TZ=${TZ}
+        volumes:
+            - /torrents:/home/Tdarr/Media
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.tdarr-seedbox.loadbalancer.server.port=8265"
+            - "traefik.http.routers.tdarr.rule=Host(`tdarr.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.tdarr.middlewares=common-auth@file"
 
     nextcloud-db:
         image: mariadb:10
