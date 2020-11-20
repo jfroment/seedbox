@@ -192,6 +192,7 @@ services:
         environment:
             - USER_ID=${PUID}
             - GROUP_ID=${PGID}
+            - TZ=${TZ}
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.mkvtoolnix-seedbox.loadbalancer.server.port=5800"
@@ -208,6 +209,8 @@ services:
             - TZ=${TZ}
         volumes:
             - /torrents:/home/Tdarr/Media
+            - ./appdata/:/home/Tdarr/Documents/Tdarr
+            - ./appdata/TdarrDB:/var/lib/mongodb
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.tdarr-seedbox.loadbalancer.server.port=8265"
