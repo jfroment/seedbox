@@ -180,24 +180,6 @@ services:
             - "traefik.http.services.jdownloader-seedbox.loadbalancer.server.port=5800"
             - "traefik.http.routers.jdownloader.rule=Host(`jdownloader.${TRAEFIK_DOMAIN}`)"
             - "traefik.http.routers.jdownloader.middlewares=common-auth@file"
-
-
-    mkvtoolnix:
-        image: jlesage/mkvtoolnix
-        container_name: mkvtoolnix
-        restart: always
-        volumes:
-            - configmkvtoolnix:/config
-            - torrents:/storage
-        environment:
-            - USER_ID=${PUID}
-            - GROUP_ID=${PGID}
-            - TZ=${TZ}
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.services.mkvtoolnix-seedbox.loadbalancer.server.port=5800"
-            - "traefik.http.routers.mkvtoolnix.rule=Host(`mkvtoolnix.${TRAEFIK_DOMAIN}`)"
-            - "traefik.http.routers.mkvtoolnix.middlewares=common-auth@file"
     
     tdarr:
         image: haveagitgat/tdarr
@@ -209,8 +191,8 @@ services:
             - TZ=${TZ}
         volumes:
             - torrents:/home/Tdarr/Media
-            - ./appdata/:/home/Tdarr/Documents/Tdarr
-            - ./appdata/TdarrDB:/var/lib/mongodb
+            - configtdarr:/home/Tdarr/Documents/Tdarr
+            - tdarrdb:/var/lib/mongodb
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.tdarr-seedbox.loadbalancer.server.port=8265"
@@ -353,10 +335,14 @@ volumes:
         driver: local-persist
         driver_opts:
             mountpoint: /data/config/jdownloader
-    configmkvtoolnix:
+    configtdarr:
         driver: local-persist
         driver_opts:
-            mountpoint: /data/config/mkvtoolnix
+            mountpoint: /data/config/tdarr
+    tdarrdb:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/tdarr-db
     nextclouddb:
         driver: local-persist
         driver_opts:
