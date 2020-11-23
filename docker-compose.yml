@@ -247,6 +247,7 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.portainer.rule=Host(`portainer.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.services.portainer-seedbox.loadbalancer.server.port=9000"
 
     netdata:
         image: netdata/netdata
