@@ -238,7 +238,7 @@ services:
             - "traefik.http.services.nextcloud-seedbox.loadbalancer.server.port=443"
 
     portainer:
-        image: portainer/portainer
+        image: portainer/portainer-ce
         container_name: portainer
         restart: always
         volumes:
