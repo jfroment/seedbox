@@ -101,7 +101,7 @@ services:
             - "traefik.http.routers.sonarr.middlewares=common-auth@file"
 
     radarr:
-        image: linuxserver/radarr:nightly
+        image: linuxserver/radarr:develop
         container_name: radarr
         restart: always
         volumes:
@@ -215,7 +215,7 @@ services:
         labels:
             - "traefik.enable=false"
 
-    # See init-setup-nextcloud.sh for first install
+    # See scripts/init-setup-nextcloud.sh for first install
     nextcloud:
         depends_on:
             - nextcloud-db

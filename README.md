@@ -10,7 +10,7 @@ seedbox and personal media server.
 | Plex                 | plex.yourdomain.com        | [linuxserver/plex](https://hub.docker.com/r/linuxserver/plex)          | *latest*                | Media Streaming     |
 | Deluge               | deluge.yourdomain.com      | [linuxserver/deluge](https://hub.docker.com/r/linuxserver/deluge)      | *latest*                | Torrents downloader |
 | Sonarr               | sonarr.yourdomain.com      | [linuxserver/sonarr](https://hub.docker.com/r/linuxserver/sonarr)      | *preview*               | TV Shows monitor    |
-| Radarr               | radarr.yourdomain.com      | [linuxserver/radarr](https://hub.docker.com/r/linuxserver/radarr)      | *nightly*                | Movies monitor      |
+| Radarr               | radarr.yourdomain.com      | [linuxserver/radarr](https://hub.docker.com/r/linuxserver/radarr)      | *develop*                | Movies monitor      |
 | Bazarr               | bazarr.yourdomain.com      | [linuxserver/bazarr](https://hub.docker.com/r/linuxserver/bazarr)      | *latest*                | Subtitles monitor   |
 | Lidarr               | lidarr.yourdomain.com      | [linuxserver/lidarr](https://hub.docker.com/r/linuxserver/lidarr)      | *preview*               | Music monitor       |
 | Jackett              | jackett.yourdomain.com     | [linuxserver/jackett](https://hub.docker.com/r/linuxserver/jackett)    | *latest*                | Tracker indexer     |
@@ -74,13 +74,12 @@ sudo rm -rf /opt/traefik /tmp/migration
 Before running, please create the volumes which will be statically mapped to the ones on the host:
 
 ```sh
-sudo su -c "mkdir /data && mkdir /data/config && mkdir /data/torrents""
+sudo su -c "mkdir /data && mkdir /data/config && mkdir /data/torrents"
 ./init.sh
 ```
 
 Edit the `.env` file and change the variables as desired.
 The variables are all self-explanatory.
-Sames goes for `open-tunnel.sh` script to open a tunnel with port forwarding in order to access Plex Tools directly in your browser. (documentation needs to be updated - for now just install manually Plex Tools)
 
 ## Running & updating
 
