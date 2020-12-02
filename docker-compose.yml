@@ -215,7 +215,7 @@ services:
         labels:
             - "traefik.enable=false"
 
-    # See scripts/init-setup-nextcloud.sh for first install
+    # See tools/init-setup-nextcloud.sh for first install
     nextcloud:
         depends_on:
             - nextcloud-db
