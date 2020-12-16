@@ -14,7 +14,7 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./traefik:/etc/traefik:ro
-            - configtraefik:/config:ro
+            - configtraefik:/config
         environment:
             - TRAEFIK_DOMAIN=${TRAEFIK_DOMAIN}
             - TZ=${TZ}
