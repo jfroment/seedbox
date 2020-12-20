@@ -66,6 +66,13 @@ services:
       - "traefik.http.services.plex-seedbox.loadbalancer.server.port=32400"
       - "traefik.http.routers.plex.rule=Host(`plex.${TRAEFIK_DOMAIN}`)"
 
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr
+    container_name: flaresolverr
+    restart: always
+    environment:
+      - CAPTCHA_SOLVER=hcaptcha-solver
+    
   jackett:
     image: ghcr.io/linuxserver/jackett
     container_name: jackett
@@ -78,6 +85,7 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
+      - RUN_OPTS='-FlareSolverrURL="http://flaresolverr:8191"'
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jackett.rule=Host(`jackett.${TRAEFIK_DOMAIN}`)"
