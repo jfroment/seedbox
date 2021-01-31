@@ -5,7 +5,7 @@ source .env
 echo "${HTTP_USER}:${HTTP_PASSWORD}" > traefik/http_auth
 
 # Fetch all YAML files
-SERVICES=$(find services2 -name "*.yaml" -mindepth 1 -maxdepth 1 | sed -e 's/^/-f /')
+SERVICES=$(find services -mindepth 1 -maxdepth 1 -name "*.yaml"  | sed -e 's/^/-f /')
 ALL_SERVICES="-f docker-compose.yaml $SERVICES"
 
 echo "[$0] ***** Pulling all images... *****"
