@@ -1,0 +1,374 @@
+version: "3.7"
+
+services:
+    traefik:
+        image: traefik
+        container_name: traefik
+        restart: always
+        command: 
+            - --certificatesresolvers.le.acme.email=${ACME_MAIL}
+            - --pilot.token=${PILOT_TOKEN}
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./traefik:/etc/traefik:ro
+            - configtraefik:/config
+        environment:
+            - TRAEFIK_DOMAIN=${TRAEFIK_DOMAIN}
+            - TZ=${TZ}
+        labels:
+            - "traefik.enable=true"
+            # Docker labels for enabling Traefik dashboard
+            - "traefik.http.routers.traefik.rule=Host(`traefik.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.traefik.service=api@internal"
+            - "traefik.http.routers.traefik.middlewares=common-auth@file"
+
+    deluge:
+        image: linuxserver/deluge
+        container_name: deluge
+        restart: always
+        volumes:
+            - torrents:/torrents
+            - configdeluge:/config
+            - downloads:/downloads
+        environment:
+            - PGID=${PGID}
+            - PUID=${PUID}
+            - TZ=${TZ}
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.deluge.rule=Host(`deluge.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.deluge.middlewares=common-auth@file"
+
+    plex:
+        image: linuxserver/plex
+        container_name: plex
+        restart: always
+        ports:
+            - "32400:32400"
+            - "32400:32400/udp"
+            - "32469:32469"
+            - "32469:32469/udp"
+            - "5353:5353/udp"
+            - "1900:1900/udp"
+        volumes:
+            - configplex:/config
+            - torrents:/torrents
+        environment:
+            - PGID=${PGID}
+            - PUID=${PUID}
+            - TZ=${TZ}
+            - VERSION=latest
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.plex-seedbox.loadbalancer.server.port=32400"
+            - "traefik.http.routers.plex.rule=Host(`plex.${TRAEFIK_DOMAIN}`)"
+
+    jackett:
+        image: linuxserver/jackett
+        container_name: jackett
+        restart: always
+        volumes:
+            - config:/config
+            - torrents:/downloads
+            - /etc/localtime:/etc/localtime:ro
+        environment:
+            - PGID=${PGID}
+            - PUID=${PUID}
+            - TZ=${TZ}
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.jackett.rule=Host(`jackett.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.jackett.middlewares=common-auth@file"
+    
+    sonarr:
+        image: linuxserver/sonarr:preview
+        container_name: sonarr
+        restart: always
+        volumes:
+            - configsonarr:/config
+            - torrents:/torrents
+            - /etc/localtime:/etc/localtime:ro
+        environment:
+            - PGID=${PGID}
+            - PUID=${PUID}
+            - TZ=${TZ}
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.sonarr.rule=Host(`sonarr.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.sonarr.middlewares=common-auth@file"
+
+    radarr:
+        image: linuxserver/radarr:develop
+        container_name: radarr
+        restart: always
+        volumes:
+            - configradarr:/config
+            - torrents:/torrents
+            - /etc/localtime:/etc/localtime:ro
+        environment:
+            - PGID=${PGID}
+            - PUID=${PUID}
+            - TZ=${TZ}
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.radarr.rule=Host(`radarr.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.radarr.middlewares=common-auth@file"
+
+    bazarr:
+        image: linuxserver/bazarr
+        container_name: bazarr
+        restart: always
+        volumes:
+            - torrents:/torrents
+            - configbazarr:/config
+        environment:
+            - PGID=${PGID}
+            - PUID=${PUID}
+            - TZ=${TZ}
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.bazarr.rule=Host(`bazarr.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.bazarr.middlewares=common-auth@file"
+
+    lidarr:
+        image: linuxserver/lidarr:preview
+        container_name: lidarr
+        restart: always
+        volumes:
+            - configlidarr:/config
+            - torrents:/torrents
+        environment:
+            - PGID=${PGID}
+            - PUID=${PUID}
+            - TZ=${TZ}
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.lidarr.rule=Host(`lidarr.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.lidarr.middlewares=common-auth@file"
+
+    tautulli:
+        image: linuxserver/tautulli
+        container_name: tautulli
+        restart: always
+        volumes:
+            - configtautulli:/config
+            - config:/logs:ro # Inside of tautulli, bind to logs via "/logs/Plex Media Server/Logs"
+        environment:
+            - PGID=${PGID}
+            - PUID=${PUID}
+            - TZ=${TZ}
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.tautulli.rule=Host(`tautulli.${TRAEFIK_DOMAIN}`)"
+
+    jdownloader:
+        image: jlesage/jdownloader-2
+        container_name: jdownloader
+        restart: unless-stopped
+        volumes:
+            - configjdownloader:/config
+            - downloads:/output
+        environment:
+            - USER_ID=${PUID}
+            - GROUP_ID=${PGID}
+            - TZ=${TZ}
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.jdownloader-seedbox.loadbalancer.server.port=5800"
+            - "traefik.http.routers.jdownloader.rule=Host(`jdownloader.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.jdownloader.middlewares=common-auth@file"
+    
+    tdarr:
+        image: haveagitgat/tdarr
+        container_name: tdarr
+        restart: always
+        environment:
+            - PUID=${PUID}
+            - PGID=${PGID}
+            - TZ=${TZ}
+        volumes:
+            - torrents:/home/Tdarr/Media
+            - configtdarr:/home/Tdarr/Documents/Tdarr
+            - tdarrdb:/var/lib/mongodb
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.tdarr-seedbox.loadbalancer.server.port=8265"
+            - "traefik.http.routers.tdarr.rule=Host(`tdarr.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.tdarr.middlewares=common-auth@file"
+
+    nextcloud-db:
+        image: mariadb:10
+        container_name: nextcloud-db
+        command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+        restart: always
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - TZ=${TZ}
+        volumes: 
+            - nextclouddb:/var/lib/mysql
+        labels:
+            - "traefik.enable=false"
+
+    # See tools/init-setup-nextcloud.sh for first install
+    nextcloud:
+        depends_on:
+            - nextcloud-db
+        image: linuxserver/nextcloud
+        container_name: nextcloud
+        restart: always
+        environment:
+            - PGID=${PGID}
+            - PUID=${PUID}
+            - TZ=${TZ}
+        volumes:
+            - confignextcloud:/config
+            - nextclouddata:/data
+            - torrents:/torrents
+            - config:/seedbox-config
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.services.nextcloud-seedbox.loadbalancer.server.scheme=https"
+            - "traefik.http.services.nextcloud-seedbox.loadbalancer.server.port=443"
+
+    portainer:
+        image: portainer/portainer-ce
+        container_name: portainer
+        restart: always
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        command: --admin-password ${PORTAINER_ADMIN_PASSWORD} --host=unix:///var/run/docker.sock
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.portainer.rule=Host(`portainer.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.services.portainer-seedbox.loadbalancer.server.port=9000"
+
+    netdata:
+        image: netdata/netdata
+        restart: always
+        container_name: netdata
+        hostname: netdata.${TRAEFIK_DOMAIN}
+        environment:
+            PGID: 999
+        cap_add:
+            - SYS_PTRACE
+        security_opt:
+            - apparmor:unconfined
+        volumes:
+            - /proc:/host/proc:ro
+            - /sys:/host/sys:ro
+            - /var/run/docker.sock:/var/run/docker.sock:rw
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.netdata.rule=Host(`netdata.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.netdata.middlewares=common-auth@file"
+
+    duplicati:
+        image: linuxserver/duplicati
+        container_name: duplicati
+        restart: unless-stopped
+        environment:
+            - PUID=${PUID}
+            - PGID=${PGID}
+            - TZ=${TZ}
+        volumes:
+            - configduplicati:/config
+            - backups:/backups
+            - alldata:/source
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.duplicati.rule=Host(`duplicati.${TRAEFIK_DOMAIN}`)"
+            - "traefik.http.routers.duplicati.middlewares=common-auth@file"
+
+networks: 
+  default: 
+    external:
+      name: "traefik-network"
+
+volumes:
+    alldata:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data
+    config:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config
+    configtraefik:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/traefik
+    configplex:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/Plex
+    configsonarr: 
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/sonarr
+    configradarr: 
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/radarr
+    configbazarr:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/bazarr
+    configlidarr:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/lidarr
+    configdeluge: 
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/deluge
+    configtautulli:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/tautulli
+    configjdownloader:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/jdownloader
+    configtdarr:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/tdarr
+    tdarrdb:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/tdarr-db
+    nextclouddb:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/nextcloud-db
+    confignextcloud:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/nextcloud
+    nextclouddata:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/nextcloud-data
+    torrents:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/torrents
+    downloads:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/torrents/deluge
+    configduplicati:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/config/duplicati
+    backups:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/backups
