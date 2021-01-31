@@ -79,6 +79,11 @@ sudo su -c "mkdir /data && mkdir /data/config && mkdir /data/torrents"
 Edit the `.env` file and change the variables as desired.
 The variables are all self-explanatory.
 
+**NEW**
+You can also disable a service if you do not need it by editing the ``services.conf`` file.
+Simply change the "*enable*" key with the "*disable*" one for the service you want to disable.
+If you remove a line in this file, it will be considered as "enabled" as all services are enabled by default.
+
 ## Running & updating
 
 ```sh
