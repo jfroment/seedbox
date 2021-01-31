@@ -1,0 +1,22 @@
+services:
+  bazarr:
+    image: ghcr.io/linuxserver/bazarr
+    container_name: bazarr
+    restart: always
+    volumes:
+      - torrents:/torrents
+      - configbazarr:/config
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.bazarr.middlewares=common-auth@file"
+
+volumes:
+  configbazarr:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/bazarr

@@ -1,0 +1,7 @@
+services:
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr
+    container_name: flaresolverr
+    restart: always
+    environment:
+      - CAPTCHA_SOLVER=hcaptcha-solver

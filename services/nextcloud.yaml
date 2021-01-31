@@ -1,0 +1,52 @@
+services:
+  nextcloud-db:
+      image: mariadb:10
+      container_name: nextcloud-db
+      command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+      restart: always
+      environment:
+        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - MYSQL_USER=${MYSQL_USER}
+        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        - TZ=${TZ}
+      volumes: 
+        - nextclouddb:/var/lib/mysql
+      labels:
+        - "traefik.enable=false"
+
+  # See tools/init-setup-nextcloud.sh for first install
+  nextcloud:
+    depends_on:
+      - nextcloud-db
+    image: linuxserver/nextcloud
+    container_name: nextcloud
+    restart: always
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+    volumes:
+      - confignextcloud:/config
+      - nextclouddata:/data
+      - torrents:/torrents
+      - config:/seedbox-config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.services.nextcloud-seedbox.loadbalancer.server.scheme=https"
+      - "traefik.http.services.nextcloud-seedbox.loadbalancer.server.port=443"
+
+volumes:
+  nextclouddb:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/nextcloud-db
+  confignextcloud:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/nextcloud
+  nextclouddata:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/nextcloud-data

@@ -1,0 +1,23 @@
+services:
+  deluge:
+    image: ghcr.io/linuxserver/deluge
+    container_name: deluge
+    restart: always
+    volumes:
+      - torrents:/torrents
+      - configdeluge:/config
+      - downloads:/downloads
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.deluge.rule=Host(`deluge.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.deluge.middlewares=common-auth@file"
+
+volumes:
+  configdeluge: 
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/deluge

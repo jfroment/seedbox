@@ -1,0 +1,22 @@
+services:
+  lidarr:
+    image: ghcr.io/linuxserver/lidarr:preview
+    container_name: lidarr
+    restart: always
+    volumes:
+      - configlidarr:/config
+      - torrents:/torrents
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.lidarr.rule=Host(`lidarr.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.lidarr.middlewares=common-auth@file"
+
+volumes:
+  configlidarr:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/lidarr

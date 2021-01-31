@@ -1,0 +1,26 @@
+version: "3.8"
+
+#############################################################################
+## Services are now located in separate files, in the services directory.  ##
+#############################################################################
+
+# Common network used by all services
+networks: 
+  default: 
+    external:
+      name: "traefik-network"
+
+# Common volumes used by at least 2 services
+volumes:
+  config:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config
+  torrents:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/torrents
+  downloads:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/torrents/deluge

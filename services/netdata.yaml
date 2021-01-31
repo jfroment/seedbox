@@ -1,0 +1,23 @@
+services:
+  netdata:
+    image: netdata/netdata
+    restart: always
+    container_name: netdata
+    hostname: netdata.${TRAEFIK_DOMAIN}
+    environment:
+      PGID: 999
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.netdata.rule=Host(`netdata.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.netdata.middlewares=common-auth@file"

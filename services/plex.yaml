@@ -1,0 +1,30 @@
+services:
+  plex:
+    image: ghcr.io/linuxserver/plex
+    container_name: plex
+    restart: always
+    ports:
+      - "32400:32400"
+      - "32400:32400/udp"
+      - "32469:32469"
+      - "32469:32469/udp"
+      - "5353:5353/udp"
+      - "1900:1900/udp"
+    volumes:
+      - configplex:/config
+      - torrents:/torrents
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+      - VERSION=latest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.plex-seedbox.loadbalancer.server.port=32400"
+      - "traefik.http.routers.plex.rule=Host(`plex.${TRAEFIK_DOMAIN}`)"
+
+volumes:
+  configplex:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/Plex
