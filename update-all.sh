@@ -4,6 +4,9 @@
 source .env
 echo "${HTTP_USER}:${HTTP_PASSWORD}" > traefik/http_auth
 
+# Docker-compose settings
+COMPOSE_HTTP_TIMEOUT=240
+
 # Fetch all YAML files
 SERVICES=$(find services -mindepth 1 -maxdepth 1 -name "*.yaml"  | sed -e 's/^/-f /')
 ALL_SERVICES="-f docker-compose.yaml $SERVICES"
