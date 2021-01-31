@@ -1,0 +1,31 @@
+services:
+  duplicati:
+    image: ghcr.io/linuxserver/duplicati
+    container_name: duplicati
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - configduplicati:/config
+      - backups:/backups
+      - alldata:/source
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.duplicati.rule=Host(`duplicati.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.duplicati.middlewares=common-auth@file"
+
+volumes:
+  alldata:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data
+  configduplicati:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/duplicati
+  backups:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/backups

@@ -1,0 +1,30 @@
+services:
+  traefik:
+    image: traefik
+    container_name: traefik
+    restart: always
+    command: 
+      - --certificatesresolvers.le.acme.email=${ACME_MAIL}
+      - --pilot.token=${PILOT_TOKEN}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik:/etc/traefik:ro
+      - configtraefik:/config
+    environment:
+      - TRAEFIK_DOMAIN=${TRAEFIK_DOMAIN}
+      - TZ=${TZ}
+    labels:
+      - "traefik.enable=true"
+      # Docker labels for enabling Traefik dashboard
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=common-auth@file"
+
+volumes:
+  configtraefik:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/traefik

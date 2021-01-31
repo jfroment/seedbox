@@ -1,0 +1,28 @@
+services:
+  tdarr:
+    image: haveagitgat/tdarr:1.3003
+    container_name: tdarr
+    restart: always
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - torrents:/home/Tdarr/Media
+      - configtdarr:/home/Tdarr/Documents/Tdarr
+      - tdarrdb:/var/lib/mongodb
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.tdarr-seedbox.loadbalancer.server.port=8265"
+      - "traefik.http.routers.tdarr.rule=Host(`tdarr.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.tdarr.middlewares=common-auth@file"
+
+volumes:
+  configtdarr:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/tdarr
+  tdarrdb:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/tdarr-db

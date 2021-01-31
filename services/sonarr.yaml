@@ -1,0 +1,23 @@
+services:
+  sonarr:
+    image: ghcr.io/linuxserver/sonarr:preview
+    container_name: sonarr
+    restart: always
+    volumes:
+      - configsonarr:/config
+      - torrents:/torrents
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.sonarr.middlewares=common-auth@file"
+
+volumes:
+  configsonarr: 
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/sonarr

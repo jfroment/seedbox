@@ -1,0 +1,21 @@
+services:
+  tautulli:
+    image: ghcr.io/linuxserver/tautulli
+    container_name: tautulli
+    restart: always
+    volumes:
+      - configtautulli:/config
+      - config:/logs:ro # Inside of tautulli, bind to logs via "/logs/Plex Media Server/Logs"
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tautulli.rule=Host(`tautulli.${TRAEFIK_DOMAIN}`)"
+
+volumes:
+  configtautulli:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/tautulli
