@@ -63,11 +63,9 @@ sudo rm -rf /opt/traefik /tmp/migration
 
 ## Dependencies
 
-- [Docker](https://github.com/docker/docker) >= 1.13.0
-    + Install guidelines for Ubuntu 16.04: https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04
-- [Docker Compose](https://github.com/docker/compose) >=v1.10.0
-    + Install guidelines for Ubuntu 16.04: https://www.digitalocean.com/community/tutorials/how-to-install-docker-compose-on-ubuntu-16-04
-- [local-persist Docker plugin](https://github.com/CWSpear/local-persist): installed directly on host (not in container). This is a volume plugin that extends the default local driver’s functionality by allowing you specify a mountpoint anywhere on the host, which enables the files to always persist, even if the volume is removed via `docker volume rm`. Use *systemd* install for Ubuntu 16.04.
+- [Docker](https://github.com/docker/docker) >= 20.10
+- [Docker Compose](https://github.com/docker/compose) >= 1.28.0
+- [local-persist Docker plugin](https://github.com/MatchbookLab/local-persist): installed directly on host (not in container). This is a volume plugin that extends the default local driver’s functionality by allowing you specify a mountpoint anywhere on the host, which enables the files to always persist, even if the volume is removed via `docker volume rm`. Use *systemd* install for Ubuntu 16.04.
 
 ## Configuration
 
