@@ -1,6 +1,6 @@
 services:
   lidarr:
-    image: ghcr.io/linuxserver/lidarr:preview
+    image: ghcr.io/linuxserver/lidarr:develop
     container_name: lidarr
     restart: always
     volumes:
