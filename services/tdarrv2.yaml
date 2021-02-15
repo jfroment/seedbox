@@ -1,0 +1,52 @@
+services:
+  tdarr:
+    image: haveagitgat/tdarr:latest
+    container_name: tdarrv2
+    restart: always
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - serverIP=tdarr
+      - serverPort=8266
+      - webUIPort=8265
+      - ROOT_URL=https://tdarrv2.${TRAEFIK_DOMAIN}
+      - BASE=/
+    volumes:
+      - torrents:/media
+      - transcodes:/temp
+      - configtdarrv2:/app/server
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.tdarrv2-seedbox.loadbalancer.server.port=8265"
+      - "traefik.http.routers.tdarrv2.rule=Host(`tdarrv2.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.tdarrv2.middlewares=common-auth@file"
+
+  tdarr_node:
+    image: haveagitgat/tdarr_node:latest
+    container_name: tdarr_node
+    restart: always
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - nodeID=Node1
+      - nodeIP=tdarr_node
+      - nodePort=8267
+      - serverIP=tdarrv2
+      - serverPort=8266
+    volumes:
+      - torrents:/media
+      - transcodes:/temp
+    labels:
+      - "traefik.enable=false"
+
+volumes:
+  configtdarrv2:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/tdarrv2
+  transcodes:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/tdarr-transcodes
