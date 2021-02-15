@@ -1,5 +1,5 @@
 services:
-  tdarr:
+  tdarrv2:
     image: haveagitgat/tdarr:latest
     container_name: tdarrv2
     restart: always
@@ -7,7 +7,7 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
-      - serverIP=tdarr
+      - serverIP=tdarrv2
       - serverPort=8266
       - webUIPort=8265
       - ROOT_URL=https://tdarrv2.${TRAEFIK_DOMAIN}
