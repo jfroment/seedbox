@@ -10,8 +10,6 @@ services:
       - serverIP=tdarrv2
       - serverPort=8266
       - webUIPort=8265
-      - ROOT_URL=https://tdarrv2.${TRAEFIK_DOMAIN}
-      - BASE=/
     volumes:
       - torrents:/media
       - transcodes:/temp
