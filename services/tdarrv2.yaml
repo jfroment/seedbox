@@ -37,6 +37,7 @@ services:
     volumes:
       - torrents:/media
       - transcodes:/temp
+      - settingstdarrv2:/app/configs
     labels:
       - "traefik.enable=false"
 
