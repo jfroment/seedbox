@@ -43,7 +43,7 @@ volumes:
   configtdarrv2:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/tdarrv2
+      mountpoint: /data/config/tdarr
   transcodes:
     driver: local-persist
     driver_opts:
