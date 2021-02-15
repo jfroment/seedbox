@@ -14,6 +14,7 @@ services:
       - torrents:/media
       - transcodes:/temp
       - configtdarrv2:/app/server
+      - settingstdarrv2:/app/configs
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.tdarrv2-seedbox.loadbalancer.server.port=8265"
@@ -43,8 +44,12 @@ volumes:
   configtdarrv2:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/tdarrv2
+      mountpoint: /data/config/tdarrv2/server
+  settingstdarrv2:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/tdarrv2/configs
   transcodes:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/tdarr-transcodes
+      mountpoint: /data/config/tdarrv2/transcodes
