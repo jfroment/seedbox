@@ -7,7 +7,7 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
-      - serverIP=tdarrv2
+      - serverIP=0.0.0.0
       - serverPort=8266
       - webUIPort=8265
     volumes:
@@ -43,7 +43,7 @@ volumes:
   configtdarrv2:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/tdarr
+      mountpoint: /data/config/tdarrv2
   transcodes:
     driver: local-persist
     driver_opts:
