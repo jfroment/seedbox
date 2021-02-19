@@ -8,8 +8,8 @@ docker exec -it -u abc -w /config/www/nextcloud \
   nextcloud bash -c " \
     php occ maintenance:install \
       --database \"mysql\" \
-      --database-host \"${MYSQL_DATABASE}\" \
-      --database-name \"nextcloud-db\" \
+      --database-host  \"nextcloud-db\" \
+      --database-name \"${MYSQL_DATABASE}\" \
       --database-user \"${MYSQL_USER}\" \
       --database-pass \"${MYSQL_PASSWORD}\" \
       --admin-user \"${NEXTCLOUD_ADMIN_USER}\" \
