@@ -1,6 +1,6 @@
 services:
   sonarr:
-    image: ghcr.io/linuxserver/sonarr:preview
+    image: ghcr.io/linuxserver/sonarr:develop
     container_name: sonarr
     restart: always
     volumes:
