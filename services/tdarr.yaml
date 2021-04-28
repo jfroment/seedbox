@@ -1,31 +1,56 @@
-#################################################################################
-####################### DEPRECATED - WILL BE DELETED SOON #######################
-#################################################################################
 services:
   tdarr:
-    image: haveagitgat/tdarr:1.3003
+    image: haveagitgat/tdarr:latest
     container_name: tdarr
     restart: always
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
+      - serverIP=0.0.0.0
+      - serverPort=8266
+      - webUIPort=8265
     volumes:
-      - torrents:/home/Tdarr/Media
-      - configtdarr:/home/Tdarr/Documents/Tdarr
-      - tdarrdb:/var/lib/mongodb
+      - torrents:/media
+      - transcodes:/temp
+      - configtdarrv2:/app/server
+      - settingstdarrv2:/app/configs
     labels:
       - "traefik.enable=true"
-      - "traefik.http.services.tdarr-seedbox.loadbalancer.server.port=8265"
-      - "traefik.http.routers.tdarr.rule=Host(`tdarr.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.tdarr.middlewares=common-auth@file"
+      - "traefik.http.services.tdarrv2-seedbox.loadbalancer.server.port=8265"
+      - "traefik.http.routers.tdarrv2.rule=Host(`tdarr.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.tdarrv2.middlewares=common-auth@file"
+
+  tdarr_node:
+    image: haveagitgat/tdarr_node:latest
+    container_name: tdarr_node
+    restart: always
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - nodeID=Node1
+      - nodeIP=tdarr_node
+      - nodePort=8267
+      - serverIP=tdarr
+      - serverPort=8266
+    volumes:
+      - torrents:/media
+      - transcodes:/temp
+      - settingstdarrv2:/app/configs
+    labels:
+      - "traefik.enable=false"
 
 volumes:
-  configtdarr:
+  configtdarrv2:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/tdarr
-  tdarrdb:
+      mountpoint: /data/config/tdarrv2/server
+  settingstdarrv2:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/tdarr-db
+      mountpoint: /data/config/tdarrv2/configs
+  transcodes:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/tdarrv2/transcodes
