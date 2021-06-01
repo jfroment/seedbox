@@ -1,0 +1,21 @@
+services:
+  ombi:
+    image: ghcr.io/linuxserver/ombi
+    container_name: ombi
+    restart: always
+    volumes:
+      - configombi:/config
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ombi.rule=Host(`ombi.${TRAEFIK_DOMAIN}`)"
+      #- "traefik.http.routers.ombi.middlewares=common-auth@file"
+
+volumes:
+  configombi:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/ombi
