@@ -9,6 +9,7 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
+      - BASE_URL=/
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ombi.rule=Host(`ombi.${TRAEFIK_DOMAIN}`)"
