@@ -11,7 +11,7 @@ services:
       - TZ=${TZ}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ombi.rule=Host(`overseerr.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.overseerr.rule=Host(`overseerr.${TRAEFIK_DOMAIN}`)"
 
 volumes:
   configoverseerr:

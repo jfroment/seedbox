@@ -11,7 +11,7 @@ services:
       - TZ=${TZ}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ombi.rule=Host(`prowlarr.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.${TRAEFIK_DOMAIN}`)"
       - "traefik.http.routers.prowlarr.middlewares=common-auth@file"
 
 volumes:
