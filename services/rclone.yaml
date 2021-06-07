@@ -1,0 +1,35 @@
+services:
+  rclone:
+    image: rclone/rclone
+    entrypoint: ["rclone", "rcd", "--rc-addr", ":5572", "--rc-web-gui", "--rc-serve", "--rc-user", "rclone", "--rc-pass", "rclone", "--rc-web-gui-no-open-browser"]
+    container_name: rclone
+    restart: unless-stopped
+    expose:
+      - "5572"
+    volumes:
+      - configrclone:/config
+      - config:/globalconfig
+      - torrents:/torrents
+      - downloads:/downloads
+      - backups:/backups
+      - alldata:/root/alldata
+    environment:
+      - USER_ID=${PUID}
+      - GROUP_ID=${PGID}
+      - TZ=${TZ}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.rclone-seedbox.loadbalancer.server.port=5572"
+      - "traefik.http.routers.rclone.rule=Host(`rclone.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.rclone.middlewares=common-auth@file, rclone-auth@docker"
+      - "traefik.http.middlewares.rclone-auth.headers.customrequestheaders.Authorization=Basic cmNsb25lOnJjbG9uZQ=="
+      # save it in case rclone changed authentication logic
+      #- "traefik.http.routers.rclone.middlewares=common-auth@file, rclone-auth@docker, rclone-logintoken@docker"
+      #- "traefik.http.middlewares.rclone-logintoken.redirectregex.regex=^http://([^/]+?)$$"
+      #- "traefik.http.middlewares.rclone-logintoken.redirectregex.replacement=http://$${1}/?login_token=cmNsb25lOnJjbG9uZQ%3D%3D"
+
+volumes:
+  configrclone:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/rclone
