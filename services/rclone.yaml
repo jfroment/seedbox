@@ -1,6 +1,6 @@
 services:
   rclone:
-    image: rclone/rclone
+    image: nyamisty/fclone
     entrypoint: ["rclone", "rcd", "--rc-addr", ":5572", "--rc-web-gui", "--rc-serve", "--rc-user", "rclone", "--rc-pass", "rclone", "--rc-web-gui-no-open-browser"]
     container_name: rclone
     restart: unless-stopped
