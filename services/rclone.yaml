@@ -10,7 +10,7 @@ services:
       - configrclone:/config
       - config:/globalconfig
       - torrents:/torrents
-      - downloads:/downloads
+      - downloads:/downloads,rw,rshared
       - backups:/backups
       - alldata:/root/alldata
     environment:
