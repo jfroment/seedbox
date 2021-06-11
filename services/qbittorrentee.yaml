@@ -1,0 +1,27 @@
+services:
+  qbittorrentee:
+    image: superng6/qbittorrentee
+    container_name: qbittorrentee
+    restart: unless-stopped
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+    volumes:
+      - torrents:/torrents
+      - configqbittorrentee:/config
+      - downloads:/downloads
+    ports:
+      - 6881:6881
+      - 6881:6881/udp
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrentee.rule=Host(`qbtee.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.qbittorrentee.middlewares=common-auth@file"
+      - "traefik.http.services.qbittorrentee-seedbox.loadbalancer.server.port=8080"
+
+volumes:
+  configqbittorrentee:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/qbittorrentee

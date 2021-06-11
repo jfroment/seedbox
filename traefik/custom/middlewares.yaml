@@ -12,6 +12,6 @@ http:
         referrerPolicy: "same-origin"
         featurePolicy: "vibrate 'self'; geolocation 'self'; midi 'self'; notifications 'self'; push 'self'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'self'; fullscreen 'self'"
 
-        frameDeny: true
+        #frameDeny: true
         contentTypeNosniff: true
         browserXssFilter: true
