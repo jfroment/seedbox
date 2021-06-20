@@ -30,6 +30,12 @@ done < <(grep "disable" services.conf | awk -F : '{print  $1}' )
 SERVICES=$(find services -mindepth 1 -maxdepth 1 -name "*.yaml" ${disabled_pattern} | sed -e 's/^/-f /')
 ALL_SERVICES="-f docker-compose.yaml $SERVICES"
 
+# Specific instructions for Flood
+# User for Deluge daemon RPC has to be created in deluge auth config file
+if [[ ! -z ${FLOOD_PASSWORD} && ${FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON} ]]; then
+  echo "flood:${FLOOD_PASSWORD}:10" >> /data/config/deluge/auth
+fi
+
 if [[ "${SKIP_PULL}" != "1" ]]; then
   echo "[$0] ***** Pulling all images... *****"
   docker-compose ${ALL_SERVICES} pull
