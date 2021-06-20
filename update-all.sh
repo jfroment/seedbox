@@ -32,8 +32,12 @@ ALL_SERVICES="-f docker-compose.yaml $SERVICES"
 
 # Specific instructions for Flood
 # User for Deluge daemon RPC has to be created in deluge auth config file
-if [[ ! -z ${FLOOD_PASSWORD} && ${FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON} == true && ! grep -q "flood" /data/config/deluge/auth ]]; then
-  echo "flood:${FLOOD_PASSWORD}:10" >> /data/config/deluge/auth
+if [[ ! -z ${FLOOD_PASSWORD} && ${FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON} == true ]]; then
+  if ! grep -q "flood" /data/config/deluge/auth; then
+    echo "flood:${FLOOD_PASSWORD}:10" >> /data/config/deluge/auth
+  else
+    echo "No need to add user/password for flood as it has already been created."
+  fi
 fi
 
 if [[ "${SKIP_PULL}" != "1" ]]; then
