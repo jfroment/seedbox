@@ -9,11 +9,15 @@ seedbox and personal media server.
 -----------------------|----------------------------|------------------------------------------------------------------------|-------------------------|---------------------|
 | Plex                 | plex.yourdomain.com        | [linuxserver/plex](https://hub.docker.com/r/linuxserver/plex)          | *latest*                | Media Streaming     |
 | Deluge               | deluge.yourdomain.com      | [linuxserver/deluge](https://hub.docker.com/r/linuxserver/deluge)      | *latest*                | Torrents downloader |
+| Flood               | flood.yourdomain.com      | [jesec/flood](https://hub.docker.com/r/jesec/flood)      | *latest*      | Web client for Deluge (experimental) |
 | Sonarr               | sonarr.yourdomain.com      | [linuxserver/sonarr](https://hub.docker.com/r/linuxserver/sonarr)      | *develop*               | TV Shows monitor    |
 | Radarr               | radarr.yourdomain.com      | [linuxserver/radarr](https://hub.docker.com/r/linuxserver/radarr)      | *develop*                | Movies monitor      |
 | Bazarr               | bazarr.yourdomain.com      | [linuxserver/bazarr](https://hub.docker.com/r/linuxserver/bazarr)      | *latest*                | Subtitles monitor   |
 | Lidarr               | lidarr.yourdomain.com      | [linuxserver/lidarr](https://hub.docker.com/r/linuxserver/lidarr)      | *develop*               | Music monitor       |
+| Ombi               | ombi.yourdomain.com      | [linuxserver/ombi](https://hub.docker.com/r/linuxserver/ombi)      | *latest*               | Plex content requests       |
+| Overseerr               | overseerr.yourdomain.com      | [linuxserver/overseerr](https://hub.docker.com/r/linuxserver/overseerr)      | *latest*               | Plex content requests       |
 | Jackett              | jackett.yourdomain.com     | [linuxserver/jackett](https://hub.docker.com/r/linuxserver/jackett)    | *latest*                | Tracker indexer     |
+| Prowlarr              | prowlarr.yourdomain.com     | [linuxserver/prowlarr](https://hub.docker.com/r/linuxserver/prowlarr)    | *nightly*                | Tracker indexer **(new)**  |
 | JDownloader          | jdownloader.yourdomain.com | [jlesage/jdownloader-2](https://hub.docker.com/r/jlesage/jdownloader-2)| *latest*                | Direct downloader   |
 | Tautulli (plexPy)    | tautulli.yourdomain.com    | [linuxserver/tautulli](https://hub.docker.com/r/linuxserver/tautulli)  | *latest*                | Plex stats and admin|
 | Tdarr            | tdarr.yourdomain.com   | [haveagitgat/tdarr](https://hub.docker.com/r/haveagitgat/tdarr)  | *latest*                | Re-encode files |

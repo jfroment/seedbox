@@ -1,6 +1,6 @@
 services:
   netdata:
-    image: netdata/netdata
+    image: netdata/netdata:stable
     restart: always
     container_name: netdata
     hostname: netdata.${TRAEFIK_DOMAIN}
@@ -16,7 +16,7 @@ services:
       - /etc/passwd:/host/etc/passwd:ro
       - /etc/group:/host/etc/group:ro
       - /etc/os-release:/host/etc/os-release:ro
-      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.netdata.rule=Host(`netdata.${TRAEFIK_DOMAIN}`)"

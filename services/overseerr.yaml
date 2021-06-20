@@ -1,0 +1,20 @@
+services:
+  overseerr:
+    image: ghcr.io/linuxserver/overseerr
+    container_name: overseerr
+    restart: always
+    volumes:
+      - configoverseerr:/config
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.overseerr.rule=Host(`overseerr.${TRAEFIK_DOMAIN}`)"
+
+volumes:
+  configoverseerr:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/overseerr
