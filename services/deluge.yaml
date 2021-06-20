@@ -16,8 +16,38 @@ services:
       - "traefik.http.routers.deluge.rule=Host(`deluge.${TRAEFIK_DOMAIN}`)"
       - "traefik.http.routers.deluge.middlewares=common-auth@file"
 
+  flood:
+    image: jesec/flood:latest
+    container_name: flood
+    restart: always
+    depends_on:
+      - deluge
+    user: ${PUID}:${PGID}
+    command:
+      - --auth=none
+      - --dehost=deluge
+      - --deport=58846
+      - --deuser=deluge
+      - --depass=deluge
+      - --rundir=/config
+    volumes:
+      - configflood:/config
+      - torrents:/torrents
+      - downloads:/downloads
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flood.rule=Host(`flood.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.flood.middlewares=common-auth@file"
+      - "traefik.http.routers.flood.service=flood-service"
+      - "traefik.http.services.flood-service.loadbalancer.server.port=3000"
+
 volumes:
   configdeluge: 
     driver: local-persist
     driver_opts:
       mountpoint: /data/config/deluge
+  configflood: 
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/flood
