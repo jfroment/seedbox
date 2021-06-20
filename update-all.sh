@@ -21,6 +21,19 @@ echo "${HTTP_USER}:${HTTP_PASSWORD}" > traefik/http_auth
 # Docker-compose settings
 COMPOSE_HTTP_TIMEOUT=240
 
+if [[ ! -f services.conf ]]; then
+  echo "[$0] No services.conf file found. Copying from sample file..."
+  cp services.conf.sample services.conf
+fi
+
+# Alert in case new services have been added (or removed) in sample but active file has not changed
+NB_SERVICES_ACTIVE=$(cat services.conf | wc -l)
+NB_SERVICES_ORIG=$(cat services.conf.sample | wc -l)
+if [[ ${NB_SERVICES_ACTIVE} != ${NB_SERVICES_ORIG} ]];
+  echo "[$0] Your services.conf file seems outdated. It appears there are new services available, or services that have been removed."
+  diff -yt services.conf services.conf.sample
+fi
+
 # Fetch all YAML files
 disabled_pattern=""
 while read -r line ; do
