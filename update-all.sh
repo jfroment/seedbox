@@ -29,7 +29,7 @@ fi
 # Alert in case new services have been added (or removed) in sample but active file has not changed
 NB_SERVICES_ACTIVE=$(cat services.conf | wc -l)
 NB_SERVICES_ORIG=$(cat services.conf.sample | wc -l)
-if [[ ${NB_SERVICES_ACTIVE} != ${NB_SERVICES_ORIG} ]];
+if [[ ${NB_SERVICES_ACTIVE} != ${NB_SERVICES_ORIG} ]]; then
   echo "[$0] Your services.conf file seems outdated. It appears there are new services available, or services that have been removed."
   diff -yt services.conf services.conf.sample
 fi
