@@ -36,7 +36,8 @@ if [[ ! -z ${FLOOD_PASSWORD} && ${FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON} == tru
   if ! grep -q "flood" /data/config/deluge/auth; then
     echo "flood:${FLOOD_PASSWORD}:10" >> /data/config/deluge/auth
   else
-    echo "No need to add user/password for flood as it has already been created."
+    echo "[$0] No need to add user/password for flood as it has already been created."
+    echo "[$0] Consider setting FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON variable to false in .env file."
   fi
 fi
 
