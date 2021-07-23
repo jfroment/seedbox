@@ -19,7 +19,7 @@ source .env
 echo "${HTTP_USER}:${HTTP_PASSWORD}" > traefik/http_auth
 
 # Docker-compose settings
-COMPOSE_HTTP_TIMEOUT=240
+export COMPOSE_HTTP_TIMEOUT=240
 
 if [[ ! -f services.conf ]]; then
   echo "[$0] No services.conf file found. Copying from sample file..."
