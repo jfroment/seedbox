@@ -2,7 +2,7 @@ services:
   jdownloader:
     image: jlesage/jdownloader-2
     container_name: jdownloader
-    restart: unless-stopped
+    restart: always
     volumes:
       - configjdownloader:/config
       - downloads:/output

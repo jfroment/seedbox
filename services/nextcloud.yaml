@@ -2,7 +2,7 @@ services:
   nextcloud-db:
       image: mariadb:10
       container_name: nextcloud-db
-      command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+      command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --innodb-file-per-table=1 --skip-innodb-read-only-compressed
       restart: always
       environment:
         - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}

@@ -1,6 +1,6 @@
 services:
   prowlarr:
-    image: ghcr.io/linuxserver/prowlarr:nightly
+    image: ghcr.io/linuxserver/prowlarr:develop
     container_name: prowlarr
     restart: always
     volumes:
