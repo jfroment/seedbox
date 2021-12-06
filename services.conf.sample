@@ -8,6 +8,7 @@ sonarr: enable
 radarr: enable
 bazarr: enable
 lidarr: enable
+readarr: false
 komga: disable
 ombi: disable
 overseerr: enable
