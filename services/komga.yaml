@@ -5,7 +5,7 @@ services:
     restart: always
     volumes:
       - configkomga:/config
-      - torrents:/data
+      - torrents:/torrents
       - /etc/localtime:/etc/localtime:ro
     environment:
       - TZ=${TZ}
