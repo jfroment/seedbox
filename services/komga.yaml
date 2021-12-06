@@ -13,7 +13,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.komga.rule=Host(`komga.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.komga.middlewares=common-auth@file"
 
 volumes:
   configkomga: 
