@@ -1,0 +1,22 @@
+services:
+  komga:
+    image: gotson/komga
+    container_name: komga
+    restart: always
+    volumes:
+      - configkomga:/config
+      - torrents:/data
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - TZ=${TZ}
+    user: "${PUID}:${PGID}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.komga.rule=Host(`komga.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.komga.middlewares=common-auth@file"
+
+volumes:
+  configkomga: 
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/komga
