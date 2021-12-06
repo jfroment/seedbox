@@ -10,6 +10,7 @@ bazarr: enable
 lidarr: enable
 readarr: false
 komga: disable
+kavita: disable
 ombi: disable
 overseerr: enable
 tautulli: enable

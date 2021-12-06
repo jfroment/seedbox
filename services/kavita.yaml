@@ -1,0 +1,22 @@
+services:
+  kavita:
+    image: kizaing/kavita:latest
+    container_name: kavita
+    restart: always
+    volumes:
+      - configkavita:/kavita/config
+      - torrents:/torrents
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - TZ=${TZ}
+    user: "${PUID}:${PGID}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kavita.rule=Host(`kavita.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.readarr.middlewares=common-auth@file"
+
+volumes:
+  configkavita: 
+    driver: local-persist
+    driver_opts:
+      mountpoint: /data/config/kavita
