@@ -9,7 +9,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       - TZ=${TZ}
-    user: "${PUID}:${PGID}"
+    #user: "${PUID}:${PGID}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.kavita.rule=Host(`kavita.${TRAEFIK_DOMAIN}`)"
