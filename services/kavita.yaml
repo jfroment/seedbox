@@ -13,7 +13,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.kavita.rule=Host(`kavita.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.readarr.middlewares=common-auth@file"
+      - "traefik.http.routers.kavita.middlewares=common-auth@file"
 
 volumes:
   configkavita: 
