@@ -7,8 +7,7 @@ version: "3.8"
 # Common network used by all services
 networks: 
   default: 
-    external:
-      name: "traefik-network"
+    name: "traefik-network"
 
 # Common volumes used by at least 2 services
 volumes:
