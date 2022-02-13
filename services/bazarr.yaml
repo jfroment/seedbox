@@ -19,4 +19,4 @@ volumes:
   configbazarr:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/bazarr
+      mountpoint: $HOST_CONFIG_PATH/bazarr

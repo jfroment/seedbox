@@ -9,6 +9,7 @@ seedbox and personal media server.
 -----------------------|----------------------------|------------------------------------------------------------------------|-------------------------|---------------------|
 | Plex                 | plex.yourdomain.com        | [linuxserver/plex](https://hub.docker.com/r/linuxserver/plex)          | *latest*                | Media Streaming     |
 | Deluge               | deluge.yourdomain.com      | [linuxserver/deluge](https://hub.docker.com/r/linuxserver/deluge)      | *latest*                | Torrents downloader |
+| Deluge (VPN)               | deluge.yourdomain.com      | [linuxserver/deluge](https://hub.docker.com/r/linuxserver/deluge)      | *latest*                | Torrents downloader (behind VPN) |
 | Flood               | flood.yourdomain.com      | [jesec/flood](https://hub.docker.com/r/jesec/flood)      | *latest*      | Web client for Deluge (experimental) |
 | Sonarr               | sonarr.yourdomain.com      | [linuxserver/sonarr](https://hub.docker.com/r/linuxserver/sonarr)      | *develop*               | TV Shows monitor    |
 | Radarr               | radarr.yourdomain.com      | [linuxserver/radarr](https://hub.docker.com/r/linuxserver/radarr)      | *develop*                | Movies monitor      |
@@ -22,6 +23,7 @@ seedbox and personal media server.
 | Jackett              | jackett.yourdomain.com     | [linuxserver/jackett](https://hub.docker.com/r/linuxserver/jackett)    | *latest*                | Tracker indexer     |
 | Prowlarr              | prowlarr.yourdomain.com     | [linuxserver/prowlarr](https://hub.docker.com/r/linuxserver/prowlarr)    | *develop*                | Tracker indexer |
 | JDownloader          | jdownloader.yourdomain.com | [jlesage/jdownloader-2](https://hub.docker.com/r/jlesage/jdownloader-2)| *latest*                | Direct downloader   |
+| JDownloader (VPN)         | jdownloader.yourdomain.com | [jlesage/jdownloader-2](https://hub.docker.com/r/jlesage/jdownloader-2)| *latest*                | Direct downloader  (behind VPN)  |
 | Tautulli (plexPy)    | tautulli.yourdomain.com    | [linuxserver/tautulli](https://hub.docker.com/r/linuxserver/tautulli)  | *latest*                | Plex stats and admin|
 | Tdarr            | tdarr.yourdomain.com   | [haveagitgat/tdarr](https://hub.docker.com/r/haveagitgat/tdarr)  | *latest*                | Re-encode files |
 | NextCloud            | nextcloud.yourdomain.com   | [linuxserver/nextcloud](https://hub.docker.com/r/linuxserver/nextcloud)  | *latest*                | Files management    |
@@ -29,6 +31,7 @@ seedbox and personal media server.
 | Portainer            | portainer.yourdomain.com   | [portainer/portainer](https://hub.docker.com/r/portainer/portainer)    | *latest*                | Container management|
 | Netdata              | netdata.yourdomain.com     | [netdata/netdata](https://hub.docker.com/r/netdata/netdata)            | *latest*                | Server monitoring   |
 | Duplicati            | duplicati.yourdomain.com   | [linuxserver/duplicati](https://hub.docker.com/r/linuxserver/duplicati)| *latest*                | Backups             |
+| Gluetun            | -   | [qmcgaw/gluetun](https://hub.docker.com/r/qmcgaw/gluetun)| *latest*                | VPN client (still WIP...)             |
 
 The front-end reverse proxy (Traefik - **check the next section if you have already the seedbox with Traefik v1**) routes based on the lowest level subdomain
  (e.g. `deluge.example.com` would route to deluge). Since this is how the router
@@ -77,6 +80,7 @@ sudo rm -rf /opt/traefik /tmp/migration
 ## Configuration
 
 Before running, please create the volumes which will be statically mapped to the ones on the host:
+For example:
 
 ```sh
 sudo su -c "mkdir /data && mkdir /data/config && mkdir /data/torrents"
@@ -106,7 +110,7 @@ this.
 ## PlexPass
 
 Just set the `VERSION` environment variable to `latest` on the Plex service (enabled by default).
-See https://hub.docker.com/r/linuxserver/plex.
+See [this link](https://hub.docker.com/r/linuxserver/plex).
 
 ## Where is my data?
 

@@ -41,12 +41,12 @@ volumes:
   nextclouddb:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/nextcloud-db
+      mountpoint: $HOST_CONFIG_PATH/nextcloud-db
   confignextcloud:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/nextcloud
+      mountpoint: $HOST_CONFIG_PATH/nextcloud
   nextclouddata:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/nextcloud-data
+      mountpoint: $HOST_CONFIG_PATH/nextcloud-data

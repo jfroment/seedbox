@@ -8,7 +8,7 @@ services:
     user: ${PUID}:${PGID}
     command:
       - --auth=none
-      - --dehost=deluge
+      - --dehost=${DELUGE_HOST}
       - --deport=58846
       - --deuser=flood
       - --depass=${FLOOD_PASSWORD}
@@ -29,4 +29,4 @@ volumes:
   configflood: 
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/flood
+      mountpoint: $HOST_CONFIG_PATH/flood

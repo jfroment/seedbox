@@ -18,4 +18,4 @@ volumes:
   configkomga: 
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/komga
+      mountpoint: $HOST_CONFIG_PATH/komga

@@ -1,0 +1,12 @@
+http:
+  routers:
+    deluge:
+      rule: 'Host(`deluge.{{ env "TRAEFIK_DOMAIN" }}`)'
+      middlewares: 
+        - common-auth@file
+      service: deluge
+  services:
+    deluge:
+      loadBalancer:
+        servers:
+          - url: "http://gluetun:8112"

@@ -27,4 +27,4 @@ volumes:
   configtraefik:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/traefik
+      mountpoint: $HOST_CONFIG_PATH/traefik

@@ -3,6 +3,7 @@ services:
     image: ghcr.io/linuxserver/deluge
     container_name: deluge
     restart: always
+    network_mode: "service:gluetun"
     volumes:
       - torrents:/torrents
       - configdeluge:/config
@@ -11,10 +12,7 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.deluge.rule=Host(`deluge.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.deluge.middlewares=common-auth@file"
+    # Traefik labels are in Gluetun YAML as deluge must be accessed via Gluetun
 
 volumes:
   configdeluge: 

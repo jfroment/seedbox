@@ -6,21 +6,20 @@ version: "3.8"
 
 # Common network used by all services
 networks: 
-  default: 
-    external:
-      name: "traefik-network"
+  default:
+    name: "traefik-network"
 
 # Common volumes used by at least 2 services
 volumes:
   config:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config
+      mountpoint: $HOST_CONFIG_PATH
   torrents:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/torrents
+      mountpoint: $HOST_MEDIA_PATH
   downloads:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/torrents/deluge
+      mountpoint: $HOST_MEDIA_PATH/$DOWNLOAD_SUBFOLDER

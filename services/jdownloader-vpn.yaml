@@ -3,6 +3,7 @@ services:
     image: jlesage/jdownloader-2
     container_name: jdownloader
     restart: always
+    network_mode: "service:gluetun"
     volumes:
       - configjdownloader:/config
       - downloads:/output
@@ -10,11 +11,7 @@ services:
       - USER_ID=${PUID}
       - GROUP_ID=${PGID}
       - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.jdownloader-seedbox.loadbalancer.server.port=5800"
-      - "traefik.http.routers.jdownloader.rule=Host(`jdownloader.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.jdownloader.middlewares=common-auth@file"
+    # Traefik routing rules are defined in the samples/ directory and applied automatically when this service is enabled
 
 volumes:
   configjdownloader:

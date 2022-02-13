@@ -17,4 +17,4 @@ volumes:
   configoverseerr:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/overseerr
+      mountpoint: $HOST_CONFIG_PATH/overseerr

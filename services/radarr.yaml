@@ -20,4 +20,4 @@ volumes:
   configradarr: 
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/radarr
+      mountpoint: $HOST_CONFIG_PATH/radarr

@@ -20,4 +20,4 @@ volumes:
   configsonarr: 
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/sonarr
+      mountpoint: $HOST_CONFIG_PATH/sonarr

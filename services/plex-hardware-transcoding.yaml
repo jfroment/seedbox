@@ -8,9 +8,12 @@ services:
       - "32400:32400/udp"
       - "32469:32469"
       - "32469:32469/udp"
+    devices:
+      - /dev/dri:/dev/dri # for hardware transcoding
     volumes:
       - configplex:/config
       - torrents:/torrents
+      - /dev/shm:/transcode
     environment:
       - PGID=${PGID}
       - PUID=${PUID}

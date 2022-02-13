@@ -19,4 +19,4 @@ volumes:
   configkavita: 
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/kavita
+      mountpoint: $HOST_CONFIG_PATH/kavita

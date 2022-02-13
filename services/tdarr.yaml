@@ -45,12 +45,12 @@ volumes:
   configtdarrv2:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/tdarrv2/server
+      mountpoint: $HOST_CONFIG_PATH/tdarrv2/server
   settingstdarrv2:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/tdarrv2/configs
+      mountpoint: $HOST_CONFIG_PATH/tdarrv2/configs
   transcodes:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/tdarrv2/transcodes
+      mountpoint: $HOST_CONFIG_PATH/tdarrv2/transcodes

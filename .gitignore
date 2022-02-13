@@ -6,3 +6,4 @@
 **/traefik/http_auth
 backup/
 services.conf
+traefik/custom/dynamic*.yaml

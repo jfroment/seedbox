@@ -1,6 +1,8 @@
 deluge: enable
+deluge-vpn: disable
 flood: enable
 plex: enable
+plex-hardware-transcoding: disable
 flaresolverr: enable
 jackett: enable
 prowlarr: enable
@@ -20,3 +22,4 @@ nextcloud: enable
 portainer: enable
 netdata: enable
 duplicati: enable
+gluetun: disable
