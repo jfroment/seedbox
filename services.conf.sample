@@ -17,6 +17,7 @@ ombi: disable
 overseerr: enable
 tautulli: enable
 jdownloader: enable
+jdownloader-vpn: disable
 tdarr: enable
 nextcloud: enable
 portainer: enable
