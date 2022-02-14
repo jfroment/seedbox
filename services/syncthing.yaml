@@ -10,6 +10,7 @@ services:
     volumes:
       - configsyncthing:/config
       - torrents:/torrents
+      - config:/allconfig
     ports:
     #   #- 8384:8384
       - 22000:22000/tcp
