@@ -1,0 +1,30 @@
+services:
+  syncthing:
+    image: lscr.io/linuxserver/syncthing
+    container_name: syncthing
+    restart: unless-stopped
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+    volumes:
+      - configsyncthing:/config
+      - torrents:/torrents
+    # ports:
+    #   #- 8384:8384
+    #   - 22000:22000/tcp
+    #   - 22000:22000/udp
+    #   - 21027:21027/udp
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.syncthing.rule=Host(`syncthing.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.syncthing.middlewares=common-auth@file"
+      - "traefik.http.services.syncthing-seedbox.loadbalancer.server.port=8384"
+      - "traefik.http.routers.synchro.rule=Host(`synchro.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.services.synchro-seedbox.loadbalancer.server.port=22000"
+
+volumes:
+  configsyncthing: 
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/configsyncthing

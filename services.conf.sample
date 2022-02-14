@@ -23,4 +23,5 @@ nextcloud: enable
 portainer: enable
 netdata: enable
 duplicati: enable
+syncthing: disable
 gluetun: disable
