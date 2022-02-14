@@ -82,6 +82,15 @@ for svc in $(cat services.conf | grep "\-vpn: enable" | sed -E "s/(.*)\: enable/
   fi
 done
 
+# Detect Synology devices for Netdata compatibility
+if [[ $(cat services.conf | { grep -E "netdata\: enable" || true; } | wc -l) -eq 1 ]]; then
+  if [[ $(uname -a | { grep synology || true; } | wc -l) -eq 1 ]]; then
+    export OS_RELEASE_FILEPATH="/etc/VERSION"
+  else
+    export OS_RELEASE_FILEPATH="/etc/os-release"
+  fi
+done
+
 # Fetch all YAML files
 disabled_pattern=""
 while read -r line ; do
