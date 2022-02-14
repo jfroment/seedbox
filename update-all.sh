@@ -89,7 +89,7 @@ if [[ $(cat services.conf | { grep -E "netdata\: enable" || true; } | wc -l) -eq
   else
     export OS_RELEASE_FILEPATH="/etc/os-release"
   fi
-done
+fi
 
 # Fetch all YAML files
 disabled_pattern=""
