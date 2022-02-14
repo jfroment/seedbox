@@ -19,9 +19,11 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.syncthing.rule=Host(`syncthing.${TRAEFIK_DOMAIN}`)"
       - "traefik.http.routers.syncthing.middlewares=common-auth@file"
-      - "traefik.http.services.syncthing-seedbox.loadbalancer.server.port=8384"
+      - "traefik.http.routers.syncthing.service=syncthing"
+      - "traefik.http.services.syncthing.loadbalancer.server.port=8384"
       - "traefik.http.routers.synchro.rule=Host(`synchro.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.services.synchro-seedbox.loadbalancer.server.port=22000"
+      - "traefik.http.routers.synchro.service=synchro"
+      - "traefik.http.services.synchro.loadbalancer.server.port=22000"
 
 volumes:
   configsyncthing: 
