@@ -7,3 +7,4 @@
 backup/
 services.conf
 traefik/custom/dynamic*.yaml
+samples/custom*/*.yaml

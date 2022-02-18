@@ -82,6 +82,12 @@ for svc in $(cat services.conf | grep "\-vpn: enable" | sed -E "s/(.*)\: enable/
   fi
 done
 
+# Apply other arbitrary custom Traefik config files
+for f in `find samples/custom-traefik -maxdepth 1 -mindepth 1 -type f | grep -E "\.yml$|\.yaml$" | sort`; do
+  echo "[$0] Applying custom Traefik config $f..."
+  cp $f traefik/custom/dynamic-$(basename $f)
+done
+
 # Detect Synology devices for Netdata compatibility
 if [[ $(cat services.conf | { grep -E "netdata\: enable" || true; } | wc -l) -eq 1 ]]; then
   if [[ $(uname -a | { grep synology || true; } | wc -l) -eq 1 ]]; then
