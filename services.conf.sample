@@ -24,4 +24,5 @@ portainer: enable
 netdata: enable
 duplicati: enable
 syncthing: disable
+heimdall: disable
 gluetun: disable

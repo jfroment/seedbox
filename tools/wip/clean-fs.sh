@@ -25,7 +25,7 @@ find $1 -maxdepth 10 -type f | grep -v -E "\.webm$|\.flv$|\.vob$|\.ogg$|\.ogv$|\
 while true; do
     read -p "[$0] Do you want to REMOVE these files?" yn
     case $yn in
-        [Yy]* ) find $1 -maxdepth 10 -type f | grep -v -E "\.webm$|\.flv$|\.vob$|\.ogg$|\.ogv$|\.drc$|\.gifv$|\.mng$|\.avi$|\.mov$|\.qt$|\.wmv$|\.yuv$|\.rm$|\.rmvb$|/.asf$|\.amv$|\.mp4$|\.m4v$|\.mp*$|\.m?v$|\.svi$|\.3gp$|\.flv$|\.f4v$" | xargs rm -f; break;;
+        [Yy]* ) find $1 -maxdepth 10 -type f | grep -v -E "\.webm$|\.flv$|\.vob$|\.ogg$|\.ogv$|\.drc$|\.gifv$|\.mng$|\.avi$|\.mov$|\.qt$|\.wmv$|\.yuv$|\.rm$|\.rmvb$|/.asf$|\.amv$|\.mp4$|\.m4v$|\.mp*$|\.m?v$|\.svi$|\.3gp$|\.flv$|\.f4v$" | xargs -0 rm -f; break;;
         [Nn]* ) echo "[$0] Skipping this part. Continuing...";;
         * ) echo "[$0] Please answer yes or no.";;
     esac
