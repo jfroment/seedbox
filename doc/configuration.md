@@ -209,3 +209,34 @@ http:
 ```
 
 This file will be automatically placed in [traefik/custom/](../traefik/custom/) directory (mounted by Traefik container) so the config will dynamically apply. This file is updated on each ``run-seedbox.sh`` execution.
+
+## VPN
+
+In order to hide a service behind a VPN, just enable ``gluetun`` service.
+
+By default, the file used is [gluetun.yaml](../services/gluetun.yaml), which is in "Wireguard custom" mode, meaning you must have somewhere a Wireguard server running and access to its client configuration. But you can add your own config to match your requirements. See sections below.
+
+### Default mode - Wireguard custom
+
+* Edit the .env and replace the Wireguard variables with your own (take them in ``.env.sample``).
+* Enable ``gluetun`` service.
+* Enable vn (``vpn: true``) on any service.
+* Run ``./run-seedbox.sh``.
+* The service now uses Wireguard. If gluetun is down or if the VPN link is broken, your service won't have any access to Internet.
+
+### Your own mode (VPN provider supported by gluetun)
+
+* Create a ``gluetun-custom.yaml`` in the [services/custom/](../services/custom/) directory. You can duplicate [this one](../services/gluetun.yaml) to avoid starting from scratch.
+* Adapt it to your needs (variables, mode...) according to your provider.
+  * Add all variables you may need (used in your custom yaml file in your ``.env`` file (replacing the wireguard ones).
+* Edit your ``config.yaml`` and add ``customFile: custom/gluetun-custom.yaml`` in the ``gluetun`` section.
+* Enable vn (``vpn: true``) on any service.
+* Run ``./run-seedbox.sh``.
+* The service now uses your VPN by tunneling via gluetun container. If gluetun is down or if the VPN link is broken, your service won't have any access to Internet.
+
+### How does VPN is handled?
+
+Behind the scenes, the ``run-seedbox.sh`` script will mainly add 2 overrides when enabling VPN on a service:
+
+* Adds a file in [services/generated/](../services/generated/) which adds a ``network_mode: gluetun`` for your service.
+* Specify in Traefik rule that the backend host is gluetun instead of the service directly.
