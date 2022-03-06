@@ -85,8 +85,8 @@ cat services.conf | while read line || [[ -n $line ]]; do
           ;;
       esac
       # Define scheme // For nextcloud, scheme must be https
-      scheme="http"
-      [[ $key == "nextcloud" ]] && scheme="https"
+      internalScheme="http"
+      [[ $key == "nextcloud" ]] && internalScheme="https"
       
       # Define service default port from bundled config file
       internalPort=$(cat config/ports | { grep $key || true; } | sed -r "s/^${key}: (.*)$/\1/")
@@ -95,7 +95,7 @@ cat services.conf | while read line || [[ -n $line ]]; do
             "host": "'"$key"'.'$(echo '${TRAEFIK_DOMAIN}')'",
             "httpAuth": '"${defaultHttpAuth}"',
             "internalPort": '"${internalPort}"',
-            "scheme": "'"${scheme}"'"
+            "internalScheme": "'"${internalScheme}"'"
           }
         ]')
       ;;

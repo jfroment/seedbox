@@ -208,9 +208,9 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
     [[ ${vpn} == "true" ]] && backendHost="gluetun"
 
     # Handle custom scheme (default if non-specified is http)
-    scheme="http"
-    customScheme=$(echo $rule | jq -r .scheme)
-    [[ ${customScheme} != "null" ]] && scheme=${customScheme}
+    internalScheme="http"
+    customInternalScheme=$(echo $rule | jq -r .internalScheme)
+    [[ ${customInternalScheme} != "null" ]] && internalScheme=${customInternalScheme}
 
     # Transform the bash syntax into Traefik/go one => anything.${TRAEFIK_DOMAIN} to anything.{{ env "TRAEFIK_DOMAIN" }}
     hostTraefik=$(echo ${host} | sed --regexp-extended 's/^(.*)(\$\{(.*)\})/\1\{\{ env "\3" \}\}/')
@@ -236,7 +236,7 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
     # If the specified service does not contain a "@" => we create it
     # If the service has a @, it means it is defined elsewhere so we do not create it (custom file, @internal...)
     if echo ${traefikService} | grep -vq "@"; then
-      echo "http.services.${ruleId}.loadBalancer.servers.0.url: ${scheme}://${backendHost}:${internalPort}" >> rules.props
+      echo "http.services.${ruleId}.loadBalancer.servers.0.url: ${internalScheme}://${backendHost}:${internalPort}" >> rules.props
     fi
     
   done

@@ -17,7 +17,7 @@ services:
           httpAuth: true
           internalPort: 8112
           # Uncomment to specify custom schme (http by default)
-          # scheme: http
+          # internalScheme: http
           # Uncomment to *NOT* generate LetsEncrypt certificate (useful for local domains)
           # disableCertificateGeneration: true
   - name: flood
