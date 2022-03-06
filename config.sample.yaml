@@ -19,7 +19,7 @@ services:
           # Uncomment to specify custom schme (http by default)
           # internalScheme: http
           # Uncomment to *NOT* generate LetsEncrypt certificate (useful for local domains)
-          # disableCertificateGeneration: true
+          # httpOnly: true
   - name: flood
     enabled: true
     vpn: false
@@ -221,7 +221,8 @@ services:
           httpAuth: true
           internalPort: 8384
   - name: heimdall
-    enabled: true
+    # Beware to the host when enabling it!
+    enabled: false
     vpn: false
     traefik:
       enabled: true

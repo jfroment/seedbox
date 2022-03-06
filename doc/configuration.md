@@ -95,7 +95,7 @@ Also, do not forget to edit your ``.env`` file, which is where all the data whic
 
 Let's say you want to add a container nginx without interfering or creating conflicts in this git repository. That's possible.
 
-Start by creating a files named nginx.yaml in the [services/custom/](services/custom/) directory:
+Start by creating a file named nginx.yaml in the [services/custom/](services/custom/) directory:
 
 ```yaml
 services:
@@ -230,7 +230,7 @@ By default, the file used is [gluetun.yaml](../services/gluetun.yaml), which is 
 
 * Create a ``gluetun-custom.yaml`` in the [services/custom/](../services/custom/) directory. You can duplicate [this one](../services/gluetun.yaml) to avoid starting from scratch.
 * Adapt it to your needs (variables, mode...) according to your provider.
-  * Add all variables you may need (used in your custom yaml file in your ``.env`` file (replacing the wireguard ones).
+  * Add all variables you may need (used in your custom yaml file) in your ``.env`` file (replacing the wireguard ones).
 * Edit your ``config.yaml`` and add ``customFile: custom/gluetun-custom.yaml`` in the ``gluetun`` section.
 * Enable vn (``vpn: true``) on any service.
 * Run ``./run-seedbox.sh``.
