@@ -2,6 +2,12 @@
 
 set -e
 
+# Load common functions
+source config/tools.sh
+
+# Check that required tools are installed
+check_utilities
+
 SKIP_PULL=0
 DEBUG=0
 
@@ -26,11 +32,19 @@ cleanup_on_exit() {
 trap cleanup_on_exit EXIT
 
 echo-debug() {
-  [[ ${DEBUG} == "1" ]] && echo "$@"
+  if [[ ${DEBUG} == "1" ]]; then echo "$@"; fi
 }
 
-# Cleanup files before start, in case there was a change we start from scratch at every script execution
-rm -f config/*-vpn.yaml
+###############################################################################################
+####################################### Load variables ########################################
+###############################################################################################
+
+echo "[$0] ***** Checking environment variables and files... *****"
+
+if [[ ! -f .env ]]; then
+  echo "[$0] ERROR. \".env\" file not found. Please copy \".env.sample\" and edit its values. Then, re-run this script."
+  exit 1
+fi
 
 # Create/update http_auth file according to values in .env file
 source .env
@@ -49,20 +63,23 @@ if [[ ! -f config.yaml ]]; then
   cp config.sample.yaml config.yaml
 fi
 
-# Alert in case new services have been added (or removed) in sample but active file has not changed
-# TODO: adapt to new config structure
-# NB_SERVICES_ACTIVE=$(cat services.conf | wc -l)
-# NB_SERVICES_ORIG=$(cat services.conf.sample | wc -l)
-# if [[ ${NB_SERVICES_ACTIVE} != ${NB_SERVICES_ORIG} ]]; then
-#   echo "[$0] Your services.conf file seems outdated. It appears there are new services available, or services that have been removed."
-#   diff -yt services.conf services.conf.sample || true
-#   echo ""
-# fi
-
 ###############################################################################################
 ###################################### Pre-flight checks ######################################
 ###############################################################################################
+
+echo "[$0] ***** Checking configuration... *****"
+
 yq eval -o json config.yaml > config.json
+
+if [[ ${CHECK_FOR_OUTDATED_CONFIG} == true ]]; then
+  nb_services=$(cat config.json | jq '.services | length')
+  nb_services_sample=$(yq eval -o json config.sample.yaml | jq '.services | length')
+  if [[ $nb_services_sample -gt $nb_services ]]; then
+    echo "[$0] There are more services in the config.sample.yaml than in your config.yaml"
+    echo "[$0] You should check config.sample.yaml because it seems there are new services available for you:"
+    diff -u config.yaml config.sample.yaml | grep "name:" | grep -E "^\+" || true
+  fi
+fi
 
 # Check if some services have vpn enabled, that gluetun itself is enabled
 nb_vpn=$(cat config.json | jq '[.services[] | select(.enabled==true and .vpn==true)] | length')
@@ -83,6 +100,7 @@ if [[ $(cat config.json | jq '[.services[] | select(.name=="flood" and .enabled=
     echo "[$0] ******* Exiting *******"
     exit 1
   fi
+  # Determine deluge hostname (for flood) based on the VPN status (enabled or not) of deluge
   if [[ $(cat config.json | jq '[.services[] | select(.name=="deluge" and .enabled==true and .vpn==true)] | length') -eq 1 ]]; then
     export DELUGE_HOST="gluetun"
   elif [[ $(cat config.json | jq '[.services[] | select(.name=="deluge" and .enabled==true and .vpn==false)] | length') -eq 1 ]]; then
@@ -99,11 +117,10 @@ if [[ $(cat config.json | jq '[.services[] | select(.name=="flood" and .enabled=
       echo "[$0] Consider setting FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON variable to false in .env file."
     fi
   fi
-
 fi
 
 # Apply other arbitrary custom Traefik config files
-rm -f $f traefik/custom/dynamic-*
+# rm -f $f traefik/custom/dynamic-*
 for f in `find samples/custom-traefik -maxdepth 1 -mindepth 1 -type f | grep -E "\.yml$|\.yaml$" | sort`; do
   echo "[$0] Applying custom Traefik config $f..."
   cp $f traefik/custom/dynamic-$(basename $f)
@@ -121,6 +138,12 @@ fi
 ###############################################################################################
 ####################################### SERVICES PARSING ######################################
 ###############################################################################################
+
+echo "[$0] ***** Generating configuration... *****"
+
+# Cleanup files before start, in case there was a change we start from scratch at every script execution
+rm -f services/generated/*-vpn.yaml
+
 ALL_SERVICES="-f docker-compose.yaml"
 
 # Parse the config.yaml master configuration file
@@ -153,10 +176,10 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
   # go through gluetun (main vpn client service).
   if [[ ${vpn} == "true" ]]; then
     echo "services.${name}.network_mode: service:gluetun" > ${name}-vpn.props
-    yq -p=props ${name}-vpn.props > config/${name}-vpn.yaml
+    yq -p=props ${name}-vpn.props > services/generated/${name}-vpn.yaml
     rm -f ${name}-vpn.props
     # Append config/${name}-vpn.yaml to global list of files which will be passed to docker commands
-    ALL_SERVICES="${ALL_SERVICES} -f config/${name}-vpn.yaml"
+    ALL_SERVICES="${ALL_SERVICES} -f services/generated/${name}-vpn.yaml"
   fi
 
   ###################################### TRAEFIK RULES ######################################
@@ -176,9 +199,9 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
     host=$(echo $rule | jq -r .host)
     internalPort=$(echo $rule | jq -r .internalPort)
     httpAuth=$(echo $rule | jq -r .httpAuth)
-    echo-debug "[$0]      Host ${host}"
-    echo-debug "[$0]      Internal Port ${internalPort}"
-    echo-debug "[$0]      Http Authentication ${httpAuth}"
+    echo-debug "[$0]      Host => ${host}"
+    echo-debug "[$0]      Internal Port => ${internalPort}"
+    echo-debug "[$0]      Http Authentication => ${httpAuth}"
 
     # If VPN => Traefik rule should redirect to gluetun container
     backendHost=${name}
@@ -205,6 +228,11 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
       echo "http.routers.${ruleId}.service: ${ruleId}" >> rules.props
     fi
 
+    disableCertificateGeneration=$(echo $rule | jq -r .disableCertificateGeneration)
+    if [[ ${disableCertificateGeneration} == true ]]; then
+      echo "http.routers.${ruleId}.tls: EMPTYMAP" >> rules.props
+    fi
+
     # If the specified service does not contain a "@" => we create it
     # If the service has a @, it means it is defined elsewhere so we do not create it (custom file, @internal...)
     if echo ${traefikService} | grep -vq "@"; then
@@ -215,10 +243,22 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
 done
 
 # Convert properties files into Traefik-ready YAML and place it in the correct folder loaded by Traefik
+mv traefik/custom/dynamic-rules.yaml traefik/custom/dynamic-rules-old.yaml
 yq -p=props rules.props > traefik/custom/dynamic-rules.yaml
 rm -f rules.props
 
-# echo ${ALL_SERVICES}
+# Post-transformations on the rules file
+sed -i "s/EMPTYMAP/{}/g" traefik/custom/dynamic-rules.yaml
+sed -i --regexp-extended "s/^(.*: )(Host.*$)/\1'\2'/g" traefik/custom/dynamic-rules.yaml
+sed -i --regexp-extended "s/^(.*url: )(.*$)/\1\"\2\"/g" traefik/custom/dynamic-rules.yaml
+
+rm -f traefik/custom/dynamic-rules-old.yaml
+
+echo-debug "[$0] Here is the list of all files which are going to be processed: ${ALL_SERVICES}"
+
+echo "[$0] ***** Config OK. Launching services... *****"
+
+exit 0
 
 if [[ "${SKIP_PULL}" != "1" ]]; then
   echo "[$0] ***** Pulling all images... *****"

@@ -11,3 +11,4 @@ samples/custom*/*.yaml
 config.yaml
 services/custom/*.yaml
 services/custom/*.yml
+services/generated/*.yaml

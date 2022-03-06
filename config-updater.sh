@@ -11,17 +11,14 @@ cleanup_on_exit() {
 }
 trap cleanup_on_exit EXIT
 
-# Check that jq is installed
-if ! which jq >/dev/null; then
-  echo "[$0] jq does not exist. Install it from here: https://stedolan.github.io/jq/download/"
-  echo "[$0] Also, please make sure it is in the PATH."
-  exit 1
-fi
+# Load common functions
+source config/tools.sh
 
-# Check that yq is installed
-if ! which yq >/dev/null; then
-  echo "[$0] yq does not exist. Install it from here: https://github.com/mikefarah/yq/releases"
-  echo "[$0] Also, please make sure it is in the PATH."
+# Check that required tools are installed
+check_utilities
+
+if [[ ! -f services.conf ]]; then
+  echo "[$0] ERROR. Could nof find services.conf. Exiting."
   exit 1
 fi
 
@@ -87,6 +84,10 @@ cat services.conf | while read line || [[ -n $line ]]; do
           defaultHttpAuth="true"
           ;;
       esac
+      # Define scheme // For nextcloud, scheme must be https
+      scheme="http"
+      [[ $key == "nextcloud" ]] && scheme="https"
+      
       # Define service default port from bundled config file
       internalPort=$(cat config/ports | { grep $key || true; } | sed -r "s/^${key}: (.*)$/\1/")
       rules=$(jq -n '[
@@ -94,6 +95,7 @@ cat services.conf | while read line || [[ -n $line ]]; do
             "host": "'"$key"'.'$(echo '${TRAEFIK_DOMAIN}')'",
             "httpAuth": '"${defaultHttpAuth}"',
             "internalPort": '"${internalPort}"',
+            "scheme": '"${scheme}"'
           }
         ]')
       ;;

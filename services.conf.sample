@@ -9,8 +9,8 @@ prowlarr: enable
 sonarr: enable
 radarr: enable
 bazarr: enable
-lidarr: enable
-readarr: false
+lidarr: disable
+readarr: disable
 komga: disable
 kavita: disable
 ombi: disable
@@ -18,11 +18,11 @@ overseerr: enable
 tautulli: enable
 jdownloader: enable
 jdownloader-vpn: disable
-tdarr: enable
+tdarr: disable
 nextcloud: enable
 portainer: enable
 netdata: enable
-duplicati: enable
+duplicati: disable
 syncthing: disable
-heimdall: disable
+heimdall: enable
 gluetun: disable

@@ -16,7 +16,10 @@ services:
         - host: deluge.${TRAEFIK_DOMAIN}
           httpAuth: true
           internalPort: 8112
-          scheme: http
+          # Uncomment to specify custom schme (http by default)
+          # scheme: http
+          # Uncomment to *NOT* generate LetsEncrypt certificate (useful for local domains)
+          # disableCertificateGeneration: true
   - name: flood
     enabled: true
     vpn: false
@@ -31,6 +34,8 @@ services:
     vpn: false
     # uncomment to use custom file with specific parameters for hardware transcoding
     # customFile: plex-hardware-transcoding.yaml
+    # You can also place you own file in services/custom/ and call it here like this:
+    # customFile: custom/my_own_file.yaml
     traefik:
       enabled: true
       rules:
@@ -89,7 +94,7 @@ services:
           httpAuth: true
           internalPort: 6767
   - name: lidarr
-    enabled: true
+    enabled: false
     vpn: false
     traefik:
       enabled: true
@@ -197,7 +202,7 @@ services:
           httpAuth: true
           internalPort: 19999
   - name: duplicati
-    enabled: true
+    enabled: false
     vpn: false
     traefik:
       enabled: true
@@ -220,7 +225,7 @@ services:
     traefik:
       enabled: true
       rules:
-        - host: heimdall.${TRAEFIK_DOMAIN}
+        - host: ${TRAEFIK_DOMAIN}
           httpAuth: true
           internalPort: 80
   - name: gluetun

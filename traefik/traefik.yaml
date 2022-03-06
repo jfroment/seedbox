@@ -2,10 +2,10 @@ api:
   dashboard: true
 
 # Set Access logs timezone
-accessLog:
-  fields:
-    names:
-      StartUTC: drop
+# accessLog:
+#   fields:
+#     names:
+#       StartUTC: drop
 
 providers:
   docker:
