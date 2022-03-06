@@ -120,10 +120,10 @@ if [[ $(cat config.json | jq '[.services[] | select(.name=="flood" and .enabled=
 fi
 
 # Apply other arbitrary custom Traefik config files
-# rm -f $f traefik/custom/dynamic-*
+rm -f $f traefik/custom/custom-*
 for f in `find samples/custom-traefik -maxdepth 1 -mindepth 1 -type f | grep -E "\.yml$|\.yaml$" | sort`; do
   echo "[$0] Applying custom Traefik config $f..."
-  cp $f traefik/custom/dynamic-$(basename $f)
+  cp $f traefik/custom/custom-$(basename $f)
 done
 
 # Detect Synology devices for Netdata compatibility

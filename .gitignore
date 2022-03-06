@@ -5,7 +5,9 @@
 **/traefik/http_auth
 backup/
 services.conf
+
 traefik/custom/dynamic*.yaml
+traefik/custom/custom-*.yaml
 samples/custom*/*.yaml
 
 config.yaml
