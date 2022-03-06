@@ -183,6 +183,7 @@ services:
         - host: nextcloud.${TRAEFIK_DOMAIN}
           httpAuth: false
           internalPort: 443
+          internalScheme: https
   - name: portainer
     enabled: true
     vpn: false
@@ -230,7 +231,6 @@ services:
           internalPort: 80
   - name: gluetun
     enabled: false
-    vpn: false
     traefik:
       enabled: false
       rules: []
