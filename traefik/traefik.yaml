@@ -19,11 +19,11 @@ providers:
 entryPoints:
   insecure:
     address: ":80"
-    http:
-      redirections:
-        entryPoint:
-          to: secure
-          scheme: https
+    # http:
+    #   redirections:
+    #     entryPoint:
+    #       to: secure
+    #       scheme: https
   secure:
     address: ":443"
     http:

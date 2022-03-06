@@ -228,9 +228,15 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
       echo "http.routers.${ruleId}.service: ${ruleId}" >> rules.props
     fi
 
+    # TODO: leave it or remove it?
     disableCertificateGeneration=$(echo $rule | jq -r .disableCertificateGeneration)
     if [[ ${disableCertificateGeneration} == true ]]; then
       echo "http.routers.${ruleId}.tls: EMPTYMAP" >> rules.props
+    fi
+
+    httpOnly=$(echo $rule | jq -r .httpOnly)
+    if [[ ${httpOnly} == true ]]; then
+      echo "http.routers.${ruleId}.entryPoints.0: insecure" >> rules.props
     fi
 
     # If the specified service does not contain a "@" => we create it
