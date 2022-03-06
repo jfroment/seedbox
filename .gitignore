@@ -1,6 +1,5 @@
 .DS_Store
 
-/config
 **/tunnel-options.sh
 **/.env
 **/traefik/http_auth
@@ -10,3 +9,5 @@ traefik/custom/dynamic*.yaml
 samples/custom*/*.yaml
 
 config.yaml
+services/custom/*.yaml
+services/custom/*.yml

@@ -27,7 +27,28 @@ fi
 
 jq -n '{"services": []}' > config.json
 
-while read -r line ; do
+# First, add Traefik as it was not explicitely set by default in old config file (services.conf)
+if ! grep -q "traefik" services.conf; then
+  jq -r '.services[.services| length] |= . + 
+    {
+      "name": "traefik",
+      "enabled": true,
+      "traefik": {
+        "enabled": true,
+        "rules": [
+          {
+            "host": "traefik.'$(echo '${TRAEFIK_DOMAIN}')'",
+            "service": "api@internal",
+            "httpAuth": true,
+          }
+        ]
+      }
+    }' config.json > tmp.json
+  rm -f config.json
+  mv tmp.json config.json
+fi
+
+cat services.conf | while read line || [[ -n $line ]]; do
   key=$(echo $line | sed -r "s/^(.*):.*$/\1/")
   enabled="true"
   if grep -q "disable" <<< $line; then
@@ -41,8 +62,9 @@ while read -r line ; do
   # If this service is disabled AND another one in the file is enabled with VPN mode, keep that information
   if grep -q "$key-vpn: enable" services.conf; then
     if [[ enabled="false" ]]; then
-      echo "[$0] $key => another service detected enabled with vpn..."
+      #echo "[$0] $key => another service detected enabled with vpn..."
       enableVpn="true"
+      enabled="true"
     fi
   fi
 
@@ -50,7 +72,7 @@ while read -r line ; do
 
   # Define if Traefik should be enabled on the service
   case $key in
-    flaresolverr)
+    flaresolverr|gluetun)
       enableTraefik="false"
       rules=$(jq -n '[]')
       ;;
@@ -58,7 +80,7 @@ while read -r line ; do
       enableTraefik="true"
       # If Traefik enabled => define if http auth Traefik middleware must be set by default
       case $key in
-        gluetun|kavita|komga|nextcloud|ombi|overseerr|plex|portainer|tautulli)
+        kavita|komga|nextcloud|ombi|overseerr|plex|portainer|tautulli)
           defaultHttpAuth="false"
           ;;
         *)
@@ -69,7 +91,7 @@ while read -r line ; do
       internalPort=$(cat config/ports | { grep $key || true; } | sed -r "s/^${key}: (.*)$/\1/")
       rules=$(jq -n '[
           {
-            "host": "'"$key"'",
+            "host": "'"$key"'.'$(echo '${TRAEFIK_DOMAIN}')'",
             "httpAuth": '"${defaultHttpAuth}"',
             "internalPort": '"${internalPort}"',
           }
@@ -90,18 +112,7 @@ while read -r line ; do
   rm -f config.json
   mv tmp.json config.json
 
-done < services.conf
-
-# If we should enable Plex with hardware transcoding
-# if grep -q -E "plex.*transcoding: enable" services.conf; then
-#   if grep -q "plex: disable" services.conf; then
-#     cat config.json | jq -r 'select(.services[].name=="plex") += {"plexHardwareTranscode":"enable"}' > tmp.json
-#     rm -f config.json
-#     mv tmp.json config.json
-#   fi
-# fi
-
-#mv config.json config.bak.json
+done
 
 # Transform json into yaml, easier to manipulate for the user
 cat config.json | yq e -P - > config.yaml
