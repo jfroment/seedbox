@@ -14,19 +14,21 @@ Since there are some breaking changes and a configuration structure migration, a
   * Easier feature switches
   * If a service is missing, it won't be enabled by default like before. The config is now more declarative.
   * Traefik routing rules are now dynamically generated in a file in Traefik config directory, so no more Docker labels. They became hard to maintain due to all possibilities caused by VPN support or custom files for example.
-  * New config syntax documented in the [Configuration Guide](./configuration.md).
+  * New config syntax documented in the [Configuration Guide](./configuration.md#configuration-structure-and-parameters).
 * **VPN support**
   * With ``gluetun`` service, you can now place any service behind a VPN.
   * Default gluetun configuration is Wireguard "custom" mode, but see below...
+  * More details in the [VPN section of the Configuration Guide](./configuration.md#vpn).
 * **Support custom services and docker-compose yaml files**
   * Place a docker-compose yaml file in ``services/custom/`` directory, add a service in your config.yaml specifying a ``customFile``, and you are set.
   * Support Plex hardware transcoding using a custom-file, already available in the ``services`` directory (just specify a ``customFile`` on plex service - see [config.sample.yaml](../config.sample.yaml)).
-  * More details in the [Configuration Guide](./configuration.md).
+  * More details in the [Configuration Guide](./configuration.md#add-your-own-service).
 * **Support arbitrary Traefik rules**
   * Place a Traefik YAML in ``samples/custom-traefik/`` directory, it will be copied in the Traefik configuration folder.
   * Ideal to forward traffic to other services which do not belong to this seedbox.
+  * More details in [this section of the Configuration Guide](./configuration.md#integration-with-other-services-custom-traefik-config)
 * **Disable certificates for some domains**
-  * Using the flag ``httpOnly: true`` on a service, access any service in unsecure mode, delegating certificates management on a higher level (reverse proxy, firewall...). More details in the [Configuration Guide](./configuration.md).
+  * Using the flag ``httpOnly: true`` on a service, access any service in unsecure mode, delegating certificates management on a higher level (reverse proxy, firewall...). More details in the [Configuration Guide](./configuration.md#disable-https-completely).
 * **Multiple hosts for any services**
   * The new config structure allows for more customization, for example you can now have many routes on the same service. Let's say, a local unsecured route + a secured one for remote access. Or anything you want.
 * **More customization**

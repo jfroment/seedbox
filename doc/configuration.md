@@ -1,5 +1,7 @@
 # Seedbox configuration
 
+## Configuration structure and parameters
+
 Almost the whole stack can be configured by using the main configuration item: ``config.yaml``.
 Here is what it looks like:
 
