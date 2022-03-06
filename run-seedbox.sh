@@ -194,7 +194,6 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
   # Loop over all Traefik rules and create the corresponding entries in the generated rules.yaml
   echo-debug "[$0]    Generating Traefik rules..."
   i=0
-  middlewareCount=0
   for rule in $(echo $json | jq -c .traefik.rules[]); do
     ((i=i+1))
     host=$(echo $rule | jq -r .host)
@@ -218,6 +217,8 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
 
     ruleId="${name}-${i}"
     echo 'http.routers.'"${ruleId}"'.rule: Host(`'${hostTraefik}'`)' >> rules.props
+
+    middlewareCount=0
     if [[ ${httpAuth} == "true" ]]; then
       echo "http.routers.${ruleId}.middlewares.${middlewareCount}: common-auth@file" >> rules.props
       ((middlewareCount=middlewareCount+1))
