@@ -15,3 +15,7 @@ http:
         frameDeny: true
         contentTypeNosniff: true
         browserXssFilter: true
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: false

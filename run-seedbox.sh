@@ -194,6 +194,7 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
   # Loop over all Traefik rules and create the corresponding entries in the generated rules.yaml
   echo-debug "[$0]    Generating Traefik rules..."
   i=0
+  middlewareCount=0
   for rule in $(echo $json | jq -c .traefik.rules[]); do
     ((i=i+1))
     host=$(echo $rule | jq -r .host)
@@ -218,7 +219,8 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
     ruleId="${name}-${i}"
     echo 'http.routers.'"${ruleId}"'.rule: Host(`'${hostTraefik}'`)' >> rules.props
     if [[ ${httpAuth} == "true" ]]; then
-      echo "http.routers.${ruleId}.middlewares.0: common-auth@file" >> rules.props
+      echo "http.routers.${ruleId}.middlewares.${middlewareCount}: common-auth@file" >> rules.props
+      ((middlewareCount=middlewareCount+1))
     fi
 
     traefikService=$(echo $rule | jq -r .service)
@@ -234,9 +236,15 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
       echo "http.routers.${ruleId}.tls: EMPTYMAP" >> rules.props
     fi
 
+    # Check if httpOnly flag is enabled
+    # If enabled => Specify to use only "insecure" (port 80) entrypoint
+    # If not => use all entryPoints (by not specifying any) but force redirection to https
     httpOnly=$(echo $rule | jq -r .httpOnly)
     if [[ ${httpOnly} == true ]]; then
       echo "http.routers.${ruleId}.entryPoints.0: insecure" >> rules.props
+    else
+      echo "http.routers.${ruleId}.middlewares.${middlewareCount}: redirect-to-https" >> rules.props
+      ((middlewareCount=middlewareCount+1))
     fi
 
     # If the specified service does not contain a "@" => we create it
