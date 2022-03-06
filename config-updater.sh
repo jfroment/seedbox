@@ -95,7 +95,7 @@ cat services.conf | while read line || [[ -n $line ]]; do
             "host": "'"$key"'.'$(echo '${TRAEFIK_DOMAIN}')'",
             "httpAuth": '"${defaultHttpAuth}"',
             "internalPort": '"${internalPort}"',
-            "scheme": '"${scheme}"'
+            "scheme": "'"${scheme}"'"
           }
         ]')
       ;;
