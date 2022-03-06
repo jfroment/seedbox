@@ -25,6 +25,12 @@ Since there are some breaking changes and a configuration structure migration, a
 * **Support arbitrary Traefik rules**
   * Place a Traefik YAML in ``samples/custom-traefik/`` directory, it will be copied in the Traefik configuration folder.
   * Ideal to forward traffic to other services which do not belong to this seedbox.
+* **Disable certificates for some domains**
+  * Using the flag ``httpOnly: true`` on a service, access any service in unsecure mode, delegating certificates management on a higher level (reverse proxy, firewall...). More details in the [Configuration Guide](./configuration.md).
+* **Multiple hosts for any services**
+  * The new config structure allows for more customization, for example you can now have many routes on the same service. Let's say, a local unsecured route + a secured one for remote access. Or anything you want.
+* **More customization**
+  * Such as http authentication which is no more hardcoded but configurable for each service.
 * **New services**
   * ``Gluetun``: [VPN client (see above)](https://github.com/qdm12/gluetun)
   * ``Heimdall``: [Dashboard](https://github.com/linuxserver/Heimdall)

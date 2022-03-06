@@ -231,12 +231,6 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
       echo "http.routers.${ruleId}.service: ${ruleId}" >> rules.props
     fi
 
-    # TODO: leave it or remove it?
-    disableCertificateGeneration=$(echo $rule | jq -r .disableCertificateGeneration)
-    if [[ ${disableCertificateGeneration} == true ]]; then
-      echo "http.routers.${ruleId}.tls: EMPTYMAP" >> rules.props
-    fi
-
     # Check if httpOnly flag is enabled
     # If enabled => Specify to use only "insecure" (port 80) entrypoint
     # If not => use all entryPoints (by not specifying any) but force redirection to https
@@ -263,8 +257,10 @@ yq -p=props rules.props > traefik/custom/dynamic-rules.yaml
 rm -f rules.props
 
 # Post-transformations on the rules file
-sed -i "s/EMPTYMAP/{}/g" traefik/custom/dynamic-rules.yaml
+# sed -i "s/EMPTYMAP/{}/g" traefik/custom/dynamic-rules.yaml
+# Add simple quotes around Host rule
 sed -i --regexp-extended "s/^(.*: )(Host.*$)/\1'\2'/g" traefik/custom/dynamic-rules.yaml
+# Add double quotes around the backend traefik service
 sed -i --regexp-extended "s/^(.*url: )(.*$)/\1\"\2\"/g" traefik/custom/dynamic-rules.yaml
 
 rm -f traefik/custom/dynamic-rules-old.yaml
