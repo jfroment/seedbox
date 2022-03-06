@@ -34,24 +34,21 @@ seedbox and personal media server.
 | Heimdall            | yourdomain.com   | [linuxserver/heimdall](https://hub.docker.com/r/linuxserver/heimdall)| *latest*                | Main dashboard      |
 | Gluetun            | -   | [qmcgaw/gluetun](https://hub.docker.com/r/qmcgaw/gluetun)| *latest*                | VPN client             |
 
-The front-end reverse proxy (Traefik - **check [this guide](doc/traefik_v2.md) if you still have the seedbox with Traefik v1**) routes based on the lowest level subdomain
- (e.g. `deluge.example.com` would route to deluge). Since this is how the router
-works, it is recommended for you to get a top level domain. If you do not have
-one, you can edit your domains locally by changing your hosts file or use a
-browser plugin that changes the host header.
+The front-end reverse proxy (Traefik - **check [this guide](doc/traefik_v2.md) if you still have the seedbox with Traefik v1**)  routes based on the lowest level subdomain (e.g. `deluge.example.com` would route to deluge). Since this is how the router works, it is recommended for you to get a top level domain. If you do not have one, you can edit your domains locally by changing your hosts file or use a browser plugin that changes the host header.
 
 Traefik takes care of valid Let's Encrypt certificates and auto-renewal.
 
-Note: Plex is also available directly through the `32400` port without going
-through the reverse proxy.
+Note: Plex is also available directly through the `32400` port without going through the reverse proxy.
 
 ## Dependencies
 
 - [Docker](https://github.com/docker/docker) >= 20.10
 - [Docker Compose](https://github.com/docker/compose) >= 2.2
 - [local-persist Docker plugin](https://github.com/MatchbookLab/local-persist): installed directly on host (not in container). This is a volume plugin that extends the default local driver’s functionality by allowing you specify a mountpoint anywhere on the host, which enables the files to always persist, even if the volume is removed via `docker volume rm`. Use *systemd* install for Ubuntu.
+- [jq](https://stedolan.github.io/jq/download/) >= 1.5
+- [yq](https://github.com/mikefarah/yq/releases) > 4
 
-## Configuration
+## Set up for the first time
 
 Before running, please create the volumes which will be statically mapped to the ones on the host:
 For example:
@@ -64,13 +61,19 @@ sudo su -c "mkdir /data && mkdir /data/config && mkdir /data/torrents"
 Edit the `.env` file and change the variables as desired.
 The variables are all self-explanatory.
 
+## Configuration
+
+The configuration lives in the ``config.yaml`` file.
+
+All you need to know is located in the [Configuration Guide](doc/configuration.md).
+
 ## Running & updating
 
 ```sh
 ./run-seedbox.sh
 ```
 
-docker-compose should manage all the volumes and network setup for you. If it does not, verify that your docker and docker-compose version is updated.
+All services and synamic configuration will be automatically created without further action from your part.
 
 Make sure you install the dependencies and finish configuration before doing this.
 

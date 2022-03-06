@@ -20,7 +20,7 @@ Since there are some breaking changes and a configuration structure migration, a
   * Default gluetun configuration is Wireguard "custom" mode, but see below...
 * **Support custom services and docker-compose yaml files**
   * Place a docker-compose yaml file in ``services/custom/`` directory, add a service in your config.yaml specifying a ``customFile``, and you are set.
-  * Support Plex hardware transcoding using a custom-file, already available in the ``services`` directory (just specify a customFile on plex service - see [config.sample.yaml](config.sample.yaml)).
+  * Support Plex hardware transcoding using a custom-file, already available in the ``services`` directory (just specify a ``customFile`` on plex service - see [config.sample.yaml](../config.sample.yaml)).
   * More details in the [Configuration Guide](./configuration.md).
 * **Support arbitrary Traefik rules**
   * Place a Traefik YAML in ``samples/custom-traefik/`` directory, it will be copied in the Traefik configuration folder.
