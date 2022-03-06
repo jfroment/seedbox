@@ -258,8 +258,6 @@ echo-debug "[$0] Here is the list of all files which are going to be processed: 
 
 echo "[$0] ***** Config OK. Launching services... *****"
 
-exit 0
-
 if [[ "${SKIP_PULL}" != "1" ]]; then
   echo "[$0] ***** Pulling all images... *****"
   docker-compose ${ALL_SERVICES} pull
