@@ -243,7 +243,7 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
 done
 
 # Convert properties files into Traefik-ready YAML and place it in the correct folder loaded by Traefik
-mv traefik/custom/dynamic-rules.yaml traefik/custom/dynamic-rules-old.yaml
+mv traefik/custom/dynamic-rules.yaml traefik/custom/dynamic-rules-old.yaml || true
 yq -p=props rules.props > traefik/custom/dynamic-rules.yaml
 rm -f rules.props
 
