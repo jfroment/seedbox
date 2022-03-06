@@ -9,10 +9,6 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.heimdall.rule=Host(`${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.heimdall.middlewares=common-auth@file"
 
 volumes:
   configheimdall:

@@ -9,9 +9,6 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.overseerr.rule=Host(`overseerr.${TRAEFIK_DOMAIN}`)"
 
 volumes:
   configoverseerr:

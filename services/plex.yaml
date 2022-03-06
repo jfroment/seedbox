@@ -16,10 +16,6 @@ services:
       - PUID=${PUID}
       - TZ=${TZ}
       - VERSION=latest
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.plex-seedbox.loadbalancer.server.port=32400"
-      - "traefik.http.routers.plex.rule=Host(`plex.${TRAEFIK_DOMAIN}`)"
 
 volumes:
   configplex:

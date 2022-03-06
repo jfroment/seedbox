@@ -28,6 +28,7 @@ Since there are some breaking changes and a configuration structure migration, a
   * ``Readarr``: [Ebook and comic monitor](https://github.com/Readarr/Readarr)
   * ``Komga``: [Comic Book Manager](https://github.com/gotson/komga)
   * ``Kavita``: [Comic / Book Manager](https://github.com/Kareadita/Kavita)
+* Docker compose v2.2+ is now required
 
 And also:
 

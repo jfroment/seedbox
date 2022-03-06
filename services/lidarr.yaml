@@ -10,10 +10,6 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.lidarr.rule=Host(`lidarr.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.lidarr.middlewares=common-auth@file"
 
 volumes:
   configlidarr:

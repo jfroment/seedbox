@@ -11,10 +11,6 @@ services:
       - configduplicati:/config
       - backups:/backups
       - config:/source
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.duplicati.rule=Host(`duplicati.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.duplicati.middlewares=common-auth@file"
 
 volumes:
   configduplicati:

@@ -10,9 +10,6 @@ services:
     environment:
       - TZ=${TZ}
     user: "${PUID}:${PGID}"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.komga.rule=Host(`komga.${TRAEFIK_DOMAIN}`)"
 
 volumes:
   configkomga: 

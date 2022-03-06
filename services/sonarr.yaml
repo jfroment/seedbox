@@ -11,10 +11,6 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.sonarr.middlewares=common-auth@file"
 
 volumes:
   configsonarr: 

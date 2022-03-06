@@ -15,11 +15,6 @@ services:
       - transcodes:/temp
       - configtdarrv2:/app/server
       - settingstdarrv2:/app/configs
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.tdarrv2-seedbox.loadbalancer.server.port=8265"
-      - "traefik.http.routers.tdarrv2.rule=Host(`tdarr.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.tdarrv2.middlewares=common-auth@file"
 
   tdarr_node:
     image: haveagitgat/tdarr_node:latest

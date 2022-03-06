@@ -11,10 +11,6 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.readarr.rule=Host(`readarr.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.readarr.middlewares=common-auth@file"
 
 volumes:
   configreadarr: 

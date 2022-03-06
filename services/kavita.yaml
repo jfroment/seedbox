@@ -11,9 +11,6 @@ services:
       - TZ=${TZ}
     # Wait for https://github.com/Kareadita/Kavita/issues/301 to be resolved
     #user: "${PUID}:${PGID}"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.kavita.rule=Host(`kavita.${TRAEFIK_DOMAIN}`)"
 
 volumes:
   configkavita: 

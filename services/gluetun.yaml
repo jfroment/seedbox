@@ -17,15 +17,6 @@ services:
       - WIREGUARD_PUBLIC_KEY=${WIREGUARD_PUBLIC_KEY}
       - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
       - WIREGUARD_ADDRESS=${WIREGUARD_ADDRESS}
-    #labels:
-      # Control Panel
-      # - "traefik.enable=true"
-      # - "traefik.http.routers.gluetun.rule=Host(`gluetun.${TRAEFIK_DOMAIN}`)"
-      # - "traefik.http.routers.gluetun.middlewares=common-auth@file"
-      # - "traefik.http.routers.gluetun.service=gluetun"
-      # - "traefik.http.services.gluetun.loadbalancer.server.port=8000"
-      # Traefik rules for VPN-enabled services (which have ot be accessed through gluetun) are defined in the samples/ directory
-      # and are applied automatically in the update-all.sh script.
 
 volumes:
   configgluetun:

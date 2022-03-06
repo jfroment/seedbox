@@ -16,12 +16,6 @@ services:
       - 22000:22000/tcp
       - 22000:22000/udp
       - 21027:21027/udp
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.syncthing.rule=Host(`syncthing.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.syncthing.middlewares=common-auth@file"
-      - "traefik.http.routers.syncthing.service=syncthing"
-      - "traefik.http.services.syncthing.loadbalancer.server.port=8384"
 
 volumes:
   configsyncthing: 
