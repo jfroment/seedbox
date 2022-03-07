@@ -51,6 +51,7 @@ And also:
 * ⚠️ Nextcloud-db has moved. It is now in ``/data/config`` (or somewhere else if you set the new variables for host paths) (see below how to mitigate the errors). [See the dedicated section below](#nextcloud-db-has-moved).
 * Disable Traefik access logs
 * New flag ``--debug`` for ``run-seedbox.sh`` to see what is happening during configuration parsing.
+* Releases are named after LOST mythology. I exhausted all the characters of Person of Interest, so that's time for a change. Only geeks will get it, I know.
 
 ## Some reading about configuration
 
