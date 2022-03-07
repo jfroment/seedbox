@@ -1,5 +1,7 @@
 # September 2020 - Upgrade to Traefik v2 instructions
 
+> This guide is useful if you already are using the seedbox but did not update before September 2020.
+
 Before upgrading Traefik to version 2, please check the following:
 
 - In this repo, Traefik v2 upgrade is as seamless as possible (same environment variables than before, out-of-the-box config file...).

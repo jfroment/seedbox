@@ -230,6 +230,7 @@ services:
         - host: ${TRAEFIK_DOMAIN}
           httpAuth: true
           internalPort: 80
+  # Gluetun is the VPN client service.
   - name: gluetun
     enabled: false
     traefik:

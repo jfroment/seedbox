@@ -8,7 +8,7 @@ Since there are some breaking changes and a configuration structure migration, a
 
 * **Configuration change to new YAML format**
   * Run ``config-updater.sh`` to migrate your old services.conf to the new config.yaml format.
-  * ⚠️ jq (v1.5+) and yq (v4+) are now requirements
+  * ⚠️ ``jq`` (v1.5+) and ``yq`` (v4+) are now requirements
   * Easier feature switches
   * If a service is missing, it won't be enabled by default like before. The config is now more declarative.
   * Traefik routing rules are now dynamically generated in a file in Traefik config directory, so no more Docker labels. They became hard to maintain due to all possibilities caused by VPN support or custom files for example.
