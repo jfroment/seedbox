@@ -31,6 +31,7 @@ Since there are some breaking changes and a configuration structure migration, a
   * The new config structure allows for more customization, for example you can now have many routes on the same service. Let's say, a local unsecured route + a secured one for remote access. Or anything you want.
 * **More customization**
   * Such as http authentication which is no more hardcoded but configurable for each service.
+  * Configurable paths on host for persistent data
 * **New services**
   * ``Gluetun``: [VPN client (see above)](https://github.com/qdm12/gluetun)
   * ``Heimdall``: [Dashboard](https://github.com/linuxserver/Heimdall)
@@ -45,7 +46,7 @@ And also:
 * ``update-all.sh`` is now called ``run-seedbox.sh`` but its purpose is the same.
 * More checks in ``run-seedbox.sh``. For example, throws an error if Flood is enabled but not Deluge, or if VPN is enabled on a service but the VPN client is not.
 * You can now specify where your data lives on your host through new environments variables (see [.env.sample](.env.sample)).
-  * This change is backward-compatible as the run-seedbox.sh script will default to the old "/data/torrents" and "/data/config" paths if these variables are not set.
+  * This change is backward-compatible as the ``run-seedbox.sh`` script will default to the old "/data/torrents" and "/data/config" paths if these variables are not set.
 * ``networks:`` section is now aligned with the new docker compose syntax
 * ⚠️ Nextcloud-db has moved. It is now in ``/data/config`` (or somewhere else if you set the new variables for host paths) (see below how to mitigate the errors). [See the dedicated section below](#nextcloud-db-has-moved).
 * Disable Traefik access logs
