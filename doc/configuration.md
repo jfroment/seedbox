@@ -129,7 +129,7 @@ services:
 ...and you're set!
 
 Please note that the ``customFile`` flag **MUST** be relative to the "services" directory, because in some cases, some alternatives yaml files for bundled services are provided in the services directory.
-For example, in this repository is provided a custom "plex-hardware-transcoding.yaml" file, with all the necessary adaptations to make Plex run with hardware transcoding enabled. Just add the ``customFile`` field in the ``plex`` service and this file will be used, instead of the default "plex.yaml".
+For example, in this repository is provided a custom "plex-hardware-transcoding.yaml" file, with all the necessary adaptations to make Plex run with hardware transcoding enabled. Just add the ``customFile: plex-hardware-transcoding.yaml`` field in the ``plex`` service and this file will be used, instead of the default "plex.yaml".
 
 ## Integration with other services (custom Traefik config)
 
@@ -232,7 +232,7 @@ By default, the file used is [gluetun.yaml](../services/gluetun.yaml), which is 
 * Adapt it to your needs (variables, mode...) according to your provider.
   * Add all variables you may need (used in your custom yaml file) in your ``.env`` file (replacing the wireguard ones).
 * Edit your ``config.yaml`` and add ``customFile: custom/gluetun-custom.yaml`` in the ``gluetun`` section.
-* Enable vn (``vpn: true``) on any service.
+* Enable vpn (``vpn: true``) on any service.
 * Run ``./run-seedbox.sh``.
 * The service now uses your VPN by tunneling via gluetun container. If gluetun is down or if the VPN link is broken, your service won't have any access to Internet.
 

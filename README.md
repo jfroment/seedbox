@@ -1,11 +1,33 @@
-# Seedbox
+<h1 align="center">Seedbox</h1>
+  <p align="center">
+    An extensive and hackable collection of containerized services to set up a seedbox and personal media server.
+  </p>
+<br>
 
-A collection of Dockerfiles and a docker-compose configuration to set up a
-seedbox and personal media server.
+## ✨ Features
 
-⚠️ Version 2 is released, please make sure you read [this V2 Migration Guide](doc/UPGRADE_V2.md) as there are breaking changes!
+* Easy to configure personal media server without needing too much technical skills
+* Compatible with multiple systems (Linux servers, desktops, Synology NAS...)
+* Automatic HTTPS ceritificates management and renewal
+  * Support for HTTP only too if required for your use-case
+* Everything is hackable
+  * Add your own services
+  * Disable the ones you do not want
+  * Customize or add your own routing rules to integrate with existing services
+  * Tweak any service to your need by using custom file parameter on any service
+* VPN support with multiple providers
+  * Hide the service(s) of your choice behind a VPN tunnel
+  * Non mandatory
+* Declarative configuration
+* Persistent data for your media
+* Install & update using the same script
+* Start with the [Configuration Guide](doc/configuration.md)
 
-## Included Applications
+## ⚠️ News
+
+Version 2 is released, please make sure you read [this V2 Migration Guide](doc/UPGRADE_V2.md) as there are breaking changes!
+
+## 📦 Included Applications
 
 | Application          | Web Interface              | Docker image                                                           | Version (image tag) | Notes               |
 -----------------------|----------------------------|------------------------------------------------------------------------|-------------------------|---------------------|
@@ -27,12 +49,17 @@ seedbox and personal media server.
 | Tautulli (plexPy)    | tautulli.yourdomain.com    | [linuxserver/tautulli](https://hub.docker.com/r/linuxserver/tautulli)  | *latest*                | Plex stats and admin|
 | Tdarr            | tdarr.yourdomain.com   | [haveagitgat/tdarr](https://hub.docker.com/r/haveagitgat/tdarr)  | *latest*                | Re-encode files |
 | NextCloud            | nextcloud.yourdomain.com   | [linuxserver/nextcloud](https://hub.docker.com/r/linuxserver/nextcloud)  | *latest*                | Files management    |
-| NextCloud-db (MariaDB) | not reachable   | [mariadb](https://hub.docker.com/r/_/mariadb)  | *10*                | DB for Nextcloud    |
+| NextCloud-db (MariaDB) | *not reachable*   | [mariadb](https://hub.docker.com/r/_/mariadb)  | *10*                | DB for Nextcloud    |
 | Portainer            | portainer.yourdomain.com   | [portainer/portainer](https://hub.docker.com/r/portainer/portainer)    | *latest*                | Container management|
 | Netdata              | netdata.yourdomain.com     | [netdata/netdata](https://hub.docker.com/r/netdata/netdata)            | *latest*                | Server monitoring   |
 | Duplicati            | duplicati.yourdomain.com   | [linuxserver/duplicati](https://hub.docker.com/r/linuxserver/duplicati)| *latest*                | Backups             |
 | Heimdall            | yourdomain.com   | [linuxserver/heimdall](https://hub.docker.com/r/linuxserver/heimdall)| *latest*                | Main dashboard      |
+| Syncthing         | syncthing.yourdomain.com |  [linuxserver/syncthing](https://hub.docker.com/r/linuxserver/syncthing) | *latest* | P2P files sharing |
+| Traefik | traefik.yourdomain.com | [traefik](https://hub.docker.com/_/traefik) | *latest* | Traefik reverse proxy (access to admin dashboard) |
 | Gluetun            | -   | [qmcgaw/gluetun](https://hub.docker.com/r/qmcgaw/gluetun)| *latest*                | VPN client             |
+| *Any application you want!* | *whatever.yourdomain.com* | *Any image* | *Any tag* | *Any service - See the [Configuration Guide](doc/configuration.md)* |
+
+## 🌐 Traefik
 
 The front-end reverse proxy (Traefik - **check [this guide](doc/traefik_v2.md) if you still have the seedbox with Traefik v1**)  routes based on the lowest level subdomain (e.g. `deluge.example.com` would route to deluge). Since this is how the router works, it is recommended for you to get a top level domain. If you do not have one, you can edit your domains locally by changing your hosts file or use a browser plugin that changes the host header.
 
@@ -40,7 +67,12 @@ Traefik takes care of valid Let's Encrypt certificates and auto-renewal.
 
 Note: Plex is also available directly through the `32400` port without going through the reverse proxy.
 
-## Dependencies
+You can also add your own Traefik rules to integrate with other services (deployed wihthin docker or somewhere else on your LAN, or even on the Internet).
+Check the [Configuration Guide](doc/configuration.md).
+
+## ⚙️ Installation
+
+### Dependencies
 
 - [Docker](https://github.com/docker/docker) >= 20.10
 - [Docker Compose](https://github.com/docker/compose) >= 2.2
@@ -48,7 +80,7 @@ Note: Plex is also available directly through the `32400` port without going thr
 - [jq](https://stedolan.github.io/jq/download/) >= 1.5
 - [yq](https://github.com/mikefarah/yq/releases) >= 4
 
-## Set up for the first time
+### Prepare your host
 
 Before running, please create the volumes which will be statically mapped to the ones on the host:
 For example:
@@ -61,13 +93,13 @@ sudo su -c "mkdir /data && mkdir /data/config && mkdir /data/torrents"
 Edit the `.env` file and change the variables as desired.
 The variables are all self-explanatory.
 
-## Configuration
+### Review the configuration
 
 The configuration lives in the ``config.yaml`` file.
 
 All you need to know is located in the [Configuration Guide](doc/configuration.md).
 
-## Running & updating
+### Running & updating
 
 ```sh
 ./run-seedbox.sh
@@ -77,12 +109,7 @@ All services and synamic configuration will be automatically created without fur
 
 Make sure you install the dependencies and finish configuration before doing this.
 
-## PlexPass
-
-Just set the `VERSION` environment variable to `latest` on the Plex service (enabled by default).
-See [this link](https://hub.docker.com/r/linuxserver/plex).
-
-## Where is my data?
+### Where is my data?
 
 All data is saved in the docker volumes `seedbox_config` or
 `seedbox_torrents`.

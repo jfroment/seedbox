@@ -4,8 +4,6 @@
 
 Since there are some breaking changes and a configuration structure migration, a major version was mandatory.
 
-> These releases notes are still a work-in-progress as V2 is not fully tested and finalized yet.
-
 ## What's new?
 
 * **Configuration change to new YAML format**
@@ -66,7 +64,7 @@ And also:
 ./run-seedbox.sh
 ```
 
-When everything runs smoothly, you can delete your old configuration file:
+When everything runs smoothly, you can delete your old configuration file which is now useless:
 
 ```sh
 rm -f services.conf
