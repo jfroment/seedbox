@@ -10,14 +10,9 @@ services:
       - USER_ID=${PUID}
       - GROUP_ID=${PGID}
       - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.jdownloader-seedbox.loadbalancer.server.port=5800"
-      - "traefik.http.routers.jdownloader.rule=Host(`jdownloader.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.jdownloader.middlewares=common-auth@file"
 
 volumes:
   configjdownloader:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/jdownloader
+      mountpoint: $HOST_CONFIG_PATH/jdownloader

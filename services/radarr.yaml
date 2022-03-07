@@ -11,13 +11,9 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.radarr.rule=Host(`radarr.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.radarr.middlewares=common-auth@file"
 
 volumes:
   configradarr: 
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/radarr
+      mountpoint: $HOST_CONFIG_PATH/radarr

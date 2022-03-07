@@ -9,13 +9,9 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.prowlarr.middlewares=common-auth@file"
 
 volumes:
   configprowlarr:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/prowlarr
+      mountpoint: $HOST_CONFIG_PATH/prowlarr

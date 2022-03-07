@@ -10,13 +10,9 @@ services:
       - PUID=${PUID}
       - TZ=${TZ}
       - BASE_URL=/
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.ombi.rule=Host(`ombi.${TRAEFIK_DOMAIN}`)"
-      #- "traefik.http.routers.ombi.middlewares=common-auth@file"
 
 volumes:
   configombi:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/ombi
+      mountpoint: $HOST_CONFIG_PATH/ombi

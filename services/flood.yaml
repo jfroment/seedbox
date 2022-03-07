@@ -8,7 +8,7 @@ services:
     user: ${PUID}:${PGID}
     command:
       - --auth=none
-      - --dehost=deluge
+      - --dehost=${DELUGE_HOST}
       - --deport=58846
       - --deuser=flood
       - --depass=${FLOOD_PASSWORD}
@@ -18,15 +18,9 @@ services:
       - torrents:/torrents
       - downloads:/downloads
       - /etc/localtime:/etc/localtime:ro
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.flood.rule=Host(`flood.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.flood.middlewares=common-auth@file"
-      - "traefik.http.routers.flood.service=flood-service"
-      - "traefik.http.services.flood-service.loadbalancer.server.port=3000"
 
 volumes:
   configflood: 
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/flood
+      mountpoint: $HOST_CONFIG_PATH/flood

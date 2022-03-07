@@ -1,9 +1,33 @@
-# Seedbox
+<h1 align="center">Seedbox</h1>
+  <p align="center">
+    An extensive and hackable collection of containerized services to set up a seedbox and personal media server.
+  </p>
+<br>
 
-A collection of Dockerfiles and a docker-compose configuration to set up a
-seedbox and personal media server.
+## ✨ Features
 
-## Included Applications
+* Easy to configure personal media server without needing too much technical skills
+* Compatible with multiple systems (Linux servers, desktops, Synology NAS...)
+* Automatic HTTPS ceritificates management and renewal
+  * Support for HTTP only too if required for your use-case
+* Everything is hackable
+  * Add your own services
+  * Disable the ones you do not want
+  * Customize or add your own routing rules to integrate with existing services
+  * Tweak any service to your need by using custom file parameter on any service
+* VPN support with multiple providers
+  * Hide the service(s) of your choice behind a VPN tunnel
+  * Non mandatory
+* Declarative configuration
+* Persistent data for your media
+* Install & update using the same script
+* Start with the [Configuration Guide](doc/configuration.md)
+
+## ⚠️ News
+
+Version 2 is released, please make sure you read [this V2 Migration Guide](doc/UPGRADE_V2.md) as there are breaking changes!
+
+## 📦 Included Applications
 
 | Application          | Web Interface              | Docker image                                                           | Version (image tag) | Notes               |
 -----------------------|----------------------------|------------------------------------------------------------------------|-------------------------|---------------------|
@@ -14,6 +38,9 @@ seedbox and personal media server.
 | Radarr               | radarr.yourdomain.com      | [linuxserver/radarr](https://hub.docker.com/r/linuxserver/radarr)      | *develop*                | Movies monitor      |
 | Bazarr               | bazarr.yourdomain.com      | [linuxserver/bazarr](https://hub.docker.com/r/linuxserver/bazarr)      | *latest*                | Subtitles monitor   |
 | Lidarr               | lidarr.yourdomain.com      | [linuxserver/lidarr](https://hub.docker.com/r/linuxserver/lidarr)      | *develop*               | Music monitor       |
+| Readarr               | readarr.yourdomain.com      | [linuxserver/readarr](https://hub.docker.com/r/linuxserver/readarr)      | *nightly*               | Ebook and comic monitor       |
+| Komga               | komga.yourdomain.com      | [gotson/komga](https://hub.docker.com/r/gotson/komga)      | *latest*               | Comic Book Manager       |
+| Kavita               | Kavita.yourdomain.com      | [gotson/komga](https://hub.docker.com/r/gotson/komga)      | *latest*               | Comic Book Manager       |
 | Ombi               | ombi.yourdomain.com      | [linuxserver/ombi](https://hub.docker.com/r/linuxserver/ombi)      | *latest*               | Plex content requests       |
 | Overseerr               | overseerr.yourdomain.com      | [linuxserver/overseerr](https://hub.docker.com/r/linuxserver/overseerr)      | *latest*               | Plex content requests       |
 | Jackett              | jackett.yourdomain.com     | [linuxserver/jackett](https://hub.docker.com/r/linuxserver/jackett)    | *latest*                | Tracker indexer     |
@@ -22,58 +49,41 @@ seedbox and personal media server.
 | Tautulli (plexPy)    | tautulli.yourdomain.com    | [linuxserver/tautulli](https://hub.docker.com/r/linuxserver/tautulli)  | *latest*                | Plex stats and admin|
 | Tdarr            | tdarr.yourdomain.com   | [haveagitgat/tdarr](https://hub.docker.com/r/haveagitgat/tdarr)  | *latest*                | Re-encode files |
 | NextCloud            | nextcloud.yourdomain.com   | [linuxserver/nextcloud](https://hub.docker.com/r/linuxserver/nextcloud)  | *latest*                | Files management    |
-| NextCloud-db (MariaDB) | not reachable   | [mariadb](https://hub.docker.com/r/_/mariadb)  | *10*                | DB for Nextcloud    |
+| NextCloud-db (MariaDB) | *not reachable*   | [mariadb](https://hub.docker.com/r/_/mariadb)  | *10*                | DB for Nextcloud    |
 | Portainer            | portainer.yourdomain.com   | [portainer/portainer](https://hub.docker.com/r/portainer/portainer)    | *latest*                | Container management|
 | Netdata              | netdata.yourdomain.com     | [netdata/netdata](https://hub.docker.com/r/netdata/netdata)            | *latest*                | Server monitoring   |
 | Duplicati            | duplicati.yourdomain.com   | [linuxserver/duplicati](https://hub.docker.com/r/linuxserver/duplicati)| *latest*                | Backups             |
+| Heimdall            | yourdomain.com   | [linuxserver/heimdall](https://hub.docker.com/r/linuxserver/heimdall)| *latest*                | Main dashboard      |
+| Syncthing         | syncthing.yourdomain.com |  [linuxserver/syncthing](https://hub.docker.com/r/linuxserver/syncthing) | *latest* | P2P files sharing |
+| Traefik | traefik.yourdomain.com | [traefik](https://hub.docker.com/_/traefik) | *latest* | Traefik reverse proxy (access to admin dashboard) |
+| Gluetun            | -   | [qmcgaw/gluetun](https://hub.docker.com/r/qmcgaw/gluetun)| *latest*                | VPN client             |
+| *Any application you want!* | *whatever.yourdomain.com* | *Any image* | *Any tag* | *Any service - See the [Configuration Guide](doc/configuration.md)* |
 
-The front-end reverse proxy (Traefik - **check the next section if you have already the seedbox with Traefik v1**) routes based on the lowest level subdomain
- (e.g. `deluge.example.com` would route to deluge). Since this is how the router
-works, it is recommended for you to get a top level domain. If you do not have
-one, you can edit your domains locally by changing your hosts file or use a
-browser plugin that changes the host header.
+## 🌐 Traefik
+
+The front-end reverse proxy (Traefik - **check [this guide](doc/traefik_v2.md) if you still have the seedbox with Traefik v1**)  routes based on the lowest level subdomain (e.g. `deluge.example.com` would route to deluge). Since this is how the router works, it is recommended for you to get a top level domain. If you do not have one, you can edit your domains locally by changing your hosts file or use a browser plugin that changes the host header.
 
 Traefik takes care of valid Let's Encrypt certificates and auto-renewal.
 
-Note: Plex is also available directly through the `32400` port without going
-through the reverse proxy.
+Note: Plex is also available directly through the `32400` port without going through the reverse proxy.
 
-## September 2020 - Upgrade to Traefik v2 instructions
+You can also add your own Traefik rules to integrate with other services (deployed wihthin docker or somewhere else on your LAN, or even on the Internet).
+Check the [Configuration Guide](doc/configuration.md).
 
-Before upgrading Traefik to version 2, please check the following:
+## ⚙️ Installation
 
-- In this repo, Traefik v2 upgrade is as seamless as possible (same environment variables than before, out-of-the-box config file...).
-- **First, ``git pull`` to grab the latest code.**
-- The ``HTTP_PASSWORD`` variable now must be simple-quoted in the .env file. See the updated ``.env.sample`` file (which has also been reorganized)
-- Run ``init.sh`` in order to create required Docker objects (network name has changed).
-- You can update your acme.json to a Traefik v2-compliant one by doing the following (before launching Traefik v2):
-
-```sh
-mkdir -p /tmp/migration
-cd /tmp/migration
-sudo cp /opt/traefik/acme.json .
-sudo chmod 775 /tmp/migration/acme.json
-# Do *NOT* forget the --resolver at the end! (le = Let's Encrypt resolver, see traefik/traefik.yml)
-docker run --rm -v ${PWD}:/data -w /data containous/traefik-migration-tool acme -i acme.json -o acme2.json --resolver le
-mkdir -p /data/config/traefik
-sudo cp acme2.json /data/config/traefik/acme.json
-sudo chmod 600 /data/config/traefik/acme.json
-# When you already have a backup!
-sudo rm -rf /opt/traefik /tmp/migration
-```
-
-- As from Traefik v2, as Http Authentication is now possible on the Traefik console, the latter is enabled at ``traefik.yourdomain.com``.
-- After all this, you can simply do: ``./update-all.sh``! Voilà!
-
-## Dependencies
+### Dependencies
 
 - [Docker](https://github.com/docker/docker) >= 20.10
-- [Docker Compose](https://github.com/docker/compose) >= 1.28.0
-- [local-persist Docker plugin](https://github.com/MatchbookLab/local-persist): installed directly on host (not in container). This is a volume plugin that extends the default local driver’s functionality by allowing you specify a mountpoint anywhere on the host, which enables the files to always persist, even if the volume is removed via `docker volume rm`. Use *systemd* install for Ubuntu 16.04.
+- [Docker Compose](https://github.com/docker/compose) >= 2.2
+- [local-persist Docker plugin](https://github.com/MatchbookLab/local-persist): installed directly on host (not in container). This is a volume plugin that extends the default local driver’s functionality by allowing you specify a mountpoint anywhere on the host, which enables the files to always persist, even if the volume is removed via `docker volume rm`. Use *systemd* install for Ubuntu.
+- [jq](https://stedolan.github.io/jq/download/) >= 1.5
+- [yq](https://github.com/mikefarah/yq/releases) >= 4
 
-## Configuration
+### Prepare your host
 
 Before running, please create the volumes which will be statically mapped to the ones on the host:
+For example:
 
 ```sh
 sudo su -c "mkdir /data && mkdir /data/config && mkdir /data/torrents"
@@ -83,29 +93,23 @@ sudo su -c "mkdir /data && mkdir /data/config && mkdir /data/torrents"
 Edit the `.env` file and change the variables as desired.
 The variables are all self-explanatory.
 
-**NEW**
-You can also disable a service if you do not need it by editing the ``services.conf`` file.
-Simply change the "*enable*" key with the "*disable*" one for the service you want to disable.
-If you remove a line in this file, it will be considered as "enabled" as all services are enabled by default.
+### Review the configuration
 
-## Running & updating
+The configuration lives in the ``config.yaml`` file.
+
+All you need to know is located in the [Configuration Guide](doc/configuration.md).
+
+### Running & updating
 
 ```sh
-./update-all.sh
+./run-seedbox.sh
 ```
 
-docker-compose should manage all the volumes and network setup for you. If it
-does not, verify that your docker and docker-compose version is updated.
+All services and synamic configuration will be automatically created without further action from your part.
 
-Make sure you install the dependencies and finish configuration before doing
-this.
+Make sure you install the dependencies and finish configuration before doing this.
 
-## PlexPass
-
-Just set the `VERSION` environment variable to `latest` on the Plex service (enabled by default).
-See https://hub.docker.com/r/linuxserver/plex.
-
-## Where is my data?
+### Where is my data?
 
 All data is saved in the docker volumes `seedbox_config` or
 `seedbox_torrents`.

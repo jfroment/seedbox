@@ -1,0 +1,25 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    restart: always
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=${PUID}
+      - PGIDq=${PGID}
+      - TZ=${TZ}
+      - VPNSP=custom
+      - VPN_TYPE=wireguard
+      # For Wireguard
+      - VPN_ENDPOINT_IP=${WIREGUARD_ENDPOINT}
+      - VPN_ENDPOINT_PORT=${WIREGUARD_PORT}
+      - WIREGUARD_PUBLIC_KEY=${WIREGUARD_PUBLIC_KEY}
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_ADDRESS=${WIREGUARD_ADDRESS}
+
+volumes:
+  configgluetun:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/gluetun

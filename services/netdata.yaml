@@ -15,9 +15,5 @@ services:
       - /sys:/host/sys:ro
       - /etc/passwd:/host/etc/passwd:ro
       - /etc/group:/host/etc/group:ro
-      - /etc/os-release:/host/etc/os-release:ro
+      - ${OS_RELEASE_FILEPATH}:/host/etc/os-release:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.netdata.rule=Host(`netdata.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.netdata.middlewares=common-auth@file"

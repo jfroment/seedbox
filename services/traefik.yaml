@@ -16,15 +16,9 @@ services:
     environment:
       - TRAEFIK_DOMAIN=${TRAEFIK_DOMAIN}
       - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      # Docker labels for enabling Traefik dashboard
-      - "traefik.http.routers.traefik.rule=Host(`traefik.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.routers.traefik.middlewares=common-auth@file"
 
 volumes:
   configtraefik:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/traefik
+      mountpoint: $HOST_CONFIG_PATH/traefik

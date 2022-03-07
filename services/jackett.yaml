@@ -12,7 +12,3 @@ services:
       - PUID=${PUID}
       - TZ=${TZ}
       - RUN_OPTS='-FlareSolverrURL="http://flaresolverr:8191"'
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.jackett.rule=Host(`jackett.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.jackett.middlewares=common-auth@file"

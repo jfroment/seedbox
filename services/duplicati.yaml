@@ -10,22 +10,14 @@ services:
     volumes:
       - configduplicati:/config
       - backups:/backups
-      - alldata:/source
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.duplicati.rule=Host(`duplicati.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.duplicati.middlewares=common-auth@file"
+      - config:/source
 
 volumes:
-  alldata:
-    driver: local-persist
-    driver_opts:
-      mountpoint: /data
   configduplicati:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/duplicati
+      mountpoint: $HOST_CONFIG_PATH/duplicati
   backups:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/backups
+      mountpoint: $HOST_CONFIG_PATH/backups

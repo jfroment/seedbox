@@ -10,13 +10,9 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.bazarr.rule=Host(`bazarr.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.bazarr.middlewares=common-auth@file"
 
 volumes:
   configbazarr:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/bazarr
+      mountpoint: $HOST_CONFIG_PATH/bazarr

@@ -10,12 +10,9 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.tautulli.rule=Host(`tautulli.${TRAEFIK_DOMAIN}`)"
 
 volumes:
   configtautulli:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/tautulli
+      mountpoint: $HOST_CONFIG_PATH/tautulli

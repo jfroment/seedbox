@@ -2,10 +2,10 @@ api:
   dashboard: true
 
 # Set Access logs timezone
-accessLog:
-  fields:
-    names:
-      StartUTC: drop
+# accessLog:
+#   fields:
+#     names:
+#       StartUTC: drop
 
 providers:
   docker:
@@ -19,11 +19,11 @@ providers:
 entryPoints:
   insecure:
     address: ":80"
-    http:
-      redirections:
-        entryPoint:
-          to: secure
-          scheme: https
+    # http:
+    #   redirections:
+    #     entryPoint:
+    #       to: secure
+    #       scheme: https
   secure:
     address: ":443"
     http:

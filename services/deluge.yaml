@@ -11,13 +11,9 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.deluge.rule=Host(`deluge.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.routers.deluge.middlewares=common-auth@file"
 
 volumes:
   configdeluge: 
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/deluge
+      mountpoint: $HOST_CONFIG_PATH/deluge

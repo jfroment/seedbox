@@ -1,0 +1,18 @@
+services:
+  komga:
+    image: gotson/komga
+    container_name: komga
+    restart: always
+    volumes:
+      - configkomga:/config
+      - torrents:/torrents
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - TZ=${TZ}
+    user: "${PUID}:${PGID}"
+
+volumes:
+  configkomga: 
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/komga

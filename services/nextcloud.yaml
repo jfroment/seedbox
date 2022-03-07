@@ -3,6 +3,7 @@ services:
       image: mariadb:10
       container_name: nextcloud-db
       command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --innodb-file-per-table=1 --skip-innodb-read-only-compressed
+      user: ${PUID}:${PGID}
       restart: always
       environment:
         - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
@@ -31,22 +32,17 @@ services:
       - nextclouddata:/data
       - torrents:/torrents
       - config:/seedbox-config
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${TRAEFIK_DOMAIN}`)"
-      - "traefik.http.services.nextcloud-seedbox.loadbalancer.server.scheme=https"
-      - "traefik.http.services.nextcloud-seedbox.loadbalancer.server.port=443"
 
 volumes:
   nextclouddb:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/nextcloud-db
+      mountpoint: $HOST_CONFIG_PATH/nextcloud-db
   confignextcloud:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/nextcloud
+      mountpoint: $HOST_CONFIG_PATH/nextcloud
   nextclouddata:
     driver: local-persist
     driver_opts:
-      mountpoint: /data/config/nextcloud-data
+      mountpoint: $HOST_CONFIG_PATH/nextcloud-data
