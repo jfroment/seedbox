@@ -12,7 +12,7 @@
 * [VPN](#vpn)
   * [Default mode - Wireguard custom](#default-mode---wireguard-custom)
   * [Your own mode (VPN provider supported by gluetun)](#your-own-mode-vpn-provider-supported-by-gluetun)
-  * [How does VPN is handled?](#how-does-vpn-is-handled)
+  * [How is VPN handled?](#how-is-vpn-handled)
 * [Make the services communicate with each other](#make-the-services-communicate-with-each-other)
 * [How does the configuration work?](#how-does-the-configuration-work)
 
@@ -249,7 +249,7 @@ By default, the file used is [gluetun.yaml](../services/gluetun.yaml), which is 
 * Run ``./run-seedbox.sh``.
 * The service now uses your VPN by tunneling via gluetun container. If gluetun is down or if the VPN link is broken, your service won't have any access to Internet.
 
-### How does VPN is handled?
+### How is VPN handled?
 
 Behind the scenes, the ``run-seedbox.sh`` script will mainly add 2 overrides when enabling VPN on a service:
 
