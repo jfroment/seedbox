@@ -3,7 +3,7 @@ services:
     image: traefik
     container_name: traefik
     restart: always
-    command: 
+    command:
       - --certificatesresolvers.le.acme.email=${ACME_MAIL}
       - --pilot.token=${PILOT_TOKEN}
     ports:

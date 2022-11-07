@@ -1,8 +1,6 @@
 http:
   middlewares:
-    common-auth:
-      basicAuth:
-        usersFile: "/etc/traefik/http_auth"
+    # Middleware applied globally at the entrypoint level (applied to all routers using "secure" entrypoint)
     security-headers:
       headers:
         forceSTSHeader: true
@@ -15,6 +13,18 @@ http:
         frameDeny: true
         contentTypeNosniff: true
         browserXssFilter: true
+
+        customresponseheaders:
+          X-Frame-Options: sameorigin
+          Content-Security-Policy: frame-ancestors https://*.{{ env "TRAEFIK_DOMAIN" }}
+        customrequestheaders:
+          X-Frame-Options: sameorigin
+          Content-Security-Policy: frame-ancestors https://*.{{ env "TRAEFIK_DOMAIN" }}
+
+    # Middlewares which are used automatically by the run-seedbox.sh script according to the parameters applied
+    common-auth:
+      basicAuth:
+        usersFile: "/etc/traefik/http_auth"
     redirect-to-https:
       redirectScheme:
         scheme: https
