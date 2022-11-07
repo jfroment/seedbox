@@ -111,6 +111,19 @@ services:
         - host: readarr.${TRAEFIK_DOMAIN}
           httpAuth: true
           internalPort: 8787
+  - name: calibre
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: calibre-admin.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 8080
+        - host: calibre.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          service: calibre-web
+          internalPort: 8083
   - name: komga
     enabled: false
     vpn: false
