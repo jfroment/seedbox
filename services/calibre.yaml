@@ -13,7 +13,7 @@ services:
       - configcalibre:/config
 
   calibre-web:
-    image: hcr.io/linuxserver/calibre-web
+    image: ghcr.io/linuxserver/calibre-web
     container_name: calibre-web
     restart: always
     environment:
