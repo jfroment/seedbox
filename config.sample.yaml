@@ -122,7 +122,7 @@ services:
           internalPort: 8080
         - host: calibre.${TRAEFIK_DOMAIN}
           httpAuth: true
-          service: calibre-web
+          service: calibre-web@docker
           internalPort: 8083
   - name: komga
     enabled: false
