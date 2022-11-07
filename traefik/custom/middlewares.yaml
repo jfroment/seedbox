@@ -19,3 +19,15 @@ http:
       redirectScheme:
         scheme: https
         permanent: false
+    authelia:
+      forwardAuth:
+        address: http://authelia:9091/api/verify?rd=https://sso.{{ env "TRAEFIK_DOMAIN" }}
+        trustForwardHeader: true
+        authResponseHeaders:
+          - "Remote-User"
+          - "Remote-Groups"
+    chain-authelia:
+      chain:
+        middlewares:
+          - security-headers
+          - authelia
