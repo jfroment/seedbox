@@ -120,9 +120,14 @@ services:
         - host: calibre-admin.${TRAEFIK_DOMAIN}
           httpAuth: true
           internalPort: 8080
+  - name: calibre-web
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
         - host: calibre.${TRAEFIK_DOMAIN}
           httpAuth: true
-          service: calibre-web@docker
           internalPort: 8083
   - name: komga
     enabled: false

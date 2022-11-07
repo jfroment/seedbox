@@ -119,6 +119,15 @@ if [[ $(cat config.json | jq '[.services[] | select(.name=="flood" and .enabled=
   fi
 fi
 
+# Check that if calibre-web is enabled, calibre should also be enabled
+if [[ $(cat config.json | jq '[.services[] | select(.name=="calibre-web" and .enabled==true)] | length') -eq 1 ]]; then
+  if [[ $(cat config.json | jq '[.services[] | select(.name=="calibre" and .enabled==false)] | length') -eq 1 ]]; then
+    echo "[$0] ERROR. Calibre-web is enabled but Calibre is not. Please either enable Calibre or disable Calibre-web as Calibre-web depends on Calibre."
+    echo "[$0] ******* Exiting *******"
+    exit 1
+  fi
+fi
+
 # Apply other arbitrary custom Traefik config files
 rm -f $f traefik/custom/custom-*
 for f in `find samples/custom-traefik -maxdepth 1 -mindepth 1 -type f | grep -E "\.yml$|\.yaml$" | sort`; do
