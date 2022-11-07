@@ -14,3 +14,5 @@ config.yaml
 services/custom/*.yaml
 services/custom/*.yml
 services/generated/*.yaml
+
+authelia/*
