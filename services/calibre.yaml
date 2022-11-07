@@ -11,6 +11,7 @@ services:
       - CLI_ARGS=
     volumes:
       - configcalibre:/config
+      - torrents:/torrents
 
 volumes:
   configcalibre: 
