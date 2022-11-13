@@ -1,6 +1,6 @@
 services:
   calibre-web:
-    image: ghcr.io/linuxserver/calibre-web
+    image: ghcr.io/linuxserver/calibre-web:nightly
     container_name: calibre-web
     restart: always
     environment:
