@@ -210,7 +210,7 @@ services:
       rules:
         - host: portainer.${TRAEFIK_DOMAIN}
           httpAuth: false
-          internalPort: 9443
+          internalPort: 9000
   - name: netdata
     enabled: true
     vpn: false
