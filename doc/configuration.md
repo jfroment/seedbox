@@ -12,9 +12,10 @@
 * [VPN](#vpn)
   * [Default mode - Wireguard custom](#default-mode---wireguard-custom)
   * [Your own mode (VPN provider supported by gluetun)](#your-own-mode-vpn-provider-supported-by-gluetun)
-  * [How does VPN is handled?](#how-does-vpn-is-handled)
+  * [How is VPN handled?](#how-is-vpn-handled)
 * [Make the services communicate with each other](#make-the-services-communicate-with-each-other)
 * [How does the configuration work?](#how-does-the-configuration-work)
+* [Apps configuration](#apps-configuration)
 
 ## General principles
 
@@ -249,7 +250,7 @@ By default, the file used is [gluetun.yaml](../services/gluetun.yaml), which is 
 * Run ``./run-seedbox.sh``.
 * The service now uses your VPN by tunneling via gluetun container. If gluetun is down or if the VPN link is broken, your service won't have any access to Internet.
 
-### How does VPN is handled?
+### How is VPN handled?
 
 Behind the scenes, the ``run-seedbox.sh`` script will mainly add 2 overrides when enabling VPN on a service:
 
@@ -316,3 +317,11 @@ http:
 ```
 
 This file will be automatically placed in [traefik/custom/](../traefik/custom/) directory (mounted by Traefik container) so the config will dynamically apply. This file is updated on each ``run-seedbox.sh`` execution.
+
+# Apps configuration
+
+List of currently available documentation for apps:
+
+- [Deluge + Flood](apps/deluge-flood.md)
+
+I also strongly recommend [TRaSH Guides](https://trash-guides.info/) to have a better overview of all *arrs apps configurations.

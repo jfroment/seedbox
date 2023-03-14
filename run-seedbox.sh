@@ -57,6 +57,7 @@ export COMPOSE_HTTP_TIMEOUT=240
 [[ -z $HOST_CONFIG_PATH ]] && export HOST_CONFIG_PATH="/data/config"
 [[ -z $HOST_MEDIA_PATH ]] && export HOST_MEDIA_PATH="/data/torrents"
 [[ -z $DOWNLOAD_SUBFOLDER ]] && export DOWNLOAD_SUBFOLDER="deluge"
+[[ -z $DOCKER_COMPOSE_BINARY ]] && export DOCKER_COMPOSE_BINARY="docker-compose"
 
 if [[ ! -f config.yaml ]]; then
   echo "[$0] No config.yaml file found. Copying from sample file..."
@@ -116,6 +117,15 @@ if [[ $(cat config.json | jq '[.services[] | select(.name=="flood" and .enabled=
       echo "[$0] No need to add user/password for flood as it has already been created."
       echo "[$0] Consider setting FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON variable to false in .env file."
     fi
+  fi
+fi
+
+# Check that if calibre-web is enabled, calibre should also be enabled
+if [[ $(cat config.json | jq '[.services[] | select(.name=="calibre-web" and .enabled==true)] | length') -eq 1 ]]; then
+  if [[ $(cat config.json | jq '[.services[] | select(.name=="calibre" and .enabled==false)] | length') -eq 1 ]]; then
+    echo "[$0] ERROR. Calibre-web is enabled but Calibre is not. Please either enable Calibre or disable Calibre-web as Calibre-web depends on Calibre."
+    echo "[$0] ******* Exiting *******"
+    exit 1
   fi
 fi
 
@@ -271,11 +281,11 @@ echo "[$0] ***** Config OK. Launching services... *****"
 
 if [[ "${SKIP_PULL}" != "1" ]]; then
   echo "[$0] ***** Pulling all images... *****"
-  docker-compose ${ALL_SERVICES} pull
+  ${DOCKER_COMPOSE_BINARY} ${ALL_SERVICES} pull
 fi
 
 echo "[$0] ***** Recreating containers if required... *****"
-docker-compose ${ALL_SERVICES} up -d --remove-orphans
+${DOCKER_COMPOSE_BINARY} ${ALL_SERVICES} up -d --remove-orphans
 echo "[$0] ***** Done updating containers *****"
 
 echo "[$0] ***** Clean unused images and volumes... *****"

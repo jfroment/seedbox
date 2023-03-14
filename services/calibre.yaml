@@ -1,0 +1,20 @@
+services:
+  calibre:
+    image: ghcr.io/linuxserver/calibre
+    container_name: calibre
+    restart: always
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+      - PASSWORD=${CALIBRE_PASSWORD}
+      - CLI_ARGS=
+    volumes:
+      - configcalibre:/config
+      - torrents:/torrents
+
+volumes:
+  configcalibre: 
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/calibre

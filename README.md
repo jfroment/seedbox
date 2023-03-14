@@ -39,6 +39,8 @@ Version 2 is released, please make sure you read [this V2 Migration Guide](doc/U
 | Bazarr               | bazarr.yourdomain.com      | [linuxserver/bazarr](https://hub.docker.com/r/linuxserver/bazarr)      | *latest*                | Subtitles monitor   |
 | Lidarr               | lidarr.yourdomain.com      | [linuxserver/lidarr](https://hub.docker.com/r/linuxserver/lidarr)      | *develop*               | Music monitor       |
 | Readarr               | readarr.yourdomain.com      | [linuxserver/readarr](https://hub.docker.com/r/linuxserver/readarr)      | *nightly*               | Ebook and comic monitor       |
+| Calibre | calibre-admin.yourdomain.com | [linuxserver/calibre](https://hub.docker.com/r/linuxserver/calibre)  | *latest* | eBook management |
+| Calibre-web | calibre.yourdomain.com | [linuxserver/calibre-web](https://hub.docker.com/r/linuxserver/calibre-web)  | *nightly* | Book management UI |
 | Komga               | komga.yourdomain.com      | [gotson/komga](https://hub.docker.com/r/gotson/komga)      | *latest*               | Comic Book Manager       |
 | Kavita               | Kavita.yourdomain.com      | [gotson/komga](https://hub.docker.com/r/gotson/komga)      | *latest*               | Comic Book Manager       |
 | Ombi               | ombi.yourdomain.com      | [linuxserver/ombi](https://hub.docker.com/r/linuxserver/ombi)      | *latest*               | Plex content requests       |
@@ -75,7 +77,7 @@ Check the [Configuration Guide](doc/configuration.md).
 ### Dependencies
 
 - [Docker](https://github.com/docker/docker) >= 20.10
-- [Docker Compose](https://github.com/docker/compose) >= 2.2
+- [Docker Compose](https://github.com/docker/compose) >= 2.2 *(2.16+ recommended)*
 - [local-persist Docker plugin](https://github.com/MatchbookLab/local-persist): installed directly on host (not in container). This is a volume plugin that extends the default local driver’s functionality by allowing you specify a mountpoint anywhere on the host, which enables the files to always persist, even if the volume is removed via `docker volume rm`. Use *systemd* install for Ubuntu.
 - [jq](https://stedolan.github.io/jq/download/) >= 1.5
 - [yq](https://github.com/mikefarah/yq/releases) >= 4
@@ -115,3 +117,8 @@ All data is saved in the docker volumes `seedbox_config` or
 `seedbox_torrents`.
 These volumes are mapped to the `config` and `torrents` folders located in `/data` on the host. You can change these static paths in the docker-compose.yml file.
 Thanks to the **local-persist** Docker plugin, the data located in these volumes is persistent, meaning that volumes are not deleted, even when using the ```docker-compose down``` command. It would be a shame to loose everything by running a simple docker command ;-)
+
+# Configure your apps
+
+- Some indications here (more to come): [Apps Configuration](doc/configuration.md#apps-configuration)
+- [TRaSH Guides](https://trash-guides.info/)

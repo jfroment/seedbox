@@ -1,0 +1,14 @@
+services:
+  calibre-web:
+    image: ghcr.io/linuxserver/calibre-web:nightly
+    container_name: calibre-web
+    restart: always
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+      - DOCKER_MODS=linuxserver/mods:universal-calibre
+      - OAUTHLIB_RELAX_TOKEN_SCOPE=1
+    volumes:
+      - configcalibre:/config
+      - torrents:/torrents

@@ -7,7 +7,7 @@ services:
       - NET_ADMIN
     environment:
       - PUID=${PUID}
-      - PGIDq=${PGID}
+      - PGID=${PGID}
       - TZ=${TZ}
       - VPNSP=custom
       - VPN_TYPE=wireguard
