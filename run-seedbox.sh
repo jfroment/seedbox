@@ -57,6 +57,7 @@ export COMPOSE_HTTP_TIMEOUT=240
 [[ -z $HOST_CONFIG_PATH ]] && export HOST_CONFIG_PATH="/data/config"
 [[ -z $HOST_MEDIA_PATH ]] && export HOST_MEDIA_PATH="/data/torrents"
 [[ -z $DOWNLOAD_SUBFOLDER ]] && export DOWNLOAD_SUBFOLDER="deluge"
+[[ -z $DOCKER_COMPOSE_BINARY ]] && export DOCKER_COMPOSE_BINARY="docker-compose"
 
 if [[ ! -f config.yaml ]]; then
   echo "[$0] No config.yaml file found. Copying from sample file..."
@@ -280,11 +281,11 @@ echo "[$0] ***** Config OK. Launching services... *****"
 
 if [[ "${SKIP_PULL}" != "1" ]]; then
   echo "[$0] ***** Pulling all images... *****"
-  docker-compose ${ALL_SERVICES} pull
+  ${DOCKER_COMPOSE_BINARY} ${ALL_SERVICES} pull
 fi
 
 echo "[$0] ***** Recreating containers if required... *****"
-docker-compose ${ALL_SERVICES} up -d --remove-orphans
+${DOCKER_COMPOSE_BINARY} ${ALL_SERVICES} up -d --remove-orphans
 echo "[$0] ***** Done updating containers *****"
 
 echo "[$0] ***** Clean unused images and volumes... *****"
