@@ -51,7 +51,7 @@ source .env
 echo "${HTTP_USER}:${HTTP_PASSWORD}" > traefik/http_auth
 
 ## Traefik Certificate Resolver tweaks
-touch traefik.env
+rm -f traefik.env && touch traefik.env
 if [[ ${ENABLE_CLOUDFLARE_TLS_CHALLENGE} == "true" ]]; then
   yq 'del(.certificatesResolvers.le.acme.httpChallenge)' -i traefik/traefik.yaml
   yq '(.certificatesResolvers.le.acme.dnsChallenge.provider="cloudflare")' -i traefik/traefik.yaml
