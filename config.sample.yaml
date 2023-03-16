@@ -29,6 +29,15 @@ services:
         - host: flood.${TRAEFIK_DOMAIN}
           httpAuth: true
           internalPort: 3000
+  - name: qbittorrent
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: qbittorrent.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 8080
   - name: plex
     enabled: true
     vpn: false
