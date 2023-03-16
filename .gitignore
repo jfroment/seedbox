@@ -16,4 +16,5 @@ services/custom/*.yml
 services/generated/*.yaml
 
 authelia/*
+.custom-env
 traefik.env

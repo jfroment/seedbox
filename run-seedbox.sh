@@ -52,11 +52,19 @@ echo "${HTTP_USER}:${HTTP_PASSWORD}" > traefik/http_auth
 
 ## Traefik Certificate Resolver tweaks
 rm -f traefik.env && touch traefik.env
-if [[ ${ENABLE_CLOUDFLARE_TLS_CHALLENGE} == "true" ]]; then
+if [[ ! -z ${TRAEFIK_CUSTOM_ACME_RESOLVER} ]]; then
+  if [[ ! -f .env-custom ]]; then
+    echo "[$0] Error. You need to have a .env-custom in order to use TRAEFIK_CUSTOM_ACME_RESOLVER variable."
+    exit 1
+  fi
+  if [[ ${TRAEFIK_CUSTOM_ACME_RESOLVER} == "changeme" ]]; then
+    echo "[$0] Error. Wrong value for TRAEFIK_CUSTOM_ACME_RESOLVER variable."
+    exit 1
+  fi
   yq 'del(.certificatesResolvers.le.acme.httpChallenge)' -i traefik/traefik.yaml
-  yq '(.certificatesResolvers.le.acme.dnsChallenge.provider="cloudflare")' -i traefik/traefik.yaml
-  echo "CF_API_EMAIL=${CF_API_EMAIL}" >> traefik.env
-  echo "CF_API_KEY=${CF_API_KEY}" >> traefik.env
+  yq '(.certificatesResolvers.le.acme.dnsChallenge.provider="'${TRAEFIK_CUSTOM_ACME_RESOLVER}'")' -i traefik/traefik.yaml
+  sed -e '/^#/d' .env-custom
+  cat .env-custom >> traefik.env
 fi
 
 # Docker-compose settings
