@@ -63,8 +63,7 @@ if [[ ! -z ${TRAEFIK_CUSTOM_ACME_RESOLVER} ]]; then
   fi
   yq 'del(.certificatesResolvers.le.acme.httpChallenge)' -i traefik/traefik.yaml
   yq '(.certificatesResolvers.le.acme.dnsChallenge.provider="'${TRAEFIK_CUSTOM_ACME_RESOLVER}'")' -i traefik/traefik.yaml
-  sed -i '/^#/d' .env-custom
-  cat .env-custom >> traefik.env
+  sed '/^#/d' .env-custom >> traefik.env
 fi
 
 # Docker-compose settings
