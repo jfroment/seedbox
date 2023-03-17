@@ -1,7 +1,7 @@
 services:
-  paperless-ngx:
+  paperless:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
-    container_name: paperless-ngx
+    container_name: paperless
     restart: unless-stopped
     depends_on:
       - redis
