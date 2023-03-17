@@ -62,3 +62,7 @@ volumes:
     driver: local-persist
     driver_opts:
       mountpoint: $HOST_CONFIG_PATH/paperless-import
+  redisdata:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/redis
