@@ -31,6 +31,8 @@ services:
     image: docker.io/library/redis:7
     container_name: redis
     restart: unless-stopped
+    # TODO: fix it => redis container does not support PGID and PUID...
+    user: root
     volumes:
       - redisdata:/data
 
