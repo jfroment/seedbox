@@ -211,6 +211,15 @@ services:
           httpAuth: false
           internalPort: 443
           internalScheme: https
+  - name: paperless
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: paperless.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 8000
   - name: portainer
     enabled: true
     vpn: false
