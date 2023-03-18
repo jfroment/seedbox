@@ -94,7 +94,7 @@ if [[ ${CHECK_FOR_OUTDATED_CONFIG} == true ]]; then
   if [[ $nb_services_sample -gt $nb_services ]]; then
     echo "[$0] There are more services in the config.sample.yaml than in your config.yaml"
     echo "[$0] You should check config.sample.yaml because it seems there are new services available for you:"
-    diff -u config.yaml config.sample.yaml | grep "name:" | grep -E "^\+" || true
+    diff -u config.yaml config.sample.yaml | grep "name:" | grep -E "^\+" | sed "s/+  - name:/-/g" || true
   fi
 fi
 
