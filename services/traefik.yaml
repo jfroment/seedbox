@@ -15,8 +15,6 @@ services:
     environment:
       - TRAEFIK_DOMAIN=${TRAEFIK_DOMAIN}
       - TZ=${TZ}
-    env_file:
-      - ./traefik.env
 
 volumes:
   configtraefik:
