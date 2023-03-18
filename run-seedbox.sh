@@ -50,8 +50,19 @@ fi
 source .env
 echo "${HTTP_USER}:${HTTP_PASSWORD}" > traefik/http_auth
 
+# Sanitize and extract variable (without prefixes) from .env.custom file
+# Input => $1 = app name (exemple traefik)
+# Output => app_name.env written with correct variables (exemple: traefik.env)
+extract_custom_env_file() {
+  # sed explanation:
+  #   1 => Remove all lines starting with a comment (#)
+  #   2 => Remove all empty lines
+  #   3 => Remove all lines *NOT* starting by [uppercase_app_name + "_"] (exemple TRAEFIK_)
+  #   4 => Remove the pattern [uppercase_app_name + "_"]
+  sed '/^#/d' .env.custom | sed '/^$/d' | sed -n "/^${1^^}_/p" | sed "s/^${1^^}_//g" > $1.env
+}
+
 ## Traefik Certificate Resolver tweaks
-rm -f traefik.env && touch traefik.env
 if [[ ! -z ${TRAEFIK_CUSTOM_ACME_RESOLVER} ]]; then
   if [[ ! -f .env.custom ]]; then
     echo "[$0] Error. You need to have a .env.custom in order to use TRAEFIK_CUSTOM_ACME_RESOLVER variable."
@@ -63,7 +74,7 @@ if [[ ! -z ${TRAEFIK_CUSTOM_ACME_RESOLVER} ]]; then
   fi
   yq 'del(.certificatesResolvers.le.acme.httpChallenge)' -i traefik/traefik.yaml
   yq '(.certificatesResolvers.le.acme.dnsChallenge.provider="'${TRAEFIK_CUSTOM_ACME_RESOLVER}'")' -i traefik/traefik.yaml
-  sed '/^#/d' .env.custom >> traefik.env
+  extract_custom_env_file traefik
 fi
 
 # Docker-compose settings
@@ -226,6 +237,19 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
     rm -f ${name}-vpn.props
     # Append config/${name}-vpn.yaml to global list of files which will be passed to docker commands
     ALL_SERVICES="${ALL_SERVICES} -f services/generated/${name}-vpn.yaml"
+  fi
+
+  # For services with existing custom environment variables in .env.custom, 
+  # Extract those variables and add a docker-compose override file in order to load them
+  if [[ -f .env.custom ]]; then
+    if grep -q "^${name^^}_.*" .env.custom; then
+      extract_custom_env_file ${name}
+      echo "services.${name}.env_file.0: ./${name}.env" > ${name}-envfile.props
+      yq -p=props ${name}-envfile.props > services/generated/${name}-envfile.yaml
+      rm -f ${name}-envfile.props
+      # Append config/${name}-envfile.yaml to global list of files which will be passed to docker commands
+      ALL_SERVICES="${ALL_SERVICES} -f services/generated/${name}-envfile.yaml"
+    fi
   fi
 
   ###################################### TRAEFIK RULES ######################################
