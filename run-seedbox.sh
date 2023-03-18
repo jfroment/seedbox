@@ -98,29 +98,52 @@ if [[ ${CHECK_FOR_OUTDATED_CONFIG} == true ]]; then
   fi
 fi
 
+# Internal function which checks another function's number ($2) and return a boolean instead
+check_result_service() {
+  #$1 => service
+  #$2 => nb to check
+  if [[ $2 == 0 ]]; then
+    false; return
+  elif [[ $2 == 1 ]]; then
+    true; return
+  else
+    echo "[$0] Error. Service \"$1\" is enabled more than once. Check your config.yaml file."
+    exit 1
+  fi
+}
+
+# Check if a service ($1) has been enabled in the config file
+is_service_enabled() {
+  local nb=$(cat config.json | jq --arg service $1 '[.services[] | select(.name==$service and .enabled==true)] | length')
+  check_result_service $1 $nb
+}
+
+# Check if a service ($1) has been enabled AND has vpn enabled in the config file
+has_vpn_enabled() {
+  local nb=$(cat config.json | jq --arg service $1 '[.services[] | select(.name==$service and .enabled==true and .vpn==true)] | length')
+  check_result_service $1 $nb
+}
+
 # Check if some services have vpn enabled, that gluetun itself is enabled
 nb_vpn=$(cat config.json | jq '[.services[] | select(.enabled==true and .vpn==true)] | length')
-gluetun_enabled=$(cat config.json | jq '[.services[] | select(.name=="gluetun" and .enabled==true)] | length')
-if [[ ${nb_vpn} -gt 0 && ${gluetun_enabled} == 0 ]]; then
+if [[ ${nb_vpn} -gt 0 ]] && ! is_service_enabled gluetun; then
   echo "[$0] ERROR. ${nb_vpn} VPN-enabled services have been enabled BUT gluetun has not been enabled. Please check your config.yaml file."
-  echo "[$0] ******* Exiting *******"
   exit 1
 fi
 
 # Determine what host Flood should connect to
 # => If deluge vpn is enabled => gluetun
 # => If deluge vpn is disabled => deluge
-if [[ $(cat config.json | jq '[.services[] | select(.name=="flood" and .enabled==true)] | length') -eq 1 ]]; then
+if is_service_enabled flood; then
   # Check that if flood is enabled, deluge should also be enabled
-  if [[ $(cat config.json | jq '[.services[] | select(.name=="deluge" and .enabled==false)] | length') -eq 1 ]]; then
+  if ! is_service_enabled deluge; then
     echo "[$0] ERROR. Flood is enabled but Deluge is not. Please either enable Deluge or disable Flood as Flood depends on Deluge."
-    echo "[$0] ******* Exiting *******"
     exit 1
   fi
   # Determine deluge hostname (for flood) based on the VPN status (enabled or not) of deluge
-  if [[ $(cat config.json | jq '[.services[] | select(.name=="deluge" and .enabled==true and .vpn==true)] | length') -eq 1 ]]; then
+  if has_vpn_enabled deluge; then
     export DELUGE_HOST="gluetun"
-  elif [[ $(cat config.json | jq '[.services[] | select(.name=="deluge" and .enabled==true and .vpn==false)] | length') -eq 1 ]]; then
+  else
     export DELUGE_HOST="deluge"
   fi
 
@@ -137,12 +160,9 @@ if [[ $(cat config.json | jq '[.services[] | select(.name=="flood" and .enabled=
 fi
 
 # Check that if calibre-web is enabled, calibre should also be enabled
-if [[ $(cat config.json | jq '[.services[] | select(.name=="calibre-web" and .enabled==true)] | length') -eq 1 ]]; then
-  if [[ $(cat config.json | jq '[.services[] | select(.name=="calibre" and .enabled==false)] | length') -eq 1 ]]; then
-    echo "[$0] ERROR. Calibre-web is enabled but Calibre is not. Please either enable Calibre or disable Calibre-web as Calibre-web depends on Calibre."
-    echo "[$0] ******* Exiting *******"
-    exit 1
-  fi
+if is_service_enabled calibre-web && ! is_service_enabled calibre; then
+  echo "[$0] ERROR. Calibre-web is enabled but Calibre is not. Please either enable Calibre or disable Calibre-web as Calibre-web depends on Calibre."
+  exit 1
 fi
 
 # Apply other arbitrary custom Traefik config files
@@ -153,7 +173,7 @@ for f in `find samples/custom-traefik -maxdepth 1 -mindepth 1 -type f | grep -E 
 done
 
 # Detect Synology devices for Netdata compatibility
-if [[ $(cat config.json | jq '[.services[] | select(.name=="netdata" and .enabled==true)] | length') -eq 1 ]]; then
+if is_service_enabled netdata; then
   if [[ $(uname -a | { grep synology || true; } | wc -l) -eq 1 ]]; then
     export OS_RELEASE_FILEPATH="/etc/VERSION"
   else
