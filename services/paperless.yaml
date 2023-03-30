@@ -5,8 +5,8 @@ services:
     restart: unless-stopped
     depends_on:
       - redis
-      - gotenberg
-      - tika
+      # - gotenberg
+      # - tika
     volumes:
       - configpaperless:/usr/src/paperless/data
       - documents:/usr/src/paperless/media
@@ -14,9 +14,9 @@ services:
       - configpaperlessconsume:/usr/src/paperless/consume
     environment:
       PAPERLESS_REDIS: redis://redis:6379
-      PAPERLESS_TIKA_ENABLED: 1
-      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
-      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+      #PAPERLESS_TIKA_ENABLED: 1
+      #PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      #PAPERLESS_TIKA_ENDPOINT: http://tika:9998
       USERMAP_UID: ${PUID}
       USERMAP_GID: ${PGID}
       PAPERLESS_TIME_ZONE: ${TZ}
@@ -32,23 +32,25 @@ services:
     container_name: redis
     restart: unless-stopped
     # TODO: fix it => redis container does not support PGID and PUID...
-    user: root
-    volumes:
-      - redisdata:/data
+    # user: root
+    # volumes:
+    #   - redisdata:/data
 
-  gotenberg:
-    image: docker.io/gotenberg/gotenberg:7.8
-    restart: unless-stopped
-    # The gotenberg chromium route is used to convert .eml files. We do not
-    # want to allow external content like tracking pixels or even javascript.
-    command:
-      - "gotenberg"
-      - "--chromium-disable-javascript=true"
-      - "--chromium-allow-list=file:///tmp/.*"
+  # gotenberg:
+  #   image: docker.io/gotenberg/gotenberg:7.8
+  #   container_name: gotenberg
+  #   restart: unless-stopped
+  #   # The gotenberg chromium route is used to convert .eml files. We do not
+  #   # want to allow external content like tracking pixels or even javascript.
+  #   command:
+  #     - "gotenberg"
+  #     - "--chromium-disable-javascript=true"
+  #     - "--chromium-allow-list=file:///tmp/.*"
 
-  tika:
-    image: ghcr.io/paperless-ngx/tika:latest
-    restart: unless-stopped
+  # tika:
+  #   image: ghcr.io/paperless-ngx/tika:latest
+  #   container_name: tika
+  #   restart: unless-stopped
 
 volumes:
   configpaperless: 
@@ -67,7 +69,7 @@ volumes:
     driver: local-persist
     driver_opts:
       mountpoint: $HOST_CONFIG_PATH/paperless-import
-  redisdata:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/redis
+  # redisdata:
+  #   driver: local-persist
+  #   driver_opts:
+  #     mountpoint: $HOST_CONFIG_PATH/redis
