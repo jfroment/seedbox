@@ -30,7 +30,7 @@ entryPoints:
       tls:
         certResolver: le
       middlewares:
-      - security-headers@file
+        - security-headers@file
 
 # Allow self-signed certificates for https backends (nextcloud for example)
 serversTransport:

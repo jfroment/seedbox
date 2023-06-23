@@ -34,6 +34,7 @@ Version 2 is released, please make sure you read [this V2 Migration Guide](doc/U
 | Plex                 | plex.yourdomain.com        | [linuxserver/plex](https://hub.docker.com/r/linuxserver/plex)          | *latest*                | Media Streaming     |
 | Deluge               | deluge.yourdomain.com      | [linuxserver/deluge](https://hub.docker.com/r/linuxserver/deluge)      | *latest*                | Torrents downloader |
 | Flood               | flood.yourdomain.com      | [jesec/flood](https://hub.docker.com/r/jesec/flood)      | *latest*      | Web client for Deluge (experimental) |
+| qBitTorrent | qbittorrent.yourdomain.com          | [hotio/qbittorrent](cr.hotio.dev/hotio/qbittorrent)    | *latest* | Torrents downloader + VuTorrent alternative WebUI built-in |
 | Sonarr               | sonarr.yourdomain.com      | [linuxserver/sonarr](https://hub.docker.com/r/linuxserver/sonarr)      | *develop*               | TV Shows monitor    |
 | Radarr               | radarr.yourdomain.com      | [linuxserver/radarr](https://hub.docker.com/r/linuxserver/radarr)      | *develop*                | Movies monitor      |
 | Bazarr               | bazarr.yourdomain.com      | [linuxserver/bazarr](https://hub.docker.com/r/linuxserver/bazarr)      | *latest*                | Subtitles monitor   |
@@ -52,6 +53,7 @@ Version 2 is released, please make sure you read [this V2 Migration Guide](doc/U
 | Tdarr            | tdarr.yourdomain.com   | [haveagitgat/tdarr](https://hub.docker.com/r/haveagitgat/tdarr)  | *latest*                | Re-encode files |
 | NextCloud            | nextcloud.yourdomain.com   | [linuxserver/nextcloud](https://hub.docker.com/r/linuxserver/nextcloud)  | *latest*                | Files management    |
 | NextCloud-db (MariaDB) | *not reachable*   | [mariadb](https://hub.docker.com/r/_/mariadb)  | *10*                | DB for Nextcloud    |
+| Paperless-ngx  | paperless.yourdomain.com | [paperless-ngx/paperless-ngx](ghcr.io/paperless-ngx/paperless-ngx) | *latest* | Documents management and archiving (**BETA**) |
 | Portainer            | portainer.yourdomain.com   | [portainer/portainer](https://hub.docker.com/r/portainer/portainer)    | *latest*                | Container management|
 | Netdata              | netdata.yourdomain.com     | [netdata/netdata](https://hub.docker.com/r/netdata/netdata)            | *latest*                | Server monitoring   |
 | Duplicati            | duplicati.yourdomain.com   | [linuxserver/duplicati](https://hub.docker.com/r/linuxserver/duplicati)| *latest*                | Backups             |
@@ -77,7 +79,7 @@ Check the [Configuration Guide](doc/configuration.md).
 ### Dependencies
 
 - [Docker](https://github.com/docker/docker) >= 20.10
-- [Docker Compose](https://github.com/docker/compose) >= 2.2
+- [Docker Compose](https://github.com/docker/compose) >= 2.2 *(2.16+ recommended)*
 - [local-persist Docker plugin](https://github.com/MatchbookLab/local-persist): installed directly on host (not in container). This is a volume plugin that extends the default local driver’s functionality by allowing you specify a mountpoint anywhere on the host, which enables the files to always persist, even if the volume is removed via `docker volume rm`. Use *systemd* install for Ubuntu.
 - [jq](https://stedolan.github.io/jq/download/) >= 1.5
 - [yq](https://github.com/mikefarah/yq/releases) >= 4
@@ -117,3 +119,8 @@ All data is saved in the docker volumes `seedbox_config` or
 `seedbox_torrents`.
 These volumes are mapped to the `config` and `torrents` folders located in `/data` on the host. You can change these static paths in the docker-compose.yml file.
 Thanks to the **local-persist** Docker plugin, the data located in these volumes is persistent, meaning that volumes are not deleted, even when using the ```docker-compose down``` command. It would be a shame to loose everything by running a simple docker command ;-)
+
+# Configure your apps
+
+- Some indications here (more to come): [Apps Configuration](doc/configuration.md#apps-configuration)
+- [TRaSH Guides](https://trash-guides.info/)

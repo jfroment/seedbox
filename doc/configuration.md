@@ -15,6 +15,7 @@
   * [How is VPN handled?](#how-is-vpn-handled)
 * [Make the services communicate with each other](#make-the-services-communicate-with-each-other)
 * [How does the configuration work?](#how-does-the-configuration-work)
+* [Apps configuration](#apps-configuration)
 
 ## General principles
 
@@ -316,3 +317,11 @@ http:
 ```
 
 This file will be automatically placed in [traefik/custom/](../traefik/custom/) directory (mounted by Traefik container) so the config will dynamically apply. This file is updated on each ``run-seedbox.sh`` execution.
+
+# Apps configuration
+
+List of currently available documentation for apps:
+
+- [Deluge + Flood](apps/deluge-flood.md)
+
+I also strongly recommend [TRaSH Guides](https://trash-guides.info/) to have a better overview of all *arrs apps configurations.

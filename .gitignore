@@ -16,3 +16,5 @@ services/custom/*.yml
 services/generated/*.yaml
 
 authelia/*
+.env.custom
+*.env

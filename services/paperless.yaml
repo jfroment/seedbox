@@ -1,0 +1,75 @@
+services:
+  paperless:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
+    restart: unless-stopped
+    depends_on:
+      - redis
+      # - gotenberg
+      # - tika
+    volumes:
+      - configpaperless:/usr/src/paperless/data
+      - documents:/usr/src/paperless/media
+      - configpaperlessexport:/usr/src/paperless/export
+      - configpaperlessconsume:/usr/src/paperless/consume
+    environment:
+      PAPERLESS_REDIS: redis://redis:6379
+      #PAPERLESS_TIKA_ENABLED: 1
+      #PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      #PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+      USERMAP_UID: ${PUID}
+      USERMAP_GID: ${PGID}
+      PAPERLESS_TIME_ZONE: ${TZ}
+      PAPERLESS_URL: https://paperless.${TRAEFIK_DOMAIN}
+      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
+      PAPERLESS_OCR_LANGUAGE: ${PAPERLESS_OCR_LANGUAGE}
+      PAPERLESS_ADMIN_USER: ${PAPERLESS_ADMIN_USER}
+      PAPERLESS_ADMIN_MAIL: ${PAPERLESS_ADMIN_MAIL}
+      PAPERLESS_ADMIN_PASSWORD: ${PAPERLESS_ADMIN_PASSWORD}
+
+  redis:
+    image: docker.io/library/redis:7
+    container_name: redis
+    restart: unless-stopped
+    # TODO: fix it => redis container does not support PGID and PUID...
+    # user: root
+    # volumes:
+    #   - redisdata:/data
+
+  # gotenberg:
+  #   image: docker.io/gotenberg/gotenberg:7.8
+  #   container_name: gotenberg
+  #   restart: unless-stopped
+  #   # The gotenberg chromium route is used to convert .eml files. We do not
+  #   # want to allow external content like tracking pixels or even javascript.
+  #   command:
+  #     - "gotenberg"
+  #     - "--chromium-disable-javascript=true"
+  #     - "--chromium-allow-list=file:///tmp/.*"
+
+  # tika:
+  #   image: ghcr.io/paperless-ngx/tika:latest
+  #   container_name: tika
+  #   restart: unless-stopped
+
+volumes:
+  configpaperless: 
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/paperless
+  documents:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_MEDIA_PATH/documents
+  configpaperlessexport: 
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/paperless-export
+  configpaperlessconsume: 
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/paperless-import
+  # redisdata:
+  #   driver: local-persist
+  #   driver_opts:
+  #     mountpoint: $HOST_CONFIG_PATH/redis

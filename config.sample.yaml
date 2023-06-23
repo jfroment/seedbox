@@ -29,6 +29,15 @@ services:
         - host: flood.${TRAEFIK_DOMAIN}
           httpAuth: true
           internalPort: 3000
+  - name: qbittorrent
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: qbittorrent.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 8080
   - name: plex
     enabled: true
     vpn: false
@@ -202,6 +211,15 @@ services:
           httpAuth: false
           internalPort: 443
           internalScheme: https
+  - name: paperless
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: paperless.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 8000
   - name: portainer
     enabled: true
     vpn: false
@@ -210,7 +228,7 @@ services:
       rules:
         - host: portainer.${TRAEFIK_DOMAIN}
           httpAuth: false
-          internalPort: 9443
+          internalPort: 9000
   - name: netdata
     enabled: true
     vpn: false

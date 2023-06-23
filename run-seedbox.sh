@@ -50,6 +50,33 @@ fi
 source .env
 echo "${HTTP_USER}:${HTTP_PASSWORD}" > traefik/http_auth
 
+# Sanitize and extract variable (without prefixes) from .env.custom file
+# Input => $1 = app name (exemple traefik)
+# Output => app_name.env written with correct variables (exemple: traefik.env)
+extract_custom_env_file() {
+  # sed explanation:
+  #   1 => Remove all lines starting with a comment (#)
+  #   2 => Remove all empty lines
+  #   3 => Remove all lines *NOT* starting by [uppercase_app_name + "_"] (exemple TRAEFIK_)
+  #   4 => Remove the pattern [uppercase_app_name + "_"]
+  sed '/^#/d' .env.custom | sed '/^$/d' | sed -n "/^${1^^}_/p" | sed "s/^${1^^}_//g" > $1.env
+}
+
+## Traefik Certificate Resolver tweaks
+if [[ ! -z ${TRAEFIK_CUSTOM_ACME_RESOLVER} ]]; then
+  if [[ ! -f .env.custom ]]; then
+    echo "[$0] Error. You need to have a .env.custom in order to use TRAEFIK_CUSTOM_ACME_RESOLVER variable."
+    exit 1
+  fi
+  if [[ ${TRAEFIK_CUSTOM_ACME_RESOLVER} == "changeme" ]]; then
+    echo "[$0] Error. Wrong value for TRAEFIK_CUSTOM_ACME_RESOLVER variable."
+    exit 1
+  fi
+  yq 'del(.certificatesResolvers.le.acme.httpChallenge)' -i traefik/traefik.yaml
+  yq '(.certificatesResolvers.le.acme.dnsChallenge.provider="'${TRAEFIK_CUSTOM_ACME_RESOLVER}'")' -i traefik/traefik.yaml
+  extract_custom_env_file traefik
+fi
+
 # Docker-compose settings
 export COMPOSE_HTTP_TIMEOUT=240
 
@@ -57,6 +84,7 @@ export COMPOSE_HTTP_TIMEOUT=240
 [[ -z $HOST_CONFIG_PATH ]] && export HOST_CONFIG_PATH="/data/config"
 [[ -z $HOST_MEDIA_PATH ]] && export HOST_MEDIA_PATH="/data/torrents"
 [[ -z $DOWNLOAD_SUBFOLDER ]] && export DOWNLOAD_SUBFOLDER="deluge"
+[[ -z $DOCKER_COMPOSE_BINARY ]] && export DOCKER_COMPOSE_BINARY="docker-compose"
 
 if [[ ! -f config.yaml ]]; then
   echo "[$0] No config.yaml file found. Copying from sample file..."
@@ -77,16 +105,40 @@ if [[ ${CHECK_FOR_OUTDATED_CONFIG} == true ]]; then
   if [[ $nb_services_sample -gt $nb_services ]]; then
     echo "[$0] There are more services in the config.sample.yaml than in your config.yaml"
     echo "[$0] You should check config.sample.yaml because it seems there are new services available for you:"
-    diff -u config.yaml config.sample.yaml | grep "name:" | grep -E "^\+" || true
+    diff -u config.yaml config.sample.yaml | grep "name:" | grep -E "^\+" | sed "s/+  - name:/-/g" || true
   fi
 fi
 
+# Internal function which checks another function's number ($2) and return a boolean instead
+check_result_service() {
+  #$1 => service
+  #$2 => nb to check
+  if [[ $2 == 0 ]]; then
+    false; return
+  elif [[ $2 == 1 ]]; then
+    true; return
+  else
+    echo "[$0] Error. Service \"$1\" is enabled more than once. Check your config.yaml file."
+    exit 1
+  fi
+}
+
+# Check if a service ($1) has been enabled in the config file
+is_service_enabled() {
+  local nb=$(cat config.json | jq --arg service $1 '[.services[] | select(.name==$service and .enabled==true)] | length')
+  check_result_service $1 $nb
+}
+
+# Check if a service ($1) has been enabled AND has vpn enabled in the config file
+has_vpn_enabled() {
+  local nb=$(cat config.json | jq --arg service $1 '[.services[] | select(.name==$service and .enabled==true and .vpn==true)] | length')
+  check_result_service $1 $nb
+}
+
 # Check if some services have vpn enabled, that gluetun itself is enabled
 nb_vpn=$(cat config.json | jq '[.services[] | select(.enabled==true and .vpn==true)] | length')
-gluetun_enabled=$(cat config.json | jq '[.services[] | select(.name=="gluetun" and .enabled==true)] | length')
-if [[ ${nb_vpn} -gt 0 && ${gluetun_enabled} == 0 ]]; then
+if [[ ${nb_vpn} -gt 0 ]] && ! is_service_enabled gluetun; then
   echo "[$0] ERROR. ${nb_vpn} VPN-enabled services have been enabled BUT gluetun has not been enabled. Please check your config.yaml file."
-  echo "[$0] ******* Exiting *******"
   exit 1
 fi
 
@@ -111,17 +163,16 @@ fi
 # Determine what host Flood should connect to
 # => If deluge vpn is enabled => gluetun
 # => If deluge vpn is disabled => deluge
-if [[ $(cat config.json | jq '[.services[] | select(.name=="flood" and .enabled==true)] | length') -eq 1 ]]; then
+if is_service_enabled flood; then
   # Check that if flood is enabled, deluge should also be enabled
-  if [[ $(cat config.json | jq '[.services[] | select(.name=="deluge" and .enabled==false)] | length') -eq 1 ]]; then
+  if ! is_service_enabled deluge; then
     echo "[$0] ERROR. Flood is enabled but Deluge is not. Please either enable Deluge or disable Flood as Flood depends on Deluge."
-    echo "[$0] ******* Exiting *******"
     exit 1
   fi
   # Determine deluge hostname (for flood) based on the VPN status (enabled or not) of deluge
-  if [[ $(cat config.json | jq '[.services[] | select(.name=="deluge" and .enabled==true and .vpn==true)] | length') -eq 1 ]]; then
+  if has_vpn_enabled deluge; then
     export DELUGE_HOST="gluetun"
-  elif [[ $(cat config.json | jq '[.services[] | select(.name=="deluge" and .enabled==true and .vpn==false)] | length') -eq 1 ]]; then
+  else
     export DELUGE_HOST="deluge"
   fi
 
@@ -138,12 +189,9 @@ if [[ $(cat config.json | jq '[.services[] | select(.name=="flood" and .enabled=
 fi
 
 # Check that if calibre-web is enabled, calibre should also be enabled
-if [[ $(cat config.json | jq '[.services[] | select(.name=="calibre-web" and .enabled==true)] | length') -eq 1 ]]; then
-  if [[ $(cat config.json | jq '[.services[] | select(.name=="calibre" and .enabled==false)] | length') -eq 1 ]]; then
-    echo "[$0] ERROR. Calibre-web is enabled but Calibre is not. Please either enable Calibre or disable Calibre-web as Calibre-web depends on Calibre."
-    echo "[$0] ******* Exiting *******"
-    exit 1
-  fi
+if is_service_enabled calibre-web && ! is_service_enabled calibre; then
+  echo "[$0] ERROR. Calibre-web is enabled but Calibre is not. Please either enable Calibre or disable Calibre-web as Calibre-web depends on Calibre."
+  exit 1
 fi
 
 # Apply other arbitrary custom Traefik config files
@@ -154,7 +202,7 @@ for f in `find samples/custom-traefik -maxdepth 1 -mindepth 1 -type f | grep -E 
 done
 
 # Detect Synology devices for Netdata compatibility
-if [[ $(cat config.json | jq '[.services[] | select(.name=="netdata" and .enabled==true)] | length') -eq 1 ]]; then
+if is_service_enabled netdata; then
   if [[ $(uname -a | { grep synology || true; } | wc -l) -eq 1 ]]; then
     export OS_RELEASE_FILEPATH="/etc/VERSION"
   else
@@ -203,10 +251,23 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
   # go through gluetun (main vpn client service).
   if [[ ${vpn} == "true" ]]; then
     echo "services.${name}.network_mode: service:gluetun" > ${name}-vpn.props
-    yq -p=props ${name}-vpn.props > services/generated/${name}-vpn.yaml
+    yq -p=props ${name}-vpn.props -o yaml > services/generated/${name}-vpn.yaml
     rm -f ${name}-vpn.props
     # Append config/${name}-vpn.yaml to global list of files which will be passed to docker commands
     ALL_SERVICES="${ALL_SERVICES} -f services/generated/${name}-vpn.yaml"
+  fi
+
+  # For services with existing custom environment variables in .env.custom, 
+  # Extract those variables and add a docker-compose override file in order to load them
+  if [[ -f .env.custom ]]; then
+    if grep -q "^${name^^}_.*" .env.custom; then
+      extract_custom_env_file ${name}
+      echo "services.${name}.env_file.0: ./${name}.env" > ${name}-envfile.props
+      yq -p=props ${name}-envfile.props -o yaml > services/generated/${name}-envfile.yaml
+      rm -f ${name}-envfile.props
+      # Append config/${name}-envfile.yaml to global list of files which will be passed to docker commands
+      ALL_SERVICES="${ALL_SERVICES} -f services/generated/${name}-envfile.yaml"
+    fi
   fi
 
   ###################################### TRAEFIK RULES ######################################
@@ -287,7 +348,7 @@ done
 
 # Convert properties files into Traefik-ready YAML and place it in the correct folder loaded by Traefik
 mv traefik/custom/dynamic-rules.yaml traefik/custom/dynamic-rules-old.yaml || true
-yq -p=props rules.props > traefik/custom/dynamic-rules.yaml
+yq -p=props rules.props -o yaml > traefik/custom/dynamic-rules.yaml
 rm -f rules.props
 
 # Post-transformations on the rules file
@@ -305,11 +366,11 @@ echo "[$0] ***** Config OK. Launching services... *****"
 
 if [[ "${SKIP_PULL}" != "1" ]]; then
   echo "[$0] ***** Pulling all images... *****"
-  docker-compose ${ALL_SERVICES} pull
+  ${DOCKER_COMPOSE_BINARY} ${ALL_SERVICES} pull
 fi
 
 echo "[$0] ***** Recreating containers if required... *****"
-docker-compose ${ALL_SERVICES} up -d --remove-orphans
+${DOCKER_COMPOSE_BINARY} ${ALL_SERVICES} up -d --remove-orphans
 echo "[$0] ***** Done updating containers *****"
 
 echo "[$0] ***** Clean unused images and volumes... *****"
