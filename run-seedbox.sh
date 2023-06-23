@@ -148,19 +148,19 @@ if [[ ${nb_vpn} -gt 0 ]] && ! is_service_enabled gluetun; then
   exit 1
 fi
 
-# Check if some services have authelia enabled, that authelia itself is enabled
+# Check if some services have Authentik enabled, that Authentik itself is enabled
 nb_sso=$(cat config.json | jq '[.services[] | select(.enabled==true and .traefik.rules[].sso==true)] | length')
-if [[ ${nb_sso} -gt 0 ]] && ! is_service_enabled authelia; then
-  echo "[$0] ERROR. ${nb_sso} Authelia-enabled services have been enabled BUT authelia itself has not been enabled. Please check your config.yaml file."
+if [[ ${nb_sso} -gt 0 ]] && ! is_service_enabled authentik; then
+  echo "[$0] ERROR. ${nb_sso} SSO services have been enabled BUT Authentik itself has not been enabled. Please check your config.yaml file."
   echo "[$0] ******* Exiting *******"
   exit 1
 fi
 
-# Check that for a same rule, httpAuth and authelia are not both enabled
+# Check that for a same rule, httpAuth and Authentik are not both enabled
 # TODO: fix the condition to allow multiple auth on multiple Traefik rules for a service
 nb_both_auth=$(cat config.json | jq '[.services[] | select(.traefik.rules[].httpAuth==true and .traefik.rules[].sso==true)] | length')
 if [[ ${nb_both_auth} -gt 0 ]]; then
-  echo "[$0] ERROR. ${nb_both_auth} services have both SSO/Authelia and HTTP Authentication enabled. Please choose only one for a rule."
+  echo "[$0] ERROR. ${nb_both_auth} services have both SSO/Authentik and HTTP Authentication enabled. Please choose only one for a rule."
   echo "[$0] ******* Exiting *******"
   exit 1
 fi
@@ -225,6 +225,11 @@ echo "[$0] ***** Generating configuration... *****"
 rm -f services/generated/*-vpn.yaml
 
 ALL_SERVICES="-f docker-compose.yaml"
+
+# SSO => create dedicated Traefik service if SSO has been enabled
+if is_service_enabled authentik; then
+  echo "http.services.sso.loadBalancer.servers.0.url: http://authentik:9000/outpost.goauthentik.io" >> rules.props
+fi
 
 # Parse the config.yaml master configuration file
 for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
@@ -320,7 +325,11 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
     fi
 
     if [[ ${sso} == "true" ]]; then
-      echo "http.routers.${ruleId}.middlewares.${middlewareCount}: chain-authelia@file" >> rules.props
+      # Authelia
+      # echo "http.routers.${ruleId}.middlewares.${middlewareCount}: chain-authelia@file" >> rules.props
+      echo "http.routers.${ruleId}.middlewares.${middlewareCount}: authentik@file" >> rules.props
+      echo 'http.routers.'"${name}"'-sso.rule: Host(`'${hostTraefik}'`) && PathPrefix(`/outpost.goauthentik.io/`)' >> rules.props
+      echo "http.routers.${name}-sso.service: sso" >> rules.props
       ((middlewareCount=middlewareCount+1))
     fi
 
@@ -337,9 +346,15 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
     httpOnly=$(echo $rule | jq -r .httpOnly)
     if [[ ${httpOnly} == true ]]; then
       echo "http.routers.${ruleId}.entryPoints.0: insecure" >> rules.props
+      if [[ ${sso} == "true" ]]; then
+        echo "http.routers.${name}-sso.entryPoints.0: insecure" >> rules.props
+      fi
     else
       echo "http.routers.${ruleId}.middlewares.${middlewareCount}: redirect-to-https" >> rules.props
       ((middlewareCount=middlewareCount+1))
+      if [[ ${sso} == "true" ]]; then
+        echo "http.routers.${name}-sso.middlewares.${middlewareCount}: redirect-to-https" >> rules.props
+      fi
     fi
 
     # If the specified service does not contain a "@" => we create it

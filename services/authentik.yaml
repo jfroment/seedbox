@@ -1,0 +1,104 @@
+services:
+  authentik-db:
+    image: docker.io/library/postgres:12-alpine
+    restart: always
+    container_name: authentik-db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+    volumes:
+      - authentikdbdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${PG_PASS:?database password required}
+      POSTGRES_USER: ${PG_USER:-authentik}
+      POSTGRES_DB: ${PG_DB:-authentik}
+
+  authentik-redis:
+    image: docker.io/library/redis:alpine
+    command: --save 60 1 --loglevel warning
+    container_name: authentik-redis
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    volumes:
+      - authentikredisdata:/data
+
+  authentik:
+    image: ghcr.io/goauthentik/server:latest
+    restart: always
+    container_name: authentik
+    command: server
+    environment:
+      AUTHENTIK_REDIS__HOST: authentik-redis
+      AUTHENTIK_POSTGRESQL__HOST: authentik-db
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+      AUTHENTIK_BOOTSTRAP_EMAIL: ${AUTHENTIK_BOOTSTRAP_EMAIL}
+      AUTHENTIK_BOOTSTRAP_PASSWORD: ${AUTHENTIK_BOOTSTRAP_PASSWORD}
+    volumes:
+      - authentikmedia:/media
+      - authentiktemplates:/templates
+    depends_on:
+      - authentik-db
+      - authentik-redis
+
+  authentik-worker:
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2023.5.3}
+    restart: always
+    container_name: authentik-worker
+    command: worker
+    environment:
+      AUTHENTIK_REDIS__HOST: authentik-redis
+      AUTHENTIK_POSTGRESQL__HOST: authentik-db
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+      AUTHENTIK_BOOTSTRAP_EMAIL: ${AUTHENTIK_BOOTSTRAP_EMAIL}
+      AUTHENTIK_BOOTSTRAP_PASSWORD: ${AUTHENTIK_BOOTSTRAP_PASSWORD}
+    # `user: root` and the docker socket volume are optional.
+    # See more for the docker socket integration here:
+    # https://goauthentik.io/docs/outposts/integrations/docker
+    # Removing `user: root` also prevents the worker from fixing the permissions
+    # on the mounted folders, so when removing this make sure the folders have the correct UID/GID
+    # (1000:1000 by default)
+    user: root
+    volumes:
+      #- /var/run/docker.sock:/var/run/docker.sock
+      - authentikmedia:/media
+      - authentikcerts:/certs
+      - authentiktemplates:/templates
+    depends_on:
+      - authentik-db
+      - authentik-redis
+
+volumes:
+  authentikdbdata:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/authentik-db
+  authentikredisdata:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/authentik-redis
+  authentikmedia:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/authentik-media
+  authentiktemplates:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/authentik-templates
+  authentikcerts:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/authentik-certs
