@@ -233,7 +233,7 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
   # go through gluetun (main vpn client service).
   if [[ ${vpn} == "true" ]]; then
     echo "services.${name}.network_mode: service:gluetun" > ${name}-vpn.props
-    yq -p=props ${name}-vpn.props > services/generated/${name}-vpn.yaml
+    yq -p=props ${name}-vpn.props -o yaml > services/generated/${name}-vpn.yaml
     rm -f ${name}-vpn.props
     # Append config/${name}-vpn.yaml to global list of files which will be passed to docker commands
     ALL_SERVICES="${ALL_SERVICES} -f services/generated/${name}-vpn.yaml"
@@ -245,7 +245,7 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
     if grep -q "^${name^^}_.*" .env.custom; then
       extract_custom_env_file ${name}
       echo "services.${name}.env_file.0: ./${name}.env" > ${name}-envfile.props
-      yq -p=props ${name}-envfile.props > services/generated/${name}-envfile.yaml
+      yq -p=props ${name}-envfile.props -o yaml > services/generated/${name}-envfile.yaml
       rm -f ${name}-envfile.props
       # Append config/${name}-envfile.yaml to global list of files which will be passed to docker commands
       ALL_SERVICES="${ALL_SERVICES} -f services/generated/${name}-envfile.yaml"
@@ -323,7 +323,7 @@ done
 
 # Convert properties files into Traefik-ready YAML and place it in the correct folder loaded by Traefik
 mv traefik/custom/dynamic-rules.yaml traefik/custom/dynamic-rules-old.yaml || true
-yq -p=props rules.props > traefik/custom/dynamic-rules.yaml
+yq -p=props rules.props -o yaml > traefik/custom/dynamic-rules.yaml
 rm -f rules.props
 
 # Post-transformations on the rules file
