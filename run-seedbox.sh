@@ -135,6 +135,12 @@ has_vpn_enabled() {
   check_result_service $1 $nb
 }
 
+# Check if a service ($1) has been enabled AND has SSO enabled in the config file
+has_sso_enabled() {
+  local nb=$(cat config.json | jq --arg service $1 '[.services[] | select(.name==$service and .enabled==true and .sso==true)] | length')
+  check_result_service $1 $nb
+}
+
 # Check if some services have vpn enabled, that gluetun itself is enabled
 nb_vpn=$(cat config.json | jq '[.services[] | select(.enabled==true and .vpn==true)] | length')
 if [[ ${nb_vpn} -gt 0 ]] && ! is_service_enabled gluetun; then
@@ -144,8 +150,7 @@ fi
 
 # Check if some services have authelia enabled, that authelia itself is enabled
 nb_sso=$(cat config.json | jq '[.services[] | select(.enabled==true and .traefik.rules[].sso==true)] | length')
-authelia_enabled=$(cat config.json | jq '[.services[] | select(.name=="authelia" and .enabled==true)] | length')
-if [[ ${nb_sso} -gt 0 && ${authelia_enabled} == 0 ]]; then
+if [[ ${nb_sso} -gt 0 ]] && ! is_service_enabled authelia; then
   echo "[$0] ERROR. ${nb_sso} Authelia-enabled services have been enabled BUT authelia itself has not been enabled. Please check your config.yaml file."
   echo "[$0] ******* Exiting *******"
   exit 1
