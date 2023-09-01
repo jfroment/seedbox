@@ -1,22 +1,25 @@
 services:
   gluetun:
-    image: qmcgaw/gluetun
+    image: ghcr.io/qdm12/gluetun
     container_name: gluetun
     restart: always
     cap_add:
       - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
-      - VPNSP=custom
+      - VPN_SERVICE_PROVIDER=custom
       - VPN_TYPE=wireguard
       # For Wireguard
       - VPN_ENDPOINT_IP=${WIREGUARD_ENDPOINT}
       - VPN_ENDPOINT_PORT=${WIREGUARD_PORT}
       - WIREGUARD_PUBLIC_KEY=${WIREGUARD_PUBLIC_KEY}
       - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
-      - WIREGUARD_ADDRESS=${WIREGUARD_ADDRESS}
+      - WIREGUARD_PRESHARED_KEY=${WIREGUARD_PRESHARED_KEY}
+      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESS}
 
 volumes:
   configgluetun:
