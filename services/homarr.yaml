@@ -6,7 +6,7 @@ services:
     volumes:
       - confighomarr:/app/data/configs
       - iconshomarr:/app/public/icons
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   confighomarr:
