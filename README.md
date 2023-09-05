@@ -58,6 +58,7 @@ Version 2 is released, please make sure you read [this V2 Migration Guide](doc/U
 | Netdata              | netdata.yourdomain.com     | [netdata/netdata](https://hub.docker.com/r/netdata/netdata)            | *latest*                | Server monitoring   |
 | Duplicati            | duplicati.yourdomain.com   | [linuxserver/duplicati](https://hub.docker.com/r/linuxserver/duplicati)| *latest*                | Backups             |
 | Heimdall            | yourdomain.com   | [linuxserver/heimdall](https://hub.docker.com/r/linuxserver/heimdall)| *latest*                | Main dashboard      |
+| Homarr            | homarr.yourdomain.com   | [ajnart/homarr](https://ghcr.io/ajnart/homarr)| *latest*                | Main dashboard (alt)     |
 | Syncthing         | syncthing.yourdomain.com |  [linuxserver/syncthing](https://hub.docker.com/r/linuxserver/syncthing) | *latest* | P2P files sharing |
 | Traefik | traefik.yourdomain.com | [traefik](https://hub.docker.com/_/traefik) | *latest* | Traefik reverse proxy (access to admin dashboard) |
 | Gluetun            | -   | [qdm12/gluetun](https:/ghcr.io/qdm12/gluetun)| *latest*                | VPN client             |
