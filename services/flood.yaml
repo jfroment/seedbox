@@ -9,7 +9,7 @@ services:
     command:
       - --auth=none
       - --dehost=${DELUGE_HOST}
-      - --deport=58846
+      - --deport=8112
       - --deuser=flood
       - --depass=${FLOOD_PASSWORD}
       - --rundir=/config
