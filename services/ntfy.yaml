@@ -8,7 +8,7 @@ services:
       - serve
     environment:
       - TZ=${TZ}
-      - NTFY_BASE_URL=ntfy.${TRAEFIK_DOMAIN}
+      - NTFY_BASE_URL=https://ntfy.${TRAEFIK_DOMAIN}
       - NTFY_LISTEN_HTTP=:2586
       - NTFY_BEHIND_PROXY=true
       - NTFY_CACHE_FILE=/var/cache/ntfy/cache.db
