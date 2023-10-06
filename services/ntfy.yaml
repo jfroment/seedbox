@@ -1,0 +1,23 @@
+services:
+  ntfy:
+    image: binwiederhier/ntfy
+    container_name: ntfy
+    restart: always
+    user: ${PUID}:${PGID}
+    command:
+      - serve
+    environment:
+      - TZ=${TZ}
+      - NTFY_BASE_URL=https://ntfy.${TRAEFIK_DOMAIN}
+      - NTFY_LISTEN_HTTP=:2586
+      - NTFY_BEHIND_PROXY=true
+      - NTFY_CACHE_FILE=/var/cache/ntfy/cache.db
+      - NTFY_ATTACHMENT_CACHE_DIR=/var/cache/ntfy/attachments
+    volumes:
+      - ntfycache:/var/cache/ntfy
+    
+volumes:
+  ntfycache:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/ntfy-cache

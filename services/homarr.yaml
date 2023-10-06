@@ -1,0 +1,19 @@
+services:
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    restart: always
+    volumes:
+      - confighomarr:/app/data/configs
+      - iconshomarr:/app/public/icons
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  confighomarr:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/homarr
+  iconshomarr:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/homarr-icons
