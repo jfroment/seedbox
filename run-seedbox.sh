@@ -99,7 +99,7 @@ echo "[$0] ***** Checking configuration... *****"
 
 yq eval -o json config.yaml > config.json
 
-if [[ ${CHECK_FOR_OUTDATED_CONFIG} == true ]]; then
+if [[ "${CHECK_FOR_OUTDATED_CONFIG}" == true ]]; then
   nb_services=$(cat config.json | jq '.services | length')
   nb_services_sample=$(yq eval -o json config.sample.yaml | jq '.services | length')
   if [[ $nb_services_sample -gt $nb_services ]]; then
