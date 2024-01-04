@@ -1,6 +1,6 @@
 services:
   qbittorrent:
-    image: cr.hotio.dev/hotio/qbittorrent
+    image: ghcr.io/hotio/qbittorrent
     container_name: qbittorrent
     restart: always
     volumes:
