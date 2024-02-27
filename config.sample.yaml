@@ -284,6 +284,15 @@ services:
         - host: homarr.${TRAEFIK_DOMAIN}
           httpAuth: true
           internalPort: 7575
+  - name: homepage
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: homepage.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 3000
   # Gluetun is the VPN client service.
   - name: gluetun
     enabled: false

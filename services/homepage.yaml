@@ -1,0 +1,18 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage
+    container_name: homepage
+    restart: always
+    volumes:
+      - confighomepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+
+volumes:
+  confighomepage:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/homepage
