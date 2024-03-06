@@ -11,6 +11,11 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8234/health"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
 
 volumes:
   configfilebrowser:

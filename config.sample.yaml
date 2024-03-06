@@ -228,7 +228,7 @@ services:
       rules:
         - host: files.${TRAEFIK_DOMAIN}
           httpAuth: true
-          internalPort: 80
+          internalPort: 8234
   - name: paperless
     enabled: false
     vpn: false
