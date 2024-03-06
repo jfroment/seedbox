@@ -54,6 +54,7 @@ Version 2 is released, please make sure you read [this V2 Migration Guide](doc/U
 | Tdarr            | tdarr.yourdomain.com   | [haveagitgat/tdarr](https://hub.docker.com/r/haveagitgat/tdarr)  | *latest*                | Re-encode files |
 | NextCloud            | nextcloud.yourdomain.com   | [linuxserver/nextcloud](https://hub.docker.com/r/linuxserver/nextcloud)  | *latest*                | Files management    |
 | NextCloud-db (MariaDB) | *not reachable*   | [mariadb](https://hub.docker.com/r/_/mariadb)  | *10*                | DB for Nextcloud    |
+| Filebrowser | files.yourdomain.com | [filebrowser/filebrowser](https://hub.docker.com/r/filebrowser/filebrowser)  | *s6*                | Files explorer  |
 | Paperless-ngx  | paperless.yourdomain.com | [paperless-ngx/paperless-ngx](ghcr.io/paperless-ngx/paperless-ngx) | *latest* | Documents management and archiving (**BETA**) |
 | Portainer            | portainer.yourdomain.com   | [portainer/portainer](https://hub.docker.com/r/portainer/portainer)    | *latest*                | Container management|
 | Netdata              | netdata.yourdomain.com     | [netdata/netdata](https://hub.docker.com/r/netdata/netdata)            | *latest*                | Server monitoring   |

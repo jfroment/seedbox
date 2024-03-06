@@ -220,6 +220,15 @@ services:
           httpAuth: false
           internalPort: 443
           internalScheme: https
+  - name: filebrowser
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: files.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 80
   - name: paperless
     enabled: false
     vpn: false

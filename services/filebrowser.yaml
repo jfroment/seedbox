@@ -1,0 +1,24 @@
+services:
+  homepage:
+    image: filebrowser/filebrowser:s6
+    container_name: filebrowser
+    restart: always
+    volumes:
+      - configfilebrowser:/config
+      - dbfilebrowser:/database
+      - torrents:/srv
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+
+volumes:
+  configfilebrowser:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/filebrowser/config
+  dbfilebrowser:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/filebrowser/db
+
