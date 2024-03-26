@@ -43,7 +43,7 @@ Version 2 is released, please make sure you read [this V2 Migration Guide](doc/U
 | Calibre | calibre-admin.yourdomain.com | [linuxserver/calibre](https://hub.docker.com/r/linuxserver/calibre)  | *latest* | eBook management |
 | Calibre-web | calibre.yourdomain.com | [linuxserver/calibre-web](https://hub.docker.com/r/linuxserver/calibre-web)  | *nightly* | Book management UI |
 | Komga               | komga.yourdomain.com      | [gotson/komga](https://hub.docker.com/r/gotson/komga)      | *latest*               | Comic Book Manager       |
-| Kavita               | Kavita.yourdomain.com      | [gotson/komga](https://hub.docker.com/r/gotson/komga)      | *latest*               | Comic Book Manager       |
+| Kavita               | Kavita.yourdomain.com      | [linuxserver/kavita](https://docs.linuxserver.io/images/docker-kavita/)      | *latest*               | Comic Book Manager       |
 | Ombi               | ombi.yourdomain.com      | [linuxserver/ombi](https://hub.docker.com/r/linuxserver/ombi)      | *latest*               | Plex content requests       |
 | Overseerr               | overseerr.yourdomain.com      | [linuxserver/overseerr](https://hub.docker.com/r/linuxserver/overseerr)      | *latest*               | Plex content requests       |
 | Jackett              | jackett.yourdomain.com     | [linuxserver/jackett](https://hub.docker.com/r/linuxserver/jackett)    | *latest*                | Tracker indexer     |
