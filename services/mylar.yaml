@@ -9,10 +9,15 @@ services:
       - TZ=${TZ}
     volumes:
       - configmylar:/config
-      - torrents:/torrents
+      - comics:/comics
+      - downloads:/downloads
 
 volumes:
   configmylar: 
     driver: local-persist
     driver_opts:
       mountpoint: $HOST_CONFIG_PATH/mylar
+  comics: 
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_MEDIA_PATH/BD
