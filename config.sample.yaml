@@ -146,7 +146,7 @@ services:
       rules:
         - host: komga.${TRAEFIK_DOMAIN}
           httpAuth: false
-          internalPort: 8080
+          internalPort: 25600
   - name: kavita
     enabled: false
     vpn: false
