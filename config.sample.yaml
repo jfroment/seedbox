@@ -156,6 +156,15 @@ services:
         - host: kavita.${TRAEFIK_DOMAIN}
           httpAuth: false
           internalPort: 5000
+  - name: mylar
+    enabled: true
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: mylar.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 8090
   - name: ombi
     enabled: false
     vpn: false
