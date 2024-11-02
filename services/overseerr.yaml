@@ -2,13 +2,17 @@ services:
   overseerr:
     image: ghcr.io/linuxserver/overseerr
     container_name: overseerr
-    restart: always
+    restart: unless-stopped
     volumes:
       - configoverseerr:/config
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
+      - LOG_LEVEL=info
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
 
 volumes:
   configoverseerr:

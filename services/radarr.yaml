@@ -2,10 +2,10 @@ services:
   radarr:
     image: ghcr.io/linuxserver/radarr:develop
     container_name: radarr
-    restart: always
+    restart: unless-stopped
     volumes:
       - configradarr:/config
-      - torrents:/torrents
+      - media:/data/media
       - /etc/localtime:/etc/localtime:ro
     environment:
       - PGID=${PGID}

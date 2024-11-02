@@ -2,10 +2,10 @@ services:
   jackett:
     image: ghcr.io/linuxserver/jackett
     container_name: jackett
-    restart: always
+    restart: unless-stopped
     volumes:
       - config:/config
-      - torrents:/downloads
+      - media:/downloads
       - /etc/localtime:/etc/localtime:ro
     environment:
       - PGID=${PGID}

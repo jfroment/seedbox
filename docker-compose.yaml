@@ -1,5 +1,3 @@
-version: "3.8"
-
 #############################################################################
 ## Services are now located in separate files, in the services directory.  ##
 #############################################################################
@@ -15,7 +13,7 @@ volumes:
     driver: local-persist
     driver_opts:
       mountpoint: $HOST_CONFIG_PATH
-  torrents:
+  media:
     driver: local-persist
     driver_opts:
       mountpoint: $HOST_MEDIA_PATH

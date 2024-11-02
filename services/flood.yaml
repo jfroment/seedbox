@@ -1,8 +1,8 @@
 services:
   flood:
-    image: jesec/flood:latest
+    image: jesec/flood:master
     container_name: flood
-    restart: always
+    restart: unless-stopped
     depends_on:
       - deluge
     user: ${PUID}:${PGID}
@@ -15,8 +15,7 @@ services:
       - --rundir=/config
     volumes:
       - configflood:/config
-      - torrents:/torrents
-      - downloads:/downloads
+      - downloads:/data/media/downloads
       - /etc/localtime:/etc/localtime:ro
 
 volumes:

@@ -2,10 +2,10 @@ services:
   komga:
     image: gotson/komga
     container_name: komga
-    restart: always
+    restart: unless-stopped
     volumes:
       - configkomga:/config
-      - torrents:/torrents
+      - media:/data/media
       - /etc/localtime:/etc/localtime:ro
     environment:
       - TZ=${TZ}

@@ -2,7 +2,7 @@ services:
   calibre-web:
     image: ghcr.io/linuxserver/calibre-web:nightly
     container_name: calibre-web
-    restart: always
+    restart: unless-stopped
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
@@ -11,4 +11,4 @@ services:
       - OAUTHLIB_RELAX_TOKEN_SCOPE=1
     volumes:
       - configcalibre:/config
-      - torrents:/torrents
+      - media:/data/media

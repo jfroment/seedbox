@@ -2,10 +2,10 @@ services:
   lidarr:
     image: ghcr.io/linuxserver/lidarr:develop
     container_name: lidarr
-    restart: always
+    restart: unless-stopped
     volumes:
       - configlidarr:/config
-      - torrents:/torrents
+      - media:/data/media
     environment:
       - PGID=${PGID}
       - PUID=${PUID}

@@ -2,7 +2,7 @@ services:
   prowlarr:
     image: ghcr.io/linuxserver/prowlarr:develop
     container_name: prowlarr
-    restart: always
+    restart: unless-stopped
     volumes:
       - configprowlarr:/config
     environment:

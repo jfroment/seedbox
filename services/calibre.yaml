@@ -2,16 +2,16 @@ services:
   calibre:
     image: ghcr.io/linuxserver/calibre
     container_name: calibre
-    restart: always
+    restart: unless-stopped
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-      - PASSWORD=${CALIBRE_PASSWORD}
-      - CLI_ARGS=
+      # - PASSWORD=${UN1K0RN_PASSWORD}
+      # - CLI_ARGS=
     volumes:
       - configcalibre:/config
-      - torrents:/torrents
+      - media:/data/media
 
 volumes:
   configcalibre: 

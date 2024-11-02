@@ -2,7 +2,7 @@ services:
   tautulli:
     image: ghcr.io/linuxserver/tautulli
     container_name: tautulli
-    restart: always
+    restart: unless-stopped
     volumes:
       - configtautulli:/config
       - config:/logs:ro # Inside of tautulli, bind to logs via "/logs/Plex Media Server/Logs"

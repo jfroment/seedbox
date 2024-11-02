@@ -1,7 +1,7 @@
 services:
   netdata:
     image: netdata/netdata:stable
-    restart: always
+    restart: unless-stopped
     container_name: netdata
     hostname: netdata.${TRAEFIK_DOMAIN}
     environment:

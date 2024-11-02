@@ -1,12 +1,11 @@
 services:
   deluge:
-    image: ghcr.io/linuxserver/deluge
+    image: ghcr.io/linuxserver/deluge #:amd64-version-2.1.1-r6
     container_name: deluge
-    restart: always
+    restart: unless-stopped
     volumes:
-      - torrents:/torrents
       - configdeluge:/config
-      - downloads:/downloads
+      - downloads:/data/media/downloads
     environment:
       - PGID=${PGID}
       - PUID=${PUID}

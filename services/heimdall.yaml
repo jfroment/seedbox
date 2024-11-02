@@ -2,7 +2,7 @@ services:
   heimdall:
     image: lscr.io/linuxserver/heimdall
     container_name: heimdall
-    restart: always
+    restart: unless-stopped
     volumes:
       - configheimdall:/config
     environment:

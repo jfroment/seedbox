@@ -2,9 +2,9 @@ services:
   bazarr:
     image: ghcr.io/linuxserver/bazarr
     container_name: bazarr
-    restart: always
+    restart: unless-stopped
     volumes:
-      - torrents:/torrents
+      - media:/data/media
       - configbazarr:/config
     environment:
       - PGID=${PGID}

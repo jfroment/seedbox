@@ -4,7 +4,7 @@ services:
       container_name: nextcloud-db
       command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --innodb-file-per-table=1 --skip-innodb-read-only-compressed
       user: ${PUID}:${PGID}
-      restart: always
+      restart: unless-stopped
       environment:
         - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
         - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -22,7 +22,7 @@ services:
       - nextcloud-db
     image: linuxserver/nextcloud
     container_name: nextcloud
-    restart: always
+    restart: unless-stopped
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
@@ -30,7 +30,7 @@ services:
     volumes:
       - confignextcloud:/config
       - nextclouddata:/data
-      - torrents:/torrents
+      - media:/data/media
       - config:/seedbox-config
 
 volumes:

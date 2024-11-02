@@ -2,7 +2,7 @@ services:
   plex:
     image: ghcr.io/linuxserver/plex
     container_name: plex
-    restart: always
+    restart: unless-stopped
     network_mode: host
     ports:
       - "32400:32400"
@@ -17,7 +17,7 @@ services:
       - /dev/dri:/dev/dri # for hardware transcoding
     volumes:
       - configplex:/config
-      - torrents:/torrents
+      - media:/data/media
       - /dev/shm:/transcode
     environment:
       - PGID=${PGID}

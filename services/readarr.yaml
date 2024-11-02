@@ -2,11 +2,12 @@ services:
   readarr:
     image: lscr.io/linuxserver/readarr:nightly
     container_name: readarr
-    restart: always
+    restart: unless-stopped
     volumes:
       - configreadarr:/config
-      - torrents:/torrents
+      - media:/data/media
       - /etc/localtime:/etc/localtime:ro
+      - /data/config/readarr/scraper/certs/bookinfo-club.crt:/etc/ssl/certs/bookinfo-club.crt
     environment:
       - PGID=${PGID}
       - PUID=${PUID}

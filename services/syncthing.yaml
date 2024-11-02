@@ -9,7 +9,7 @@ services:
       - TZ=${TZ}
     volumes:
       - configsyncthing:/config
-      - torrents:/torrents
+      - media:/data/media
       - config:/allconfig
     ports:
     #   #- 8384:8384

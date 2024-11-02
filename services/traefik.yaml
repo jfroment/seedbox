@@ -2,7 +2,7 @@ services:
   traefik:
     image: traefik
     container_name: traefik
-    restart: always
+    restart: unless-stopped
     command:
       - --certificatesresolvers.le.acme.email=${ACME_MAIL}
     ports:

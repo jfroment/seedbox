@@ -2,15 +2,16 @@ services:
   sonarr:
     image: ghcr.io/linuxserver/sonarr:develop
     container_name: sonarr
-    restart: always
+    restart: unless-stopped
     volumes:
       - configsonarr:/config
-      - torrents:/torrents
+      - media:/data/media
       - /etc/localtime:/etc/localtime:ro
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
+
 
 volumes:
   configsonarr: 
