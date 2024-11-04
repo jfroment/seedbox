@@ -1,7 +1,6 @@
 services:
   flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr
+    #image: ghcr.io/flaresolverr/flaresolverr
+    image: alexfozor/flaresolverr:pr-1300-experimental
     container_name: flaresolverr
     restart: unless-stopped
-    environment:
-      - CAPTCHA_SOLVER=hcaptcha-solver
