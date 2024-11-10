@@ -9,7 +9,7 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-      - LOG_LEVEL=info
+      - LOG_LEVEL=warn
     dns:
       - 1.1.1.1
       - 8.8.8.8
