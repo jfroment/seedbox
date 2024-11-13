@@ -57,10 +57,6 @@ volumes:
     driver: local-persist
     driver_opts:
       mountpoint: $HOST_CONFIG_PATH/paperless
-  documents:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_MEDIA_PATH/documents
   configpaperlessexport: 
     driver: local-persist
     driver_opts:

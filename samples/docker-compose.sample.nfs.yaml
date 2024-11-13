@@ -1,0 +1,36 @@
+#############################################################################
+## Services are now located in separate files, in the services directory.  ##
+#############################################################################
+
+# Common network used by all services
+networks: 
+  default:
+    name: "traefik-network"
+
+# Common volumes used by at least 2 services
+volumes:
+  config:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH
+  torrents: 
+    driver_opts:
+      type: nfs
+      # Add NFS_IP to your .env with the corresponding value
+      o: addr=$NFS_IP,nolock,soft,nfsvers=4
+      # Add NFS_MEDIA_VOLUME to your .env with the corresponding value
+      device: $NFS_MEDIA_VOLUME
+  downloads:
+    driver_opts:
+      type: nfs
+      # Add NFS_IP to your .env with the corresponding value
+      o: addr=$NFS_IP,nolock,soft,nfsvers=4
+      # Add NFS_MEDIA_VOLUME to your .env with the corresponding value
+      device: $NFS_MEDIA_VOLUME/$DOWNLOAD_SUBFOLDER
+  documents:
+    driver_opts:
+      type: nfs
+      # Add NFS_IP to your .env with the corresponding value
+      o: addr=$NFS_IP,nolock,soft,nfsvers=4
+      # Add NFS_MEDIA_VOLUME to your .env with the corresponding value
+      device: $NFS_MEDIA_VOLUME/$DOCUMENTS_SUBFOLDER

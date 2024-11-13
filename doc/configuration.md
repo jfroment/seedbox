@@ -13,6 +13,7 @@
   * [Default mode - Wireguard custom](#default-mode---wireguard-custom)
   * [Your own mode (VPN provider supported by gluetun)](#your-own-mode-vpn-provider-supported-by-gluetun)
   * [How is VPN handled?](#how-is-vpn-handled)
+* [Media on NFS server](#media-on-nfs-server)
 * [Make the services communicate with each other](#make-the-services-communicate-with-each-other)
 * [How does the configuration work?](#how-does-the-configuration-work)
 * [Apps configuration](#apps-configuration)
@@ -256,6 +257,16 @@ Behind the scenes, the ``run-seedbox.sh`` script will mainly add 2 overrides whe
 
 * Adds a file in [services/generated/](../services/generated/) which adds a ``network_mode: gluetun`` for your service.
 * Specify in Traefik rule that the backend host is gluetun instead of the service directly.
+
+## Media on NFS Server
+
+If your media is not on the same machine as your containers, do the following:
+
+* Configure a NFS share on the network.
+* Use the ``docker-compose.sample.nfs.yaml`` from the ``samples`` directory by copying it at the project root level and name it ``docker-compose.yaml``.
+* Specify in ``.env`` the following variables:
+  * ``NFS_IP``: the IP of your NFS server
+  * ``NFS_MEDIA_VOLUME``: the volume of the share (it must start with ":/").
 
 ## Make the services communicate with each other
 

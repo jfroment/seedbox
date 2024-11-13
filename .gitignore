@@ -18,3 +18,5 @@ services/generated/*.yaml
 authelia/*
 .env.custom
 *.env
+
+docker-compose.yaml

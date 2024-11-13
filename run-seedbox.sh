@@ -46,6 +46,11 @@ if [[ ! -f .env ]]; then
   exit 1
 fi
 
+if [[ ! -f docker-compose.yaml ]]; then
+  echo "[$0] ERROR. \"docker-compose.yaml\" file not found. Please copy \"docker-compose.sample.yaml\" and edit its valuesif you need customization. Then, re-run this script."
+  exit 1
+fi
+
 # Create/update http_auth file according to values in .env file
 source .env
 echo "${HTTP_USER}:${HTTP_PASSWORD}" > traefik/http_auth
