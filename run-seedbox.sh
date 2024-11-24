@@ -47,7 +47,7 @@ if [[ ! -f .env ]]; then
 fi
 
 if [[ ! -f docker-compose.yaml ]]; then
-  echo "[$0] ERROR. \"docker-compose.yaml\" file not found. Please copy \"docker-compose.sample.yaml\" and edit its valuesif you need customization. Then, re-run this script."
+  echo "[$0] ERROR. \"docker-compose.yaml\" file not found. Please copy \"docker-compose.sample.yaml\" and edit its values if you need customization. Then, re-run this script."
   exit 1
 fi
 

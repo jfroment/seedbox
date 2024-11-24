@@ -133,11 +133,39 @@ Some general rules:
 
 Also, do not forget to edit your ``.env`` file, which is where all the data which will be sent to containers (passwords, tokens, uid for disk permission...) lives.
 
+> ⚠️ Since v2.2 release, environment variable live in two places: ``.env`` for common/global variables, common for the whole stack, and ``.env.custom`` where variables are specific for services **and prefixed with the service name**. Read below for forther explanations.
+
+### Global variables
+
+All variables releated to the stack itself live in the ``.env`` file. They concern:
+
+* Traefik configuration (domain name, ACME mail, http-auth credentials...)
+* Disk UUID/GUID
+* Timezone
+* Paths on your system/network and directories to organize your data and map docker volumes
+
+### Services variables
+
+This is a new feature in v2.2. For variables specific for a service, they are located in two places:
+
+* directly in the docker-compose service file (for example the one for [ntfy](../services/ntfy.yaml)) under the ``environment:`` section. Mostly, they are generic here and do not contain sensitive information or customization.
+* in the [.env.custom](../.env.custom.sample) file, where variables **must be prefixed with the service name in uppercase and a "_"**, they will be injected on the corresponding service.
+
+*Example*: let's say you have a service called ``WONDERFULAPP``, and want it to use the environment variable ``MYKEY`` with the value ``ImAwesome``.
+Simply add the following line in ``.env.custom``:
+
+```yaml
+#[...]
+# Add this line to add the variable "MYKEY" with value "ImAwesome" to the service "WONDERFULAPP".
+WONDERFULAPP_MYKEY: "ImAwesome"
+#[...]
+```
+
 ## Add your own service
 
 Let's say you want to add a container nginx without interfering or creating conflicts in this git repository. That's possible.
 
-Start by creating a file named nginx.yaml in the [services/custom/](services/custom/) directory:
+Start by creating a file named nginx.yaml in the [services/custom/](../services/custom/) directory:
 
 ```yaml
 services:
@@ -270,7 +298,7 @@ If your media is not on the same machine as your containers, do the following:
 
 ## Make the services communicate with each other
 
-With docker-compose, all services are in the same Docker network (it is called ``traefik-network`` and is defined [here](../docker-compose.yaml)). Docker provides DNS resolution in the same network based on the name of the services, which act as hostnames.
+With docker-compose, all services are in the same Docker network (it is called ``traefik-network`` and is defined [here](../docker-compose.sample.yaml)). Docker provides DNS resolution in the same network based on the name of the services, which act as hostnames.
 
 So, for example, in order to setup Deluge in Sonarr, just add ``http://deluge:8112`` in the Download Clients settings section in Sonarr.
 
