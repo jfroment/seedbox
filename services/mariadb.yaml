@@ -1,0 +1,23 @@
+services:
+  mariadb:
+      image: mariadb:10
+      container_name: mariadb
+      command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --innodb-file-per-table=1 --skip-innodb-read-only-compressed
+      user: ${PUID}:${PGID}
+      restart: always
+      environment:
+        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - MYSQL_USER=${MYSQL_USER}
+        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        - TZ=${TZ}
+      volumes: 
+        - nextclouddb:/var/lib/mysql
+      labels:
+        - "traefik.enable=false"
+
+volumes:
+  nextclouddb:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/nextcloud-db

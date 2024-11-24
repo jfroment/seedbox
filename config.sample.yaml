@@ -219,6 +219,12 @@ services:
         - host: tdarr.${TRAEFIK_DOMAIN}
           httpAuth: true
           internalPort: 8265
+  - name: mariadb
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: false
+      rules: []
   - name: nextcloud
     enabled: true
     vpn: false

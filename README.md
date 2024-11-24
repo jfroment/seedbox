@@ -70,7 +70,7 @@ Version 2 is released, please make sure you read [this V2 Migration Guide](doc/U
 
 ## 🌐 Traefik
 
-The front-end reverse proxy (Traefik - **check [this guide](doc/traefik_v2.md) if you still have the seedbox with Traefik v1**)  routes based on the lowest level subdomain (e.g. `deluge.example.com` would route to deluge). Since this is how the router works, it is recommended for you to get a top level domain. If you do not have one, you can edit your domains locally by changing your hosts file or use a browser plugin that changes the host header.
+The front-end reverse proxy (Traefik - **check [this guide](doc/traefik_v2_upgrade.md) if you still have the seedbox with Traefik v1**)  routes based on the lowest level subdomain (e.g. `deluge.example.com` would route to deluge). Since this is how the router works, it is recommended for you to get a top level domain. If you do not have one, you can edit your domains locally by changing your hosts file or use a browser plugin that changes the host header.
 
 Traefik takes care of valid Let's Encrypt certificates and auto-renewal.
 

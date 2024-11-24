@@ -46,14 +46,55 @@ if [[ ! -f .env ]]; then
   exit 1
 fi
 
+if [[ ! -f .env.custom ]]; then
+  echo "[$0] ERROR. \".env.custom\" file not found. Please copy \".env.custom.sample\" and edit its values. Be aware that since v2.2 update, some variables from .env must be moved to .env.custom. When done, re-run this script."
+  exit 1
+fi
+
 if [[ ! -f docker-compose.yaml ]]; then
   echo "[$0] ERROR. \"docker-compose.yaml\" file not found. Please copy \"docker-compose.sample.yaml\" and edit its values if you need customization. Then, re-run this script."
+  exit 1
+fi
+
+# Check if there are obsolete config still in .env but should be moved to .env.custom
+if [[ $(grep "^MYSQL_.*" .env | wc -l) != 0 || $(grep "^WIREGUARD_.*" .env | wc -l) != 0 || $(grep "^NEXTCLOUD_.*" .env | wc -l) != 0 || $(grep "^PORTAINER_.*" .env | wc -l) != 0 || $(grep "^FLOOD_PASSWORD.*" .env | wc -l) != 0 || $(grep "^CALIBRE_PASSWORD.*" .env | wc -l) != 0 || $(grep "^PAPERLESS_.*" .env | wc -l) != 0 ]]; then
+  echo "/!\ Some obsolete config has been detected in your .env."
+  echo "It should be moved in .env.custom as they apply to specific app (this is new since v2.2 update - see documentation)."
+  echo ""
+  echo "Please refer to the .env.custom file to see which variables should be ported to the new file."
+  echo "Exiting now as bad configuration for your services may break your config."
+  echo ""
+  echo "Run this script again when variables has been moved to the correct file."
+  read -r -p "Do you want more explanation (Y/n) ? " help_wanted
+  if [[ "$help_wanted" =~ ^([yY][eE][sS]|[yY])$ ]]
+  then
+      echo "These are the variables you must move to .env.custom:"
+      echo ""
+      echo "  Variables starting by \"MYSQL_\" (if there are some) ==> Add prefix MARIADB_ in .env.custom"
+      echo "  Variables starting by \"NEXTCLOUD_\" (if there are some) ==> Add another NEXTCLOUD_ prefix in .env.custom"
+      echo "  Variables starting by \"PAPERLESS_\" (if there are some) => Add another PAPERLESS_ prefix in .env.custom"
+      echo "  Variables starting by \"PORTAINER_\" (if there are some) ==> Add another PORTAINER_ prefix in .env.custom"
+      echo "  Variable named \"FLOOD_PASSWORD\" (if existing) ==> Add another FLOOD_ prefix in .env.custom"
+      echo "  Variable named \"CALIBRE_PASSWORD\" (if existing) ==> Add another CALIBRE_ prefix in .env.custom"
+      echo "  Variable named \"WIREGUARD_ENDPOINT\" (if existing) ==> Replace by GLUETUN_VPN_ENDPOINT_IP in .env.custom"
+      echo "  Variable named \"WIREGUARD_PORT\" (if existing) ==> Replace by GLUETUN_VPN_ENDPOINT_PORT in .env.custom"
+      echo "  Variable named \"WIREGUARD_PUBLIC_KEY\" (if existing) ==> Replace by GLUETUN_WIREGUARD_PUBLIC_KEY in .env.custom"
+      echo "  Variable named \"WIREGUARD_PRIVATE_KEY\" (if existing) ==> Replace by GLUETUN_WIREGUARD_PRIVATE_KEY in .env.custom"
+      echo "  Variable named \"WIREGUARD_PRESHARED_KEY\" (if existing) ==> Replace by GLUETUN_WIREGUARD_PRESHARED_KEY in .env.custom"
+      echo "  Variable named \"WIREGUARD_ADDRESS\" (if existing) ==> Replace by GLUETUN_WIREGUARD_ADDRESSES (**plural!**) in .env.custom"
+  else
+      echo "Ok bye."
+  fi
   exit 1
 fi
 
 # Create/update http_auth file according to values in .env file
 source .env
 echo "${HTTP_USER}:${HTTP_PASSWORD}" > traefik/http_auth
+
+if [[ ! -d env ]]; then
+  mkdir -p env
+fi
 
 # Sanitize and extract variable (without prefixes) from .env.custom file
 # Input => $1 = app name (exemple traefik)
@@ -64,7 +105,7 @@ extract_custom_env_file() {
   #   2 => Remove all empty lines
   #   3 => Remove all lines *NOT* starting by [uppercase_app_name + "_"] (exemple TRAEFIK_)
   #   4 => Remove the pattern [uppercase_app_name + "_"]
-  sed '/^#/d' .env.custom | sed '/^$/d' | sed -n "/^${1^^}_/p" | sed "s/^${1^^}_//g" > $1.env
+  sed '/^#/d' .env.custom | sed '/^$/d' | sed -n "/^${1^^}_/p" | sed "s/^${1^^}_//g" > env/$1.env
 }
 
 ## Traefik Certificate Resolver tweaks
@@ -181,6 +222,12 @@ if is_service_enabled calibre-web && ! is_service_enabled calibre; then
   exit 1
 fi
 
+# Check that if nextcloud is enabled, mariadb should also be enabled
+if is_service_enabled nextcloud && ! is_service_enabled mariadb; then
+  echo "[$0] ERROR. Nextcloud is enabled but MariaDB is not. Please either enable MariaDB or disable Nextcloud as Nextcloud depends on MariaDB."
+  exit 1
+fi
+
 # Apply other arbitrary custom Traefik config files
 rm -f $f traefik/custom/custom-*
 for f in `find samples/custom-traefik -maxdepth 1 -mindepth 1 -type f | grep -E "\.yml$|\.yaml$" | sort`; do
@@ -249,7 +296,7 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
   if [[ -f .env.custom ]]; then
     if grep -q "^${name^^}_.*" .env.custom; then
       extract_custom_env_file ${name}
-      echo "services.${name}.env_file.0: ./${name}.env" > ${name}-envfile.props
+      echo "services.${name}.env_file.0: ./env/${name}.env" > ${name}-envfile.props
       yq -p=props ${name}-envfile.props -o yaml > services/generated/${name}-envfile.yaml
       rm -f ${name}-envfile.props
       # Append config/${name}-envfile.yaml to global list of files which will be passed to docker commands

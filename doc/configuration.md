@@ -263,13 +263,22 @@ By default, the file used is [gluetun.yaml](../services/gluetun.yaml), which is 
 
 ### Default mode - Wireguard custom
 
-* Edit the ``.env`` file and replace the Wireguard variables with your own (take them in ``.env.sample``).
-* Enable ``gluetun`` service.
+* Edit the ``.env.custom`` file and replace the Gluetun/Wireguard variables with your own (take them in ``.env.custom.sample``).
+* Enable ``gluetun`` service in ``config.yaml``.
 * Enable vpn (``vpn: true``) on any service.
 * Run ``./run-seedbox.sh``.
 * The service now uses Wireguard. If gluetun is down or if the VPN link is broken, your service won't have any access to Internet.
 
 ### Your own mode (VPN provider supported by gluetun)
+
+> Old way of doing "your own mode" is deprecated (since v2.2) now that custom environment variables are available for all the services.
+
+#### Proper way (since v2.2)
+
+* Just edit the ``.env.custom`` file and adapt ``GLUETUN_VPN_SERVICE_PROVIDER``, ``GLUETUN_VPN_TYPE`` and all required variables based on your provider/configuration. **Do not forget to prefix all variables coming from Gluetun documentation with ``GLUETUN_``**.
+* All possible environment variables for Gluetun are documented [here](https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers).
+
+#### Legacy mode (**deprecated**)
 
 * Create a ``gluetun-custom.yaml`` in the [services/custom/](../services/custom/) directory. You can duplicate [this one](../services/gluetun.yaml) to avoid starting from scratch.
 * Adapt it to your needs (variables, mode...) according to your provider.
