@@ -12,20 +12,20 @@ cleanup_on_exit() {
 trap cleanup_on_exit EXIT
 
 # Load common functions
-source config/tools.sh
+source ../tools.sh
 
 # Check that required tools are installed
 check_utilities
 
-if [[ ! -f services.conf ]]; then
-  echo "[$0] ERROR. Could nof find services.conf. Exiting."
+if [[ ! -f ../../services.conf ]]; then
+  echo "[$0] ERROR. Could not find services.conf. Exiting."
   exit 1
 fi
 
 jq -n '{"services": []}' > config.json
 
 # First, add Traefik as it was not explicitely set by default in old config file (services.conf)
-if ! grep -q "traefik" services.conf; then
+if ! grep -q "traefik" ../../services.conf; then
   jq -r '.services[.services| length] |= . + 
     {
       "name": "traefik",
@@ -45,7 +45,7 @@ if ! grep -q "traefik" services.conf; then
   mv tmp.json config.json
 fi
 
-cat services.conf | while read line || [[ -n $line ]]; do
+cat ../../services.conf | while read line || [[ -n $line ]]; do
   key=$(echo $line | sed -r "s/^(.*):.*$/\1/")
   enabled="true"
   if grep -q "disable" <<< $line; then
@@ -89,7 +89,7 @@ cat services.conf | while read line || [[ -n $line ]]; do
       [[ $key == "nextcloud" ]] && internalScheme="https"
       
       # Define service default port from bundled config file
-      internalPort=$(cat config/ports | { grep $key || true; } | sed -r "s/^${key}: (.*)$/\1/")
+      internalPort=$(cat ports | { grep $key || true; } | sed -r "s/^${key}: (.*)$/\1/")
       rules=$(jq -n '[
           {
             "host": "'"$key"'.'$(echo '${TRAEFIK_DOMAIN}')'",
@@ -117,4 +117,4 @@ cat services.conf | while read line || [[ -n $line ]]; do
 done
 
 # Transform json into yaml, easier to manipulate for the user
-cat config.json | yq e -P - > config.yaml
+cat config.json | yq e -P - > ../../config.yaml

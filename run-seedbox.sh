@@ -3,7 +3,7 @@
 set -e
 
 # Load common functions
-source config/tools.sh
+source tools/tools.sh
 
 # Check that required tools are installed
 check_utilities
@@ -27,7 +27,7 @@ for i in "$@"; do
 done
 
 cleanup_on_exit() {
-  rm -f rules.props *-vpn.props config.json
+  rm -f rules.props *-vpn.props *-envfile.props config.json
 }
 trap cleanup_on_exit EXIT
 

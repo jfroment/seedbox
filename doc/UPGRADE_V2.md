@@ -7,7 +7,7 @@ Since there are some breaking changes and a configuration structure migration, a
 ## What's new?
 
 * **Configuration change to new YAML format**
-  * Run ``config-updater.sh`` to migrate your old services.conf to the new config.yaml format.
+  * Run ``cd tools/config-updater && ./config-updater.sh`` to migrate your old services.conf to the new config.yaml format.
   * ⚠️ ``jq`` (v1.5+) and ``yq`` (v4+) are now requirements
   * Easier feature switches
   * If a service is missing, it won't be enabled by default like before. The config is now more declarative.
@@ -60,9 +60,11 @@ And also:
 ## How to migrate
 
 ```sh
+cd tools/config-updater
 ./config-updater.sh
 # Check the content of your .env file (in comparison with .env.sample which brings new variables)
 # Also, check your generated config.yaml and read the config documentation (in doc/configuration.md)
+cd ../..
 ./run-seedbox.sh
 ```
 

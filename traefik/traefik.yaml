@@ -1,12 +1,10 @@
 api:
   dashboard: true
-
 # Set Access logs timezone
 # accessLog:
 #   fields:
 #     names:
 #       StartUTC: drop
-
 providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
@@ -15,7 +13,6 @@ providers:
   file:
     directory: /etc/traefik/custom
     watch: true
-
 entryPoints:
   insecure:
     address: ":80"
@@ -31,11 +28,9 @@ entryPoints:
         certResolver: le
       middlewares:
         - security-headers@file
-
 # Allow self-signed certificates for https backends (nextcloud for example)
 serversTransport:
   insecureSkipVerify: true
-
 certificatesResolvers:
   le:
     acme:
@@ -43,3 +38,4 @@ certificatesResolvers:
       httpChallenge:
         # used during the challenge
         entryPoint: insecure
+
