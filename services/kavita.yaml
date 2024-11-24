@@ -1,16 +1,16 @@
 services:
   kavita:
-    image: kizaing/kavita:latest
+    image: lscr.io/linuxserver/kavita:latest
     container_name: kavita
     restart: always
     volumes:
-      - configkavita:/kavita/config
+      - configkavita:/config
       - torrents:/torrents
       - /etc/localtime:/etc/localtime:ro
     environment:
       - TZ=${TZ}
-    # Wait for https://github.com/Kareadita/Kavita/issues/301 to be resolved
-    #user: "${PUID}:${PGID}"
+      - PGID=${PGID}
+      - PUID=${PUID}
 
 volumes:
   configkavita: 

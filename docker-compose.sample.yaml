@@ -1,5 +1,3 @@
-version: "3.8"
-
 #############################################################################
 ## Services are now located in separate files, in the services directory.  ##
 #############################################################################
@@ -23,3 +21,7 @@ volumes:
     driver: local-persist
     driver_opts:
       mountpoint: $HOST_MEDIA_PATH/$DOWNLOAD_SUBFOLDER
+  documents:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_MEDIA_PATH/$DOCUMENTS_SUBFOLDER

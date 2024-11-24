@@ -29,6 +29,15 @@ services:
         - host: flood.${TRAEFIK_DOMAIN}
           httpAuth: true
           internalPort: 3000
+  - name: qbittorrent
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: qbittorrent.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 8080
   - name: plex
     enabled: true
     vpn: false
@@ -137,7 +146,7 @@ services:
       rules:
         - host: komga.${TRAEFIK_DOMAIN}
           httpAuth: false
-          internalPort: 8080
+          internalPort: 25600
   - name: kavita
     enabled: false
     vpn: false
@@ -147,6 +156,15 @@ services:
         - host: kavita.${TRAEFIK_DOMAIN}
           httpAuth: false
           internalPort: 5000
+  - name: mylar
+    enabled: true
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: mylar.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 8090
   - name: ombi
     enabled: false
     vpn: false
@@ -174,6 +192,15 @@ services:
         - host: tautulli.${TRAEFIK_DOMAIN}
           httpAuth: false
           internalPort: 8181
+  - name: ntfy
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: ntfy.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 2586
   - name: jdownloader
     enabled: true
     vpn: false
@@ -192,6 +219,12 @@ services:
         - host: tdarr.${TRAEFIK_DOMAIN}
           httpAuth: true
           internalPort: 8265
+  - name: mariadb
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: false
+      rules: []
   - name: nextcloud
     enabled: true
     vpn: false
@@ -202,6 +235,24 @@ services:
           httpAuth: false
           internalPort: 443
           internalScheme: https
+  - name: filebrowser
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: files.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 8234
+  - name: paperless
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: paperless.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 8000
   - name: portainer
     enabled: true
     vpn: false
@@ -248,6 +299,24 @@ services:
         - host: ${TRAEFIK_DOMAIN}
           httpAuth: true
           internalPort: 80
+  - name: homarr
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: homarr.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 7575
+  - name: homepage
+    enabled: false
+    vpn: false
+    traefik:
+      enabled: true
+      rules:
+        - host: homepage.${TRAEFIK_DOMAIN}
+          httpAuth: true
+          internalPort: 3000
   # Gluetun is the VPN client service.
   - name: gluetun
     enabled: false

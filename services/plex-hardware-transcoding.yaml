@@ -4,15 +4,6 @@ services:
     container_name: plex
     restart: always
     network_mode: host
-    ports:
-      - "32400:32400"
-      - "32400:32400/udp"
-      - "32469:32469"
-      - "32469:32469/udp"
-      - "32410:32410/udp"
-      - "32412:32412/udp"
-      - "32413:32413/udp"
-      - "32414:32414/udp"
     devices:
       - /dev/dri:/dev/dri # for hardware transcoding
     volumes:

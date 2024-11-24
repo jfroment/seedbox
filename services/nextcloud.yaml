@@ -1,25 +1,8 @@
 services:
-  nextcloud-db:
-      image: mariadb:10
-      container_name: nextcloud-db
-      command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --innodb-file-per-table=1 --skip-innodb-read-only-compressed
-      user: ${PUID}:${PGID}
-      restart: always
-      environment:
-        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-        - MYSQL_DATABASE=${MYSQL_DATABASE}
-        - MYSQL_USER=${MYSQL_USER}
-        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-        - TZ=${TZ}
-      volumes: 
-        - nextclouddb:/var/lib/mysql
-      labels:
-        - "traefik.enable=false"
-
   # See tools/init-setup-nextcloud.sh for first install
   nextcloud:
     depends_on:
-      - nextcloud-db
+      - mariadb
     image: linuxserver/nextcloud
     container_name: nextcloud
     restart: always
@@ -34,10 +17,6 @@ services:
       - config:/seedbox-config
 
 volumes:
-  nextclouddb:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/nextcloud-db
   confignextcloud:
     driver: local-persist
     driver_opts:

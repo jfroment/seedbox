@@ -1,20 +1,18 @@
 services:
-  plex:
-    image: ghcr.io/linuxserver/plex
-    container_name: plex
+  qbittorrent:
+    image: ghcr.io/hotio/qbittorrent
+    container_name: qbittorrent
     restart: always
-    network_mode: host
     volumes:
-      - configplex:/config
       - torrents:/torrents
+      - configqbittorrent:/config
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-      - VERSION=latest
 
 volumes:
-  configplex:
+  configqbittorrent: 
     driver: local-persist
     driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/Plex
+      mountpoint: $HOST_CONFIG_PATH/qbittorrent

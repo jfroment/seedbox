@@ -1,0 +1,29 @@
+services:
+  homepage:
+    image: filebrowser/filebrowser:s6
+    container_name: filebrowser
+    restart: always
+    volumes:
+      - configfilebrowser:/config
+      - dbfilebrowser:/database
+      - torrents:/srv
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8234/health"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+volumes:
+  configfilebrowser:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/filebrowser/config
+  dbfilebrowser:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/filebrowser/db
+

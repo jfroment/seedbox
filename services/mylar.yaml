@@ -1,0 +1,19 @@
+services:
+  mylar:
+    image: lscr.io/linuxserver/mylar3:latest
+    container_name: mylar3
+    restart: always
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+    volumes:
+      - configmylar:/config
+      - torrents:/comics
+      - downloads:/downloads
+
+volumes:
+  configmylar: 
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/mylar
