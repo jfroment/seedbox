@@ -9,6 +9,7 @@ services.conf
 traefik/custom/dynamic*.yaml
 traefik/custom/custom-*.yaml
 samples/custom*/*.yaml
+samples/custom*/*.yaml.disabled
 
 config.yaml
 services/custom/*.yaml
