@@ -42,6 +42,8 @@
 * Fix #43: fix warning for jq and output format.
 * Refactor ``run-seedbox.sh`` script (use of functions, move code around, tiny fixes...)
 * Due to newly added app-specific environment variables, gluetun VPN config and install mode has been refined. Please see the [documentation](doc/configuration.md#vpn) for specific details.
+* Add the changelog in ``CHANGELOG.md``.
+* Add the current version in ``VERSION``. May be useful later for automatic upgrades between versions.
 
 ## ⚠️ Config changes ⚠️
 
