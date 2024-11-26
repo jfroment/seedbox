@@ -6,6 +6,7 @@ services:
     volumes:
       - configsonarr:/config
       - torrents:/torrents
+      - library:/library
       - /etc/localtime:/etc/localtime:ro
     environment:
       - PGID=${PGID}
@@ -17,3 +18,7 @@ volumes:
     driver: local-persist
     driver_opts:
       mountpoint: $HOST_CONFIG_PATH/sonarr
+  library:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_LIBRARY_PATH
