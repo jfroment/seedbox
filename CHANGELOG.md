@@ -1,10 +1,20 @@
+# v2.2.1 (The little Flame 🔥)
+
+> Bugfix release due to errors on some services after v2.2 release.
+
+## Bugfixes and improvements ⚙️
+
+* [**Portainer**] Remove ``admin`` password auto-configuration. Password is now set on first installation via GUI.
+* [**Flood** | **MariaDB** | **Calibre**] Fix variables not taken into account (fix #61)
+  * Services which used a ``command`` with environment variables were broken since v2.2 release because app-specific env files are injected with env_file directive in Docker Compose, but some services cannot read from environment variables in their command.
+
 # v2.2 (The Flame 🔥)
 
 ## What's new?
 
 ### New services 💫
 
-* ``qBittorrent``: [Torrends downloader](https://github.com/qbittorrent/qBittorrent)
+* ``qBittorrent``: [Torrents downloader](https://github.com/qbittorrent/qBittorrent)
   * Use of ``hotio`` build ([documentation here](https://hotio.dev/containers/qbittorrent/)) with VueTorrent and native VPN support (for those who want to avoid gluetun configuration)
   * Use of qBittorrent is recommended over Deluge as the project is more active and its alternative UI setup is easier (no separate container).
 * ``Filebrowser``: [Lightweight filebrowser](https://github.com/filebrowser/filebrowser)

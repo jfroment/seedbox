@@ -28,6 +28,7 @@ done
 
 cleanup_on_exit() {
   rm -f rules.props *-vpn.props *-envfile.props config.json
+  [[ -d env ]] && rm -f env/*.tmp
 }
 trap cleanup_on_exit EXIT
 
@@ -255,6 +256,8 @@ rm -f services/generated/*-vpn.yaml
 
 ALL_SERVICES="-f docker-compose.yaml"
 
+GLOBAL_ENV_FILE=".env"
+
 # Parse the config.yaml master configuration file
 for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
   name=$(echo $json | jq -r .name)
@@ -302,6 +305,63 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
       # Append config/${name}-envfile.yaml to global list of files which will be passed to docker commands
       ALL_SERVICES="${ALL_SERVICES} -f services/generated/${name}-envfile.yaml"
     fi
+  fi
+
+  ###### For services which have "command" field with environment variables ######
+  var_in_cmd_detected="0"
+  if [[ $(yq ".services.${name}.command[]" services/${file} | { grep "\\$.*\}" || true; } | wc -l) -gt 0 ]]; then
+    var_in_cmd_detected="1"
+    echo-debug "[$0] Service ${name} has a command with environment variables..."
+    # Extract variable names to test them
+    yq ".services.${name}.command[]" services/${file} | { grep "\\$.*\}" || true; } | sed -n -e 's/.*${\(\w\+\)}.*/\1/p' > env/${name}-cmd.env.1.tmp
+    (
+      # Check if these variables are defined in generated .env files (global or custom)
+      set -a
+      source ./env/${name}.env
+      source .env
+      set +a
+      while read p; do
+        # If the command references a variable which is not known, throw an error
+        if [[ -z ${!p+x} ]]; then
+          echo "ERROR. Variable \"$p\" is referenced in \"command\" for service ${name} (file $file) but this variable is not defined in .env (or in .env.custom with prefix \"${name^^}_\"). Please correct it or add a variable which will be used."
+          exit 1
+        fi
+      done < env/${name}-cmd.env.1.tmp
+
+      # Does not work for now because of how docker handles merges for arrays. Original values with variables stay.
+      # Disabled for now
+      if [[ "0" == "1" ]]; then
+        # Extract command block from original service yaml file
+        yq ".services.${name}.command[]" services/${file} > env/${name}-cmd.env.2.tmp
+        # Envsubst this file
+        envsubst < env/${name}-cmd.env.2.tmp > env/${name}-cmd.env.3.tmp
+        # Convert this file to a props file, used to source a new proper YAML file
+        i=0
+        while read line; do
+          echo "services.${name}.command.$i: $line" >> env/${name}-cmd.env.4.tmp
+          i=$((i+1))
+        done < env/${name}-cmd.env.3.tmp
+        # Generate a proper override file with substituted variables
+        yq -p=props env/${name}-cmd.env.4.tmp -o yaml > services/generated/${name}-command.yaml
+      fi
+    )
+    rm -f env/*.tmp
+    # echo-debug "[$0] Adding override file for service ${name} / command with subsituted environment variables..."
+    # ALL_SERVICES="${ALL_SERVICES} -f services/generated/${name}-command.yaml"
+  fi
+
+  # Handle case for command in a single line, not in array
+  if [[ $(yq ".services.${name}.command" services/${file} | { grep "\\$.*\}" || true; } | wc -l) -gt 0 ]]; then
+    var_in_cmd_detected="1"
+  fi
+
+  # Workaround for now
+  if [[ "${var_in_cmd_detected}" == "1" ]]; then
+    cat ${GLOBAL_ENV_FILE} ./env/${name}.env >> .env.concat.tmp
+    rm -f .env.concat
+    mv .env.concat.tmp .env.concat
+    export GLOBAL_ENV_FILE=".env.concat"
+    var_in_cmd_detected="0"
   fi
 
   ###################################### TRAEFIK RULES ######################################
@@ -397,8 +457,9 @@ if [[ "${SKIP_PULL}" != "1" ]]; then
 fi
 
 echo "[$0] ***** Recreating containers if required... *****"
-${DOCKER_COMPOSE_BINARY} ${ALL_SERVICES} up -d --remove-orphans
+${DOCKER_COMPOSE_BINARY} --env-file ${GLOBAL_ENV_FILE} ${ALL_SERVICES} up -d --remove-orphans
 echo "[$0] ***** Done updating containers *****"
+rm -f .env.concat
 
 echo "[$0] ***** Clean unused images and volumes... *****"
 docker image prune -af

@@ -6,10 +6,6 @@ services:
       user: ${PUID}:${PGID}
       restart: always
       environment:
-        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-        - MYSQL_DATABASE=${MYSQL_DATABASE}
-        - MYSQL_USER=${MYSQL_USER}
-        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
         - TZ=${TZ}
       volumes: 
         - nextclouddb:/var/lib/mysql
