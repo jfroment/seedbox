@@ -1,3 +1,13 @@
+# v2.2.1 (The little Flame 🔥)
+
+> Bugfix release due to errors on some services after v2.2 release.
+
+## Bugfixes and improvements ⚙️
+
+* [**Portainer**] Remove ``admin`` password auto-configuration. Password is now set on first installation via GUI.
+* [**Flood** | **MariaDB** | **Calibre**] Fix variables not taken into account (fix #61)
+  * Services which used a ``command`` with environment variables were broken since v2.2 release because app-specific env files are injected with env_file directive in Docker Compose, but some services cannot read from environment variables in their command.
+
 # v2.2 (The Flame 🔥)
 
 ## What's new?
