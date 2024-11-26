@@ -4,7 +4,7 @@
 
 ### New services 💫
 
-* ``qBittorrent``: [Torrends downloader](https://github.com/qbittorrent/qBittorrent)
+* ``qBittorrent``: [Torrents downloader](https://github.com/qbittorrent/qBittorrent)
   * Use of ``hotio`` build ([documentation here](https://hotio.dev/containers/qbittorrent/)) with VueTorrent and native VPN support (for those who want to avoid gluetun configuration)
   * Use of qBittorrent is recommended over Deluge as the project is more active and its alternative UI setup is easier (no separate container).
 * ``Filebrowser``: [Lightweight filebrowser](https://github.com/filebrowser/filebrowser)

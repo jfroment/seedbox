@@ -5,4 +5,4 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --admin-password ${PORTAINER_ADMIN_PASSWORD} --host=unix:///var/run/docker.sock
+    command: --host=unix:///var/run/docker.sock
