@@ -204,17 +204,6 @@ if is_service_enabled flood; then
   else
     export DELUGE_HOST="deluge"
   fi
-
-  # Specific instructions for Flood
-  # User for Deluge daemon RPC has to be created in deluge auth config file
-  if [[ ! -z ${FLOOD_PASSWORD} && ${FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON} == true ]]; then
-    if ! grep -q "flood" $HOST_CONFIG_PATH/deluge/auth; then
-      echo "flood:${FLOOD_PASSWORD}:10" >> $HOST_CONFIG_PATH/deluge/auth
-    else
-      echo "[$0] No need to add user/password for flood as it has already been created."
-      echo "[$0] Consider setting FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON variable to false in .env file."
-    fi
-  fi
 fi
 
 # Check that if calibre-web is enabled, calibre should also be enabled
@@ -253,6 +242,7 @@ echo "[$0] ***** Generating configuration... *****"
 
 # Cleanup files before start, in case there was a change we start from scratch at every script execution
 rm -f services/generated/*-vpn.yaml
+rm -f services/generated/*-envfile.yaml
 
 ALL_SERVICES="-f docker-compose.yaml"
 
@@ -306,6 +296,47 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
       ALL_SERVICES="${ALL_SERVICES} -f services/generated/${name}-envfile.yaml"
     fi
   fi
+
+  # If we are on flood service AND autoconfig for flood password is set to true:
+  # Check that .env.custom exists and variable defined
+  # Do the deluge autoconfig - we already checked that deluge is enabled at this point
+  if [[ ${name} == "flood" && ${FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON} == true ]]; then
+    # Specific instructions for Flood
+    if [[ ! -f env/${name}.env ]]; then
+      echo "ERROR. You set variable \"FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON\" to true but you did not specify key \"FLOOD_FLOOD_PASSWORD\" in your .env.custom."
+      exit 1
+    fi
+    set -a
+    source env/${name}.env
+    set +a
+    # User for Deluge daemon RPC has to be created in deluge auth config file
+    if [[ ! -z ${FLOOD_PASSWORD} ]]; then
+      DELUGE_CONFIG_FILE="$HOST_CONFIG_PATH/deluge/auth"
+      if [[ -r $DELUGE_CONFIG_FILE && -w $DELUGE_CONFIG_FILE ]]; then
+        if ! grep -q "flood" ${DELUGE_CONFIG_FILE}; then
+          echo "flood:${FLOOD_PASSWORD}:10" >> ${DELUGE_CONFIG_FILE}
+        else
+          echo "[$0] No need to add user/password for flood as it has already been created."
+          echo "[$0] Consider setting FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON variable to false in .env file."
+        fi
+      else
+        echo "[$0] It seems you do not have permission to read or write to ${DELUGE_CONFIG_FILE} ."
+        echo "[$0] Prompting for sudo password..."
+        sudo bash <<EOF
+if ! grep -q "flood" ${DELUGE_CONFIG_FILE}; then
+  echo "flood:${FLOOD_PASSWORD}:10" >> ${DELUGE_CONFIG_FILE}
+else
+  echo "[$0] No need to add user/password for flood as it has already been created."
+  echo "[$0] Consider setting FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON variable to false in .env file."
+fi
+EOF
+      fi
+    else
+      echo "ERROR. \"FLOOD_FLOOD_PASSWORD\" variable seems not defined but flood service still has variables defined. Please add the missing variable."
+      exit 1
+    fi
+  fi
+
 
   ###### For services which have "command" field with environment variables ######
   var_in_cmd_detected="0"
