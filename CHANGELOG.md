@@ -1,3 +1,15 @@
+# v2.2.2 (The tiny Flame 🔥)
+
+> Yet another bug resolution
+
+## Bugfixes and improvements ⚙️
+
+* [**script**] When no customization where done on Traefik (custom variable beginning with ``TRAEFIK_`` in ``.env.custom``), the ``run-seedbox.sh`` script failed with error:
+  ```
+  [./run-seedbox.sh] line 320: ./env/traefik.env: No such file or directory
+  ```
+  This bug was introduced in ``v2.2.1`` release and I'm sorry for it. It should work as expected now.
+
 # v2.2.1 (The little Flame 🔥)
 
 > Bugfix release due to errors on some services after v2.2 release.

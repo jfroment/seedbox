@@ -99,7 +99,7 @@ fi
 
 # Sanitize and extract variable (without prefixes) from .env.custom file
 # Input => $1 = app name (exemple traefik)
-# Output => app_name.env written with correct variables (exemple: traefik.env)
+# Output => env/app_name.env written with correct variables (exemple: env/traefik.env)
 extract_custom_env_file() {
   # sed explanation:
   #   1 => Remove all lines starting with a comment (#)
@@ -317,13 +317,16 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
     (
       # Check if these variables are defined in generated .env files (global or custom)
       set -a
-      source ./env/${name}.env
+      # Only source custom envfile if it exists
+      if [[ -f ./env/${name}.env ]]; then
+        source ./env/${name}.env
+      fi
       source .env
       set +a
       while read p; do
         # If the command references a variable which is not known, throw an error
         if [[ -z ${!p+x} ]]; then
-          echo "ERROR. Variable \"$p\" is referenced in \"command\" for service ${name} (file $file) but this variable is not defined in .env (or in .env.custom with prefix \"${name^^}_\"). Please correct it or add a variable which will be used."
+          echo "ERROR. Variable \"$p\" is referenced in \"command\" for service ${name} (file $file) but this variable is not defined in .env (or in .env.custom with prefix \"${name^^}_\" if existing). Please correct it or add a variable which will be used."
           exit 1
         fi
       done < env/${name}-cmd.env.1.tmp
@@ -357,10 +360,13 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
 
   # Workaround for now
   if [[ "${var_in_cmd_detected}" == "1" ]]; then
-    cat ${GLOBAL_ENV_FILE} ./env/${name}.env >> .env.concat.tmp
-    rm -f .env.concat
-    mv .env.concat.tmp .env.concat
-    export GLOBAL_ENV_FILE=".env.concat"
+    # Only concat .env.concat with env/${name}.env if it exists
+    if [[ -f ./env/${name}.env ]]; then
+      cat ${GLOBAL_ENV_FILE} ./env/${name}.env >> .env.concat.tmp
+      rm -f .env.concat
+      mv .env.concat.tmp .env.concat
+      export GLOBAL_ENV_FILE=".env.concat"
+    fi
     var_in_cmd_detected="0"
   fi
 
