@@ -360,10 +360,13 @@ for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
 
   # Workaround for now
   if [[ "${var_in_cmd_detected}" == "1" ]]; then
-    cat ${GLOBAL_ENV_FILE} ./env/${name}.env >> .env.concat.tmp
-    rm -f .env.concat
-    mv .env.concat.tmp .env.concat
-    export GLOBAL_ENV_FILE=".env.concat"
+    # Only concat .env.concat with env/${name}.env if it exists
+    if [[ -f ./env/${name}.env ]]; then
+      cat ${GLOBAL_ENV_FILE} ./env/${name}.env >> .env.concat.tmp
+      rm -f .env.concat
+      mv .env.concat.tmp .env.concat
+      export GLOBAL_ENV_FILE=".env.concat"
+    fi
     var_in_cmd_detected="0"
   fi
 
