@@ -9,6 +9,8 @@
   [./run-seedbox.sh] line 320: ./env/traefik.env: No such file or directory
   ```
   This bug was introduced in ``v2.2.1`` release and I'm sorry for it. It should work as expected now.
+* [**Flood**] Fix #61
+  The feature of Deluge Daemon auth autoconfig was broken since v2.2.0. It should work now and also handle filesystem with different permissions between config directory and media directory.
 
 # v2.2.1 (The little Flame 🔥)
 
