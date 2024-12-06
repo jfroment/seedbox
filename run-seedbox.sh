@@ -253,11 +253,13 @@ CONFIG_JSON=($(yq eval -o json config.yaml | jq -c ".services[]")) # Parenthesis
 CONFIG_JSON_INDEX=0
 
 for json in "${CONFIG_JSON[@]}"; do
-  # Progress indicator with constant width
-  printf "[%s] ***** Processing [%02d / %02d] *****\r" "$0" "$((++CONFIG_JSON_INDEX))" "${#CONFIG_JSON[@]}"
-  # Break progress line if loop is ending
-  if [[ "$CONFIG_JSON_INDEX" -eq "${#CONFIG_JSON[@]}" ]]; then
-    echo ""
+  if [[ ${DEBUG} != "1" ]]; then
+    # Progress indicator with constant width
+    printf "[%s] ***** Processing [%02d / %02d] *****\r" "$0" "$((++CONFIG_JSON_INDEX))" "${#CONFIG_JSON[@]}"
+    # Break progress line if loop is ending
+    if [[ "$CONFIG_JSON_INDEX" -eq "${#CONFIG_JSON[@]}" ]]; then
+      echo ""
+    fi
   fi
   
   name=$(echo $json | jq -r .name)
