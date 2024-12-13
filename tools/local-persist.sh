@@ -17,13 +17,13 @@ if [[ "$UID" != 0 ]]; then
     exit 1
 fi
 
-
-if [[ `git -C "${gitDir}" rev-parse --is-inside-work-tree 2> /dev/null` == "true" ]]; then
-    thisGit=`git -C "${gitDir}" config --get remote.origin.url`
-    thisGit=${thisGit::-4}
-    GITHUB_BINARY_BASE="${thisGit}/releases/download"
-    GITHUB_RAW_BASE="${thisGit/github.com/raw.githubusercontent.com}/releases/download"
-fi
+thisGit=""
+# if [[ `git -C "${gitDir}" rev-parse --is-inside-work-tree 2> /dev/null` == "true" ]]; then
+#     thisGit=`git -C "${gitDir}" config --get remote.origin.url`
+#     thisGit=${thisGit::-4}
+#     GITHUB_BINARY_BASE="${thisGit}/releases/download"
+#     GITHUB_RAW_BASE="${thisGit/github.com/raw.githubusercontent.com}/releases/download"
+# fi
 
 if [[ $thisGit == "" ]]; then
     GITHUB_URL_PARTS="MatchbookLab/local-persist"
