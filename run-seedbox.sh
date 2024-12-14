@@ -249,7 +249,19 @@ ALL_SERVICES="-f docker-compose.yaml"
 GLOBAL_ENV_FILE=".env"
 
 # Parse the config.yaml master configuration file
-for json in $(yq eval -o json config.yaml | jq -c ".services[]"); do
+CONFIG_JSON=($(yq eval -o json config.yaml | jq -c ".services[]")) # Parenthesis to cast as Bash array
+CONFIG_JSON_INDEX=0
+
+for json in "${CONFIG_JSON[@]}"; do
+  if [[ ${DEBUG} != "1" ]]; then
+    # Progress indicator with constant width
+    printf "[%s] ***** Processing [%02d / %02d] *****\r" "$0" "$((++CONFIG_JSON_INDEX))" "${#CONFIG_JSON[@]}"
+    # Break progress line if loop is ending
+    if [[ "$CONFIG_JSON_INDEX" -eq "${#CONFIG_JSON[@]}" ]]; then
+      echo ""
+    fi
+  fi
+  
   name=$(echo $json | jq -r .name)
   enabled=$(echo $json | jq -r .enabled)
   vpn=$(echo $json | jq -r .vpn)
