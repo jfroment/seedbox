@@ -418,6 +418,7 @@ EOF
     host=$(echo $rule | jq -r .host)
     internalPort=$(echo $rule | jq -r .internalPort)
     httpAuth=$(echo $rule | jq -r .httpAuth)
+    internalOnly=$(echo $rule | jq -r .internalOnly)
     echo-debug "[$0]      Host => ${host}"
     echo-debug "[$0]      Internal Port => ${internalPort}"
     echo-debug "[$0]      Http Authentication => ${httpAuth}"
@@ -440,6 +441,11 @@ EOF
     middlewareCount=0
     if [[ ${httpAuth} == "true" ]]; then
       echo "http.routers.${ruleId}.middlewares.${middlewareCount}: common-auth@file" >> rules.props
+      ((middlewareCount=middlewareCount+1))
+    fi
+
+    if [[ ${internalOnly} == "true" ]]; then
+      echo "http.routers.${ruleId}.middlewares.${middlewareCount}: internal-only@file" >> rules.props
       ((middlewareCount=middlewareCount+1))
     fi
 

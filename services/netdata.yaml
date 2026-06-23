@@ -1,19 +1,58 @@
 services:
   netdata:
-    image: netdata/netdata:stable
-    restart: always
+    image: netdata/netdata
     container_name: netdata
-    hostname: netdata.${TRAEFIK_DOMAIN}
-    environment:
-      PGID: 999
+    pid: host
+    network_mode: host
+    restart: unless-stopped
     cap_add:
       - SYS_PTRACE
+      - SYS_ADMIN
     security_opt:
       - apparmor:unconfined
     volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
+      - netdataconfig:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/cache/netdata
+      - /:/host/root:ro,rslave
       - /etc/passwd:/host/etc/passwd:ro
       - /etc/group:/host/etc/group:ro
-      - ${OS_RELEASE_FILEPATH}:/host/etc/os-release:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /var/log:/host/var/log:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /run/dbus:/run/dbus:ro
+
+volumes:
+  netdataconfig:
+  netdatalib:
+  netdatacache:
+
+#services:
+#  netdata:
+#    image: netdata/netdata
+#    restart: always
+#    container_name: netdata
+#    pid: host
+#    network_mode: host
+#    hostname: netdata.${TRAEFIK_DOMAIN}
+    #environment:
+    #  PGID: 999
+#    cap_add:
+#      - SYS_PTRACE
+#      - SYS_ADMIN
+#    security_opt:
+#      - apparmor:unconfined
+#    volumes:
+#      - /proc:/host/proc:ro
+#      - /sys:/host/sys:ro
+#      - /:/host/root:ro,rslave
+#      - /etc/passwd:/host/etc/passwd:ro
+#      - /etc/group:/host/etc/group:ro
+#      - /etc/localtime:/etc/localtime:ro
+#      - ${OS_RELEASE_FILEPATH}:/host/etc/os-release:ro
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#      - /var/log:/host/var/log:ro
+#      - /run/dbus:/run/dbus:ro 

@@ -29,3 +29,11 @@ http:
       redirectScheme:
         scheme: https
         permanent: false
+
+    internal-only:
+      ipAllowList:
+        sourceRange:
+          - "127.0.0.1/32"
+          - "192.168.0.0/24"
+          - "172.16.0.0/12"
+          - "10.0.0.0/8"

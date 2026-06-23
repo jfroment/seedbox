@@ -78,6 +78,8 @@ services:
           httpAuth: true
           # Internal container port on which we want to bind the Traefik routing
           internalPort: 8112
+          # Only accessible via LAN (private IP addresses) => default to false if absent. You should have a DNS server which answers to your TRAEFIK_DOMAIN in your LAN for it to work.
+          internalOnly: true
   # Another service
   - name: flaresolverr
     enabled: true
