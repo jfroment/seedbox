@@ -1,0 +1,7 @@
+# Default values of this service. Do not edit: override them in config.yaml (see doc/configuration.md)
+rules:
+  - host: vaultls.${TRAEFIK_DOMAIN}
+    httpAuth: false
+    internalPort: 80
+    # VaulTLS holds the private keys of your certificates: never expose it on the Internet
+    internalOnly: true

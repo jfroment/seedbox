@@ -1,0 +1,79 @@
+http:
+  routers:
+    netbird-grpc:
+      rule: 'Host(`netbird.{{ env "TRAEFIK_DOMAIN" }}`) && (PathPrefix(`/signalexchange.SignalExchange/`) || PathPrefix(`/management.ManagementService/`) || PathPrefix(`/management.ProxyService/`))'
+      entryPoints:
+        - secure
+      tls:
+        certResolver: le
+      service: netbird-server-h2c
+      priority: 100
+
+    netbird-backend:
+      rule: 'Host(`netbird.{{ env "TRAEFIK_DOMAIN" }}`) && (PathPrefix(`/relay`) || PathPrefix(`/ws-proxy/`) || PathPrefix(`/api`) || PathPrefix(`/oauth2`))'
+      entryPoints:
+        - secure
+      tls:
+        certResolver: le
+      service: netbird-server
+      priority: 100
+
+    netbird-dashboard:
+      rule: 'Host(`netbird.{{ env "TRAEFIK_DOMAIN" }}`)'
+      entryPoints:
+        - secure
+      tls:
+        certResolver: le
+      service: netbird-dashboard
+      priority: 1
+
+  serversTransports:
+    netbird-grpc-transport:
+      forwardingTimeouts:
+        dialTimeout: "30s"
+        responseHeaderTimeout: "0s"
+        idleConnTimeout: "0s"
+
+  services:
+    netbird-server-h2c:
+      loadBalancer:
+        serversTransport: netbird-grpc-transport
+        servers:
+          - url: "h2c://netbird-server:80"
+        passHostHeader: true
+
+    netbird-server:
+      loadBalancer:
+        servers:
+          - url: "http://netbird-server:80"
+        passHostHeader: true
+
+    netbird-dashboard:
+      loadBalancer:
+        servers:
+          - url: "http://netbird-dashboard:80"
+        passHostHeader: true
+
+#########################################################
+##################### NETBIRD-PROXY #####################
+#########################################################
+tcp:
+  routers:
+    proxy-passthrough:
+      entryPoints: ["secure"]
+      rule: "HostSNI(`*`)"
+      tls:
+        passthrough: true
+      service: proxy-tls
+      priority: 1
+  services:
+    proxy-tls:
+      loadBalancer:
+        serverstransport: pp-v2
+        servers:
+          - address: "netbird-proxy:8443"
+
+  serversTransports:
+    pp-v2:
+      proxyProtocol:
+        version: 2

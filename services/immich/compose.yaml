@@ -1,0 +1,65 @@
+services:
+
+  immich:
+    image: ghcr.io/imagegenius/immich:latest
+    container_name: immich
+    restart: always
+    depends_on:
+      - immich-db
+      - immich-redis
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - DB_HOSTNAME=immich-db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_DATABASE_NAME=immich
+      - REDIS_HOSTNAME=immich-redis
+      - DISABLE_MACHINE_LEARNING=false
+      - DISABLE_TYPESENSE=false
+      - DB_PORT=5432
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+      - CUDA_ACCELERATION=false
+    volumes:
+      - immichconfig:/config
+      - photos:/photos
+      - immichconfigmachinelearning:/config/machine-learning
+
+  immich-redis:
+    image: redis:7.0
+    container_name: immich-redis
+    restart: always
+
+  immich-db:
+    image: postgres:14.8
+    container_name: immich-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: immich
+    volumes:
+      - immichdbdata:/var/lib/postgresql/data
+
+volumes:
+  immichdbdata:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/immich-db
+
+  immichconfig:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/immich-config
+
+  immichconfigmachinelearning:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/immich-machine-learning
+
+  photos:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_MEDIA_PATH/Photos

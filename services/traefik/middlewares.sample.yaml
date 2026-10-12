@@ -1,0 +1,35 @@
+http:
+  middlewares:
+    # Middleware applied globally at the entrypoint level (applied to all routers using "secure" entrypoint)
+    security-headers:
+      headers:
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsSeconds: 31536000
+
+        referrerPolicy: "same-origin"
+        featurePolicy: "vibrate 'self'; geolocation 'self'; midi 'self'; notifications 'self'; push 'self'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'self'; fullscreen 'self'"
+
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+
+        customresponseheaders:
+          X-Frame-Options: sameorigin
+          Content-Security-Policy: frame-ancestors https://*.{{ env "TRAEFIK_DOMAIN" }}
+        customrequestheaders:
+          X-Frame-Options: sameorigin
+          Content-Security-Policy: frame-ancestors https://*.{{ env "TRAEFIK_DOMAIN" }}
+
+    # Middlewares which are used automatically by the run-seedbox.sh script according to the parameters applied
+    common-auth:
+      basicAuth:
+        usersFile: "/etc/traefik/http_auth"
+
+    internal-only:
+      ipAllowList:
+        sourceRange:
+          - "127.0.0.1/32"
+          - "192.168.0.0/24"
+          - "172.16.0.0/12"
+          - "10.0.0.0/8"

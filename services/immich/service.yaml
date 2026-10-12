@@ -1,0 +1,5 @@
+# Default values of this service. Do not edit: override them in config.yaml (see doc/configuration.md)
+rules:
+  - host: immich.${TRAEFIK_DOMAIN}
+    httpAuth: false
+    internalPort: 8080

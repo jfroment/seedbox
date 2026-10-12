@@ -1,0 +1,21 @@
+services:
+  jackett:
+    image: ghcr.io/linuxserver/jackett
+    container_name: jackett
+    restart: always
+    volumes:
+      # Only the directory of Jackett, not the whole config directory: the image takes ownership of everything in /config
+      - configjackett:/config/Jackett
+      - torrents:/downloads
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+      - RUN_OPTS='-FlareSolverrURL="http://flaresolverr:8191"'
+
+volumes:
+  configjackett:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/Jackett

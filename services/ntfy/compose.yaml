@@ -1,0 +1,32 @@
+services:
+  ntfy:
+    image: binwiederhier/ntfy
+    container_name: ntfy
+    restart: always
+    user: ${PUID}:${PGID}
+    command:
+      - serve
+    environment:
+      TZ: ${TZ}
+      NTFY_BASE_URL: https://ntfy.${TRAEFIK_DOMAIN}
+      NTFY_LISTEN_HTTP: :2586
+      NTFY_BEHIND_PROXY: true
+      NTFY_CACHE_FILE: /var/cache/ntfy/cache.db
+      NTFY_ATTACHMENT_CACHE_DIR: /var/cache/ntfy/attachments
+      NTFY_AUTH_FILE: /var/lib/ntfy/auth.db
+      NTFY_AUTH_DEFAULT_ACCESS: deny-all
+      NTFY_ENABLE_LOGIN: true
+      #NTFY_AUTH_USERS: "" # set it in your services/ntfy/custom/service.env
+    volumes:
+      - ntfycache:/var/cache/ntfy
+      - ntfyauth:/var/lib/ntfy
+    
+volumes:
+  ntfycache:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/ntfy-cache
+  ntfyauth:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/ntfy-auth

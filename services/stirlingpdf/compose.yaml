@@ -1,0 +1,25 @@
+services:
+  stirlingpdf:
+    image: stirlingtools/stirling-pdf:latest
+    container_name: stirlingpdf
+    restart: always
+    volumes:
+      - stirlingpdfocr:/usr/share/tessdata # Required for extra OCR languages
+      - stirlingpdfconfig:/configs
+      - stirlingpdfextra:/customFiles/
+
+volumes:
+  stirlingpdfocr:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/stirlingpdf-ocr
+  
+  stirlingpdfconfig:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/stirlingpdf-config
+
+  stirlingpdfextra:
+    driver: local-persist
+    driver_opts:
+      mountpoint: $HOST_CONFIG_PATH/stirlingpdf-extra
