@@ -45,6 +45,7 @@ All disabled by default in ``config.sample.yaml``, except Seerr.
 * ``Stirling PDF`` and ``BentoPDF``: PDF tools
 * ``Vaultwarden``: [Passwords manager](https://github.com/dani-garcia/vaultwarden)
 * ``VaulTLS``: [Client certificates management](https://github.com/7ritn/VaulTLS), see [documentation](doc/apps/vaultls.md)
+* ``FileBrowser Quantum``: [Files explorer](https://github.com/gtsteffaniak/filebrowser), which replaces Filebrowser under the same service name (``filebrowser``), see [documentation](doc/apps/filebrowser.md)
 * ``Dockhand``: Containers management, which replaces Portainer, see [documentation](doc/apps/dockhand.md)
 * ``Wireguard``: [VPN server](https://github.com/linuxserver/docker-wireguard)
 * ``Netbird``: [Mesh VPN and public reverse proxy with access control](https://github.com/netbirdio/netbird), with CrowdSec and automatic export of Traefik certificates (**experimental**, see [documentation](doc/apps/netbird.md))
@@ -66,7 +67,7 @@ All disabled by default in ``config.sample.yaml``, except Seerr.
 * [**Nextcloud**] MariaDB is now enabled in the sample configuration, as Nextcloud requires it.
 * [**init**] Fix #68: ``local-persist`` driver is not installed anymore (see above).
 * [**script**] ``CHECK_FOR_OUTDATED_CONFIG`` variable is removed: you are now warned each time a sample file changes, and ``tools/sync-templates.sh diff`` shows you what changed.
-* [**doc**] New [V3 Migration Guide](doc/UPGRADE_V3.md), [Netbird](doc/apps/netbird.md), [VaulTLS](doc/apps/vaultls.md), [Dockhand](doc/apps/dockhand.md) and [Plex](doc/apps/plex.md) guides. [Configuration Guide](doc/configuration.md) rewritten for the new organization.
+* [**doc**] New [V3 Migration Guide](doc/UPGRADE_V3.md), [Netbird](doc/apps/netbird.md), [VaulTLS](doc/apps/vaultls.md), [Dockhand](doc/apps/dockhand.md), [FileBrowser Quantum](doc/apps/filebrowser.md) and [Plex](doc/apps/plex.md) guides. [Configuration Guide](doc/configuration.md) rewritten for the new organization.
 * Fix typos in ``.env.sample`` and broken links in ``README.md``.
 
 ## Upgrade notes ⚠️
@@ -76,6 +77,7 @@ All disabled by default in ``config.sample.yaml``, except Seerr.
 * [**Removed services**] ``Overseerr``, ``Readarr``, ``Ombi``, ``Homarr`` and ``Portainer`` are not bundled anymore: these projects are discontinued, or replaced here by another service. If one of them is enabled in your ``config.yaml``, the script stops because its file does not exist anymore.
   * Replacements: Seerr for Overseerr and Ombi (rename ``overseerr`` to ``seerr``, and see the [Seerr migration guide](https://docs.seerr.dev/migration-guide) to keep your data), Dockhand for Portainer, Homepage or Heimdall for Homarr.
   * Still need one of them? Keep it as your own service, in one command: see [Removed services](doc/UPGRADE_V3.md#after-the-migration) and [Add your own service](doc/configuration.md#add-your-own-service).
+* [**Filebrowser**] The original Filebrowser is discontinued (archived repository): the ``filebrowser`` service now runs FileBrowser Quantum. It is another application, so users, settings and shares are not migrated (your files are not affected). A password is now required for its ``admin`` user (``services/filebrowser/custom/service.env``, the script asks for it), its data is in ``$HOST_CONFIG_PATH/filebrowser-quantum`` and its default rule has no http authentication anymore, as the application has its own. See [its documentation](doc/apps/filebrowser.md#coming-from-the-previous-filebrowser).
 * [**Docker Compose**] Docker Compose v2 (``docker compose`` command, 2.27.2 or above) is now required. The ``DOCKER_COMPOSE_BINARY`` variable is removed and the old ``docker-compose`` binary is not supported anymore.
 * [**Docker Compose**] If the directory of your seedbox is not named ``seedbox``, the new project name requires to remove and create all containers again (not their data): the script asks you before doing it. Set ``COMPOSE_PROJECT_NAME`` in your ``.env`` to keep the previous name instead. See the [V3 Migration Guide](doc/UPGRADE_V3.md#after-the-migration).
 * [**local-persist**] Your ``docker-compose.yaml`` and your own services may still use volumes of the plugin: they keep working as long as it is installed, and the script lists them. See [how to get rid of it](doc/UPGRADE_V3.md#local-persist-plugin).

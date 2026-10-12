@@ -1,5 +1,6 @@
 # Default values of this service. Do not edit: override them in config.yaml (see doc/configuration.md)
 rules:
   - host: files.${TRAEFIK_DOMAIN}
-    httpAuth: true
+    # FileBrowser Quantum has its own authentication
+    httpAuth: false
     internalPort: 8234

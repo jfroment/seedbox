@@ -1,16 +1,18 @@
 services:
-  homepage:
-    image: filebrowser/filebrowser:s6
+  filebrowser:
+    image: ghcr.io/gtsteffaniak/filebrowser:stable
     container_name: filebrowser
     restart: unless-stopped
+    user: ${PUID}:${PGID}
     volumes:
-      - ${HOST_CONFIG_PATH}/filebrowser/config:/config
-      - ${HOST_CONFIG_PATH}/filebrowser/db:/database
+      # Database and cache
+      - ${HOST_CONFIG_PATH}/filebrowser-quantum:/home/filebrowser/data
+      # Your configuration file, created from config.sample.yaml
+      - ./services/filebrowser/custom/config.yaml:/home/filebrowser/config.yaml:ro
       - torrents:/srv
     environment:
-      - PGID=${PGID}
-      - PUID=${PUID}
       - TZ=${TZ}
+      - FILEBROWSER_CONFIG=/home/filebrowser/config.yaml
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8234/health"]
       interval: 30s

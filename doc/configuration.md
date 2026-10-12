@@ -592,6 +592,7 @@ List of currently available documentation for apps:
 
 - [Deluge + Flood](apps/deluge-flood.md): configuration of Deluge so Flood can connect to it
 - [Dockhand](apps/dockhand.md): containers management, and how to give it access to the Docker socket
+- [FileBrowser Quantum](apps/filebrowser.md): installation, configuration and what changes from the previous Filebrowser
 - [Plex](apps/plex.md): how to reach it (host network) and publish it on ``plex.yourdomain.com``
 - [Netbird](apps/netbird.md): private network and public reverse proxy with access control (CrowdSec, certificates...)
 - [VaulTLS](apps/vaultls.md): client certificates (mTLS) to restrict a service to your own devices

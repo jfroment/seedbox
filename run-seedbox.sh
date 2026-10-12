@@ -555,8 +555,9 @@ create_data_dir() {
   mkdir -p ${dir} 2>/dev/null || return 1
   echo "[$0] Created directory ${dir}"
   if [[ -n ${PUID} && -n ${PGID} && "$(id -u):$(id -g)" != "${PUID}:${PGID}" ]]; then
-    # Another user than the one running this script: only root can do it (sudo is used if it does not ask for a password)
-    if ! chown -R ${PUID}:${PGID} ${top} 2>/dev/null && ! sudo -n chown -R ${PUID}:${PGID} ${top} 2>/dev/null; then
+    # Another user than the one running this script: only root can do it, so it is done from a small container
+    if ! chown -R ${PUID}:${PGID} ${top} 2>/dev/null \
+       && ! docker run --rm --network none -v ${top}:/target busybox chown -R ${PUID}:${PGID} /target >/dev/null 2>&1; then
       DIRS_TO_CHOWN="${DIRS_TO_CHOWN} ${top}"
     fi
   fi

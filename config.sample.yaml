@@ -59,6 +59,7 @@ services:
   # Database required by Nextcloud
   mariadb:
   nextcloud:
+  # FileBrowser Quantum: see doc/apps/filebrowser.md
   filebrowser:
     enabled: false
   paperless:

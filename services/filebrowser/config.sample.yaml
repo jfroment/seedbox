@@ -1,0 +1,21 @@
+# Configuration of FileBrowser Quantum. Your copy of this file is services/filebrowser/custom/config.yaml: it is
+# created when the service is enabled, and mounted in the container.
+# All options: https://filebrowserquantum.com/en/docs/getting-started/config/
+http:
+  # Port used by the Traefik rule of the service (see service.yaml) and by its healthcheck: do not change it
+  port: 8234
+  baseURL: "/"
+server:
+  cacheDir: /home/filebrowser/data/tmp
+  # Directories you can browse: paths inside the container (see "volumes" in compose.yaml)
+  sources:
+    - path: /srv
+      config:
+        defaultEnabled: true
+auth:
+  adminUsername: admin
+  # Set in services/filebrowser/custom/service.env
+  adminPassword: "${FILEBROWSER_ADMIN_PASSWORD}"
+  methods:
+    password:
+      enabled: true

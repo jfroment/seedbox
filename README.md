@@ -57,7 +57,7 @@ Still on version 1? Upgrade to v2.2.2 first (``git checkout v2.2.2``), with the 
 | Tdarr            | tdarr.yourdomain.com   | [haveagitgat/tdarr](https://hub.docker.com/r/haveagitgat/tdarr)  | *latest*                | Re-encode files |
 | NextCloud            | nextcloud.yourdomain.com   | [linuxserver/nextcloud](https://hub.docker.com/r/linuxserver/nextcloud)  | *latest*                | Files management    |
 | NextCloud-db (MariaDB) | *not reachable*   | [mariadb](https://hub.docker.com/r/_/mariadb)  | *10*                | DB for Nextcloud    |
-| Filebrowser | files.yourdomain.com | [filebrowser/filebrowser](https://hub.docker.com/r/filebrowser/filebrowser)  | *s6*                | Files explorer  |
+| FileBrowser Quantum | files.yourdomain.com | [gtsteffaniak/filebrowser](https://ghcr.io/gtsteffaniak/filebrowser)  | *stable*                | Files explorer, see [documentation](doc/apps/filebrowser.md)  |
 | Paperless-ngx  | paperless.yourdomain.com | [paperless-ngx/paperless-ngx](https://ghcr.io/paperless-ngx/paperless-ngx) | *latest* | Documents management and archiving (**BETA**) |
 | Netdata              | - (port 19999 of the host) | [netdata/netdata](https://hub.docker.com/r/netdata/netdata)            | *latest*                | Server monitoring   |
 | Duplicati            | duplicati.yourdomain.com   | [linuxserver/duplicati](https://hub.docker.com/r/linuxserver/duplicati)| *latest*                | Backups             |
