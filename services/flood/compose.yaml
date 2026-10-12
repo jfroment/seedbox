@@ -1,0 +1,20 @@
+services:
+  flood:
+    image: jesec/flood:latest
+    container_name: flood
+    restart: unless-stopped
+    depends_on:
+      - deluge
+    user: ${PUID}:${PGID}
+    command:
+      - --auth=none
+      - --dehost=${DELUGE_HOST}
+      - --deport=58846
+      - --deuser=flood
+      - --depass=${FLOOD_PASSWORD}
+      - --rundir=/config
+    volumes:
+      - ${HOST_CONFIG_PATH}/flood:/config
+      - torrents:/torrents
+      - downloads:/downloads
+      - /etc/localtime:/etc/localtime:ro

@@ -1,0 +1,13 @@
+services:
+  tautulli:
+    image: ghcr.io/linuxserver/tautulli
+    container_name: tautulli
+    restart: unless-stopped
+    volumes:
+      - ${HOST_CONFIG_PATH}/tautulli:/config
+      # Logs of Plex, to set in Tautulli settings: "/plex/Library/Application Support/Plex Media Server/Logs"
+      - ${HOST_CONFIG_PATH}/Plex:/plex:ro
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}

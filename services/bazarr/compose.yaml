@@ -1,0 +1,12 @@
+services:
+  bazarr:
+    image: ghcr.io/linuxserver/bazarr
+    container_name: bazarr
+    restart: unless-stopped
+    volumes:
+      - torrents:/torrents
+      - ${HOST_CONFIG_PATH}/bazarr:/config
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}

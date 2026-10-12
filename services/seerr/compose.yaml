@@ -1,0 +1,13 @@
+services:
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    container_name: seerr
+    restart: unless-stopped
+    init: true
+    user: ${PUID}:${PGID}
+    volumes:
+      - ${HOST_CONFIG_PATH}/seerr:/app/config
+    environment:
+      - TZ=${TZ}
+    dns:
+      - 9.9.9.9

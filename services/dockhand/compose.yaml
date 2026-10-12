@@ -1,0 +1,13 @@
+services:
+  dockhand:
+    image: fnsys/dockhand:latest
+    container_name: dockhand
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - HTTPS_MODE=off
+    volumes:
+      # The container must be in the group which owns the socket: see doc/apps/dockhand.md
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${HOST_CONFIG_PATH}/dockhand:/app/data

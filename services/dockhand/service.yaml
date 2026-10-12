@@ -1,0 +1,6 @@
+# Default values of this service. Do not edit: override them in config.yaml (see doc/configuration.md)
+rules:
+  - host: dockhand.${TRAEFIK_DOMAIN}
+    httpAuth: false
+    internalOnly: true
+    internalPort: 3000

@@ -1,0 +1,12 @@
+services:
+  komga:
+    image: gotson/komga
+    container_name: komga
+    restart: unless-stopped
+    volumes:
+      - ${HOST_CONFIG_PATH}/komga:/config
+      - torrents:/torrents
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - TZ=${TZ}
+    user: "${PUID}:${PGID}"

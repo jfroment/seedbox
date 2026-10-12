@@ -1,0 +1,13 @@
+services:
+  radarr:
+    image: ghcr.io/linuxserver/radarr:develop
+    container_name: radarr
+    restart: unless-stopped
+    volumes:
+      - ${HOST_CONFIG_PATH}/radarr:/config
+      - torrents:/torrents
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}

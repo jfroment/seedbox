@@ -1,0 +1,12 @@
+services:
+  jdownloader:
+    image: jlesage/jdownloader-2
+    container_name: jdownloader
+    restart: unless-stopped
+    volumes:
+      - ${HOST_CONFIG_PATH}/jdownloader:/config
+      - downloads:/output
+    environment:
+      - USER_ID=${PUID}
+      - GROUP_ID=${PGID}
+      - TZ=${TZ}

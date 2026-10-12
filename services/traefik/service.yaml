@@ -1,0 +1,6 @@
+# Default values of this service. Do not edit: override them in config.yaml (see doc/configuration.md)
+rules:
+  - host: traefik.${TRAEFIK_DOMAIN}
+    service: api@internal
+    httpAuth: true
+    internalOnly: true

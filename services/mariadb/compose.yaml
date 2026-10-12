@@ -1,0 +1,13 @@
+services:
+  mariadb:
+      image: mariadb:10
+      container_name: mariadb
+      command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --innodb-file-per-table=1 --skip-innodb-read-only-compressed
+      user: ${PUID}:${PGID}
+      restart: unless-stopped
+      environment:
+        - TZ=${TZ}
+      volumes: 
+        - ${HOST_CONFIG_PATH}/nextcloud-db:/var/lib/mysql
+      labels:
+        - "traefik.enable=false"

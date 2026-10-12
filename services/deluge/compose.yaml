@@ -1,0 +1,13 @@
+services:
+  deluge:
+    image: ghcr.io/linuxserver/deluge
+    container_name: deluge
+    restart: unless-stopped
+    volumes:
+      - torrents:/torrents
+      - ${HOST_CONFIG_PATH}/deluge:/config
+      - downloads:/downloads
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}

@@ -1,0 +1,11 @@
+services:
+  prowlarr:
+    image: ghcr.io/linuxserver/prowlarr:develop
+    container_name: prowlarr
+    restart: unless-stopped
+    volumes:
+      - ${HOST_CONFIG_PATH}/prowlarr:/config
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}

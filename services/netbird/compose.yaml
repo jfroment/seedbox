@@ -1,0 +1,129 @@
+services:
+  netbird-dashboard:
+    image: netbirdio/dashboard:latest
+    container_name: netbird-dashboard
+    restart: unless-stopped
+    environment:
+      # Endpoints
+      - NETBIRD_MGMT_API_ENDPOINT=https://netbird.${TRAEFIK_DOMAIN}
+      - NETBIRD_MGMT_GRPC_API_ENDPOINT=https://netbird.${TRAEFIK_DOMAIN}
+      # OIDC - using embedded IdP
+      - AUTH_AUDIENCE=netbird-dashboard
+      - AUTH_CLIENT_ID=netbird-dashboard
+      - AUTH_CLIENT_SECRET=
+      - AUTH_AUTHORITY=https://netbird.${TRAEFIK_DOMAIN}/oauth2
+      - USE_AUTH0=false
+      - AUTH_SUPPORTED_SCOPES=openid profile email groups
+      - AUTH_REDIRECT_URI=/nb-auth
+      - AUTH_SILENT_REDIRECT_URI=/nb-silent-auth
+      # SSL - disabled when behind reverse proxy (Traefik handles TLS)
+      - NGINX_SSL_PORT=443
+      - LETSENCRYPT_DOMAIN=none
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500m"
+        max-file: "2"
+
+  netbird-server:
+    image: netbirdio/netbird-server:latest
+    container_name: netbird-server
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:8081:80'
+      - '3478:3478/udp'
+    volumes:
+      - ${HOST_CONFIG_PATH}/netbird:/var/lib/netbird
+      - ./services/netbird/custom/config.yaml:/etc/netbird/config.yaml
+    command: ["--config", "/etc/netbird/config.yaml"]
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500m"
+        max-file: "2"
+
+  netbird-docker-agent:
+    image: netbirdio/netbird:latest
+    container_name: netbird-docker-agent
+    cap_add:
+        - NET_ADMIN
+        - SYS_ADMIN
+        - SYS_RESOURCE
+    restart: unless-stopped
+    volumes:
+      - ${HOST_CONFIG_PATH}/netbird-docker-agent:/var/lib/netbird
+    env_file:
+      - ./services/netbird/custom/docker-agent.env
+    environment:
+      - NB_MANAGEMENT_URL=https://netbird.${TRAEFIK_DOMAIN}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500m"
+        max-file: "2"
+
+  traefik-certs-dumper:
+    image: ldez/traefik-certs-dumper:latest
+    container_name: traefik-certs-dumper
+    depends_on:
+      - traefik
+    restart: unless-stopped
+    volumes:
+      - ${HOST_CONFIG_PATH}/traefik:/traefik:ro
+      - ${HOST_CONFIG_PATH}/traefik-certificates:/dump
+    # Certificates must stay readable by netbird-proxy (user 1000) even when the owner of the files is changed
+    # afterwards: some containers set the owner of the whole config directory to PUID:PGID when they start.
+    # So the hook gives the files to the user of the proxy, and read access to the PGID group (the proxy is in it).
+    entrypoint:
+      - sh
+      - -c
+      - |
+        printf '#!/bin/sh\nchown -R 1000:%s /dump\nchmod -R g+rX /dump\n' "${PGID}" > /usr/local/bin/post-hook
+        chmod +x /usr/local/bin/post-hook
+        exec traefik-certs-dumper file --watch --version v3 --clean=false --source /traefik/acme.json --dest /dump --domain-subdir --crt-name ${TRAEFIK_DOMAIN} --key-name ${TRAEFIK_DOMAIN} --post-hook /usr/local/bin/post-hook
+
+  netbird-crowdsec:
+    image: crowdsecurity/crowdsec
+    container_name: netbird-crowdsec
+    restart: unless-stopped
+    environment:
+      COLLECTIONS: crowdsecurity/linux
+      GID: "${GUID-1000}"
+    volumes:
+      - ${HOST_CONFIG_PATH}/crowdsec-config:/etc/crowdsec
+      - ${HOST_CONFIG_PATH}/crowdsec-data:/var/lib/crowdsec/data
+    healthcheck:
+      test: ["CMD", "cscli", "lapi", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500m"
+        max-file: "2"
+
+  netbird-proxy:
+    image: netbirdio/reverse-proxy:latest
+    container_name: netbird-proxy
+    restart: unless-stopped
+    depends_on:
+      - traefik-certs-dumper
+      - netbird-server
+      - netbird-crowdsec
+    env_file:
+      - ./services/netbird/custom/proxy.env
+      - .env
+    environment:
+      - NB_PROXY_DOMAIN=${TRAEFIK_DOMAIN}
+      - NB_PROXY_CERTIFICATE_DIRECTORY=/certs/*.${TRAEFIK_DOMAIN}
+      - NB_PROXY_CERTIFICATE_FILE=${TRAEFIK_DOMAIN}.crt
+      - NB_PROXY_CERTIFICATE_KEY_FILE=${TRAEFIK_DOMAIN}.key
+      - NB_PROXY_MANAGEMENT_ADDRESS=http://netbird-server:80
+      - NB_PROXY_ACME_CERTIFICATES=false
+      - NB_PROXY_ALLOW_INSECURE=true
+    # See traefik-certs-dumper: access to the certificates through the PGID group
+    group_add:
+      - "${PGID}"
+    volumes:
+      - ${HOST_CONFIG_PATH}/traefik-certificates:/certs:ro

@@ -1,0 +1,12 @@
+services:
+  lidarr:
+    image: ghcr.io/linuxserver/lidarr:develop
+    container_name: lidarr
+    restart: unless-stopped
+    volumes:
+      - ${HOST_CONFIG_PATH}/lidarr:/config
+      - torrents:/torrents
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}

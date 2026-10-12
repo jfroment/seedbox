@@ -1,0 +1,16 @@
+services:
+  vaultwarden:
+    image: ghcr.io/dani-garcia/vaultwarden:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    volumes:
+      - ${HOST_CONFIG_PATH}/vaultwarden:/data
+    environment:
+      - DOMAIN=https://vault.${TRAEFIK_DOMAIN}
+      - SIGNUPS_ALLOWED=false
+      - INVITATIONS_ALLOWED=true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500m"
+        max-file: "2"

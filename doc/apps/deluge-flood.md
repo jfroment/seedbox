@@ -2,7 +2,8 @@
 
 Here is the recommended configuration for Deluge to work with Flood:
 
-- In your ``.env`` configuration file, check that both ``FLOOD_PASSWORD`` and ``FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON`` variables are set and that ``FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON`` is ``true``.
+- In your ``.env`` configuration file, check that ``FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON`` is ``true``.
+- In ``services/flood/custom/service.env`` (created when Flood is enabled), set ``FLOOD_PASSWORD``.
 - Check in your ``config.yaml`` that both ``Deluge`` and ``Flood`` are enabled.
 - Run the stack: ``./run-seedbox.sh``
 - Wait for services to be up and running.

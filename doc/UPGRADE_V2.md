@@ -1,5 +1,7 @@
 # Upgrade to V2
 
+> **This guide only works with the version 2 of the seedbox.** The migration tool it uses (``tools/config-updater``) was removed in version 3. If you are still on version 1: run ``git checkout v2.2.2``, follow this guide, check that everything works, then upgrade to the latest version with the [V3 Migration Guide](UPGRADE_V3.md).
+
 **Seedbox version 2 is here!** 🔥
 
 Since there are some breaking changes and a configuration structure migration, a major version was mandatory.
@@ -45,7 +47,7 @@ And also:
 
 * ``update-all.sh`` is now called ``run-seedbox.sh`` but its purpose is the same.
 * More checks in ``run-seedbox.sh``. For example, throws an error if Flood is enabled but not Deluge, or if VPN is enabled on a service but the VPN client is not.
-* You can now specify where your data lives on your host through new environments variables (see [.env.sample](.env.sample)).
+* You can now specify where your data lives on your host through new environments variables (see [.env.sample](../.env.sample)).
   * This change is backward-compatible as the ``run-seedbox.sh`` script will default to the old "/data/torrents" and "/data/config" paths if these variables are not set.
 * ``networks:`` section is now aligned with the new docker compose syntax
 * ⚠️ Nextcloud-db has moved. It is now in ``/data/config`` (or somewhere else if you set the new variables for host paths) (see below how to mitigate the errors). [See the dedicated section below](#nextcloud-db-has-moved).

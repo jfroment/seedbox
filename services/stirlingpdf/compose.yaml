@@ -1,0 +1,9 @@
+services:
+  stirlingpdf:
+    image: stirlingtools/stirling-pdf:latest
+    container_name: stirlingpdf
+    restart: unless-stopped
+    volumes:
+      - ${HOST_CONFIG_PATH}/stirlingpdf-ocr:/usr/share/tessdata # Required for extra OCR languages
+      - ${HOST_CONFIG_PATH}/stirlingpdf-config:/configs
+      - ${HOST_CONFIG_PATH}/stirlingpdf-extra:/customFiles/

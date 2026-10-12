@@ -1,0 +1,9 @@
+services:
+  vaultls:
+    image: ghcr.io/7ritn/vaultls:latest
+    container_name: vaultls
+    restart: unless-stopped
+    environment:
+      - VAULTLS_URL=https://vaultls.${TRAEFIK_DOMAIN}/
+    volumes:
+      - ${HOST_CONFIG_PATH}/vaultls:/app/data

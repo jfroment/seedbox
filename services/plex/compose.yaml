@@ -1,0 +1,14 @@
+services:
+  plex:
+    image: ghcr.io/linuxserver/plex
+    container_name: plex
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ${HOST_CONFIG_PATH}/Plex:/config
+      - torrents:/torrents
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+      - VERSION=latest

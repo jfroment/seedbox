@@ -1,0 +1,13 @@
+services:
+  calibre:
+    image: ghcr.io/linuxserver/calibre
+    container_name: calibre
+    restart: unless-stopped
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+      - CLI_ARGS=
+    volumes:
+      - ${HOST_CONFIG_PATH}/calibre:/config
+      - torrents:/torrents

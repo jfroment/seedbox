@@ -1,0 +1,8 @@
+# Default values of this service. Do not edit: override them in config.yaml (see doc/configuration.md)
+requires:
+  - mariadb
+rules:
+  - host: nextcloud.${TRAEFIK_DOMAIN}
+    httpAuth: false
+    internalPort: 443
+    internalScheme: https

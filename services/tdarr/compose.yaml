@@ -1,0 +1,37 @@
+services:
+  tdarr:
+    image: haveagitgat/tdarr:latest
+    container_name: tdarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - serverIP=0.0.0.0
+      - serverPort=8266
+      - webUIPort=8265
+    volumes:
+      - torrents:/media
+      - ${HOST_CONFIG_PATH}/tdarrv2/transcodes:/temp
+      - ${HOST_CONFIG_PATH}/tdarrv2/server:/app/server
+      - ${HOST_CONFIG_PATH}/tdarrv2/configs:/app/configs
+
+  tdarr_node:
+    image: haveagitgat/tdarr_node:latest
+    container_name: tdarr_node
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - nodeID=Node1
+      - nodeIP=tdarr_node
+      - nodePort=8267
+      - serverIP=tdarr
+      - serverPort=8266
+    volumes:
+      - torrents:/media
+      - ${HOST_CONFIG_PATH}/tdarrv2/transcodes:/temp
+      - ${HOST_CONFIG_PATH}/tdarrv2/configs:/app/configs
+    labels:
+      - "traefik.enable=false"

@@ -1,0 +1,44 @@
+#############################################################################
+## Services are now located in separate files, in the services directory.  ##
+#############################################################################
+
+# Name of the Docker Compose project: do not change it once your containers exist (see COMPOSE_PROJECT_NAME in .env)
+name: seedbox
+
+# Common network used by all services
+networks: 
+  default:
+    name: "traefik-network"
+    # Uncomment if a service needs a static IP (Netbird needs to know the IP of Traefik for example).
+    # Dynamic IPs are then only taken in "ip_range", and the rest of the subnet is kept for the static IPs
+    # you set with a compose.override.yaml: no other container can take them.
+    # The network must be recreated to apply this change: see doc/configuration.md#static-ip-for-a-service
+    # ipam:
+    #   config:
+    #     - subnet: 172.18.0.0/16
+    #       gateway: 172.18.0.1
+    #       ip_range: 172.18.128.0/17
+
+# Media volumes, shared by services ("torrents:/torrents" in their files): here, on a NFS share
+volumes:
+  torrents:
+    driver_opts:
+      type: nfs
+      # Add NFS_IP to your .env with the corresponding value
+      o: addr=$NFS_IP,nolock,soft,nfsvers=4
+      # Add NFS_MEDIA_VOLUME to your .env with the corresponding value
+      device: $NFS_MEDIA_VOLUME
+  downloads:
+    driver_opts:
+      type: nfs
+      # Add NFS_IP to your .env with the corresponding value
+      o: addr=$NFS_IP,nolock,soft,nfsvers=4
+      # Add NFS_MEDIA_VOLUME to your .env with the corresponding value
+      device: $NFS_MEDIA_VOLUME/$DOWNLOAD_SUBFOLDER
+  documents:
+    driver_opts:
+      type: nfs
+      # Add NFS_IP to your .env with the corresponding value
+      o: addr=$NFS_IP,nolock,soft,nfsvers=4
+      # Add NFS_MEDIA_VOLUME to your .env with the corresponding value
+      device: $NFS_MEDIA_VOLUME/$DOCUMENTS_SUBFOLDER

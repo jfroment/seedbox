@@ -1,0 +1,41 @@
+api:
+  dashboard: true
+# Set Access logs timezone
+# accessLog:
+#   fields:
+#     names:
+#       StartUTC: drop
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    network: "traefik-network"
+    exposedByDefault: false # Only expose explicitly enabled containers
+  file:
+    directory: /etc/traefik/dynamic
+    watch: true
+entryPoints:
+  insecure:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: secure
+          scheme: https
+  secure:
+    address: ":443"
+    http:
+      tls:
+        certResolver: le
+      middlewares:
+        - security-headers@file
+# Allow self-signed certificates for https backends (nextcloud for example)
+serversTransport:
+  insecureSkipVerify: true
+certificatesResolvers:
+  le:
+    acme:
+      storage: /config/acme.json
+      httpChallenge:
+        # used during the challenge
+        entryPoint: insecure
+

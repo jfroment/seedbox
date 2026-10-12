@@ -1,0 +1,7 @@
+services:
+  actual:
+    image: ghcr.io/actualbudget/actual-server:latest
+    container_name: actual
+    restart: unless-stopped
+    volumes:
+      - ${HOST_CONFIG_PATH}/actual:/data

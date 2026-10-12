@@ -1,0 +1,12 @@
+services:
+  qbittorrent:
+    image: ghcr.io/hotio/qbittorrent
+    container_name: qbittorrent
+    restart: unless-stopped
+    volumes:
+      - torrents:/torrents
+      - ${HOST_CONFIG_PATH}/qbittorrent:/config
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}

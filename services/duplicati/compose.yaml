@@ -1,0 +1,13 @@
+services:
+  duplicati:
+    image: ghcr.io/linuxserver/duplicati
+    container_name: duplicati
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${HOST_CONFIG_PATH}/duplicati:/config
+      - ${HOST_CONFIG_PATH}/backups:/backups
+      - ${HOST_CONFIG_PATH}:/source

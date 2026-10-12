@@ -1,0 +1,14 @@
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin
+    container_name: jellyfin
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - ${HOST_CONFIG_PATH}/jellyfin:/config
+      - torrents:/torrents

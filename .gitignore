@@ -1,25 +1,24 @@
 .DS_Store
 
-**/tunnel-options.sh
 **/.env
-**/traefik/http_auth
 backup/
-services.conf
-
-traefik/custom/dynamic*.yaml
-traefik/custom/custom-*.yaml
-samples/custom*/*.yaml
-samples/custom*/*.yaml.disabled
-
 config.yaml
-services/custom/*.yaml
-services/custom/*.yml
-services/generated/*.yaml
 
-authelia/*
+# Your own files: custom directory of each service
+services/*/custom/
+# Leftovers of v2
+services/custom/
+/traefik/
+/env/
+
+# Generated files
+.seedbox/
+services/traefik/generated-config/
+
 .env.custom
 *.env
-env/*
-env
+!*.sample.env
 
 docker-compose.yaml
+
+SECRET*
