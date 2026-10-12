@@ -2,7 +2,7 @@ services:
   ntfy:
     image: binwiederhier/ntfy
     container_name: ntfy
-    restart: always
+    restart: unless-stopped
     user: ${PUID}:${PGID}
     command:
       - serve
@@ -18,15 +18,5 @@ services:
       NTFY_ENABLE_LOGIN: true
       #NTFY_AUTH_USERS: "" # set it in your services/ntfy/custom/service.env
     volumes:
-      - ntfycache:/var/cache/ntfy
-      - ntfyauth:/var/lib/ntfy
-    
-volumes:
-  ntfycache:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/ntfy-cache
-  ntfyauth:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/ntfy-auth
+      - ${HOST_CONFIG_PATH}/ntfy-cache:/var/cache/ntfy
+      - ${HOST_CONFIG_PATH}/ntfy-auth:/var/lib/ntfy

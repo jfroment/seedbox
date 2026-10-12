@@ -2,7 +2,7 @@ services:
   gluetun:
     image: ghcr.io/qdm12/gluetun
     container_name: gluetun
-    restart: always
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
     devices:
@@ -11,9 +11,3 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
-
-volumes:
-  configgluetun:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/gluetun

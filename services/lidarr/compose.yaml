@@ -2,17 +2,11 @@ services:
   lidarr:
     image: ghcr.io/linuxserver/lidarr:develop
     container_name: lidarr
-    restart: always
+    restart: unless-stopped
     volumes:
-      - configlidarr:/config
+      - ${HOST_CONFIG_PATH}/lidarr:/config
       - torrents:/torrents
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-
-volumes:
-  configlidarr:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/lidarr

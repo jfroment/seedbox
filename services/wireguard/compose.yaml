@@ -2,7 +2,7 @@ services:
   wireguard:
     image: lscr.io/linuxserver/wireguard
     container_name: wireguard
-    restart: always
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
@@ -17,15 +17,9 @@ services:
       - INTERNAL_SUBNET=10.13.13.0
       - ALLOWEDIPS=0.0.0.0/0, ::/128, 0.0.0.0/1, 128.0.0.0/1
     volumes:
-      - configwireguard:/config
+      - ${HOST_CONFIG_PATH}/wireguard:/config
       - /lib/modules:/lib/modules
     ports:
       - 51820:51820/udp
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
-
-volumes:
-  configwireguard:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/wireguard

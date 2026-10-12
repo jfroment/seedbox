@@ -2,17 +2,11 @@ services:
   qbittorrent:
     image: ghcr.io/hotio/qbittorrent
     container_name: qbittorrent
-    restart: always
+    restart: unless-stopped
     volumes:
       - torrents:/torrents
-      - configqbittorrent:/config
+      - ${HOST_CONFIG_PATH}/qbittorrent:/config
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-
-volumes:
-  configqbittorrent: 
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/qbittorrent

@@ -8,16 +8,15 @@ http:
         stsSeconds: 31536000
 
         referrerPolicy: "same-origin"
-        featurePolicy: "vibrate 'self'; geolocation 'self'; midi 'self'; notifications 'self'; push 'self'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'self'; fullscreen 'self'"
+        permissionsPolicy: "geolocation=(self), midi=(self), microphone=(), camera=(), magnetometer=(), gyroscope=(), fullscreen=(self)"
 
         frameDeny: true
         contentTypeNosniff: true
-        browserXssFilter: true
 
-        customresponseheaders:
+        customResponseHeaders:
           X-Frame-Options: sameorigin
           Content-Security-Policy: frame-ancestors https://*.{{ env "TRAEFIK_DOMAIN" }}
-        customrequestheaders:
+        customRequestHeaders:
           X-Frame-Options: sameorigin
           Content-Security-Policy: frame-ancestors https://*.{{ env "TRAEFIK_DOMAIN" }}
 

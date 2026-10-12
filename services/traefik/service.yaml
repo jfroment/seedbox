@@ -3,3 +3,4 @@ rules:
   - host: traefik.${TRAEFIK_DOMAIN}
     service: api@internal
     httpAuth: true
+    internalOnly: true

@@ -14,7 +14,7 @@
 #      service is kept, so the result is the same as before.
 #   4. .env.custom: split in one file per service  => services/<name>/custom/service.env
 #
-# Nothing is deleted: previous config.yaml and .env.custom are saved in backup/.
+# Nothing is deleted: previous config.yaml and .env.custom are saved in .seedbox/backup/.
 
 set -e
 shopt -s nullglob
@@ -133,8 +133,8 @@ if [[ ${config_is_v2} == 1 ]]; then
         ) }' >> config.v3.tmp
   done < <(jq -c '.services[]' config.v2.json)
 
-  mkdir -p backup
-  backup="backup/config.v2.${now}.yaml"
+  mkdir -p .seedbox/backup
+  backup=".seedbox/backup/config.v2.${now}.yaml"
   cp config.yaml ${backup}
 
   {
@@ -181,9 +181,9 @@ if [[ -f .env.custom ]]; then
     log "⚠️  These variables of .env.custom do not match any service and were not migrated: ${orphans}"
   fi
 
-  mkdir -p backup
-  mv .env.custom backup/.env.custom.v2.${now}
-  log ".env.custom is not used anymore: moved to backup/.env.custom.v2.${now}"
+  mkdir -p .seedbox/backup
+  mv .env.custom .seedbox/backup/.env.custom.v2.${now}
+  log ".env.custom is not used anymore: moved to .seedbox/backup/.env.custom.v2.${now}"
 fi
 
 log "***** Migration done. See doc/UPGRADE_V3.md for details. *****"

@@ -28,13 +28,13 @@
 
 Version 3 is released: a much shorter configuration and all your customizations in your own files, safe from updates. Migration is automatic, but please read [this V3 Migration Guide](doc/UPGRADE_V3.md) as there are breaking changes!
 
-Still on version 1? Read the [V2 Migration Guide](doc/UPGRADE_V2.md) first.
+Still on version 1? Upgrade to v2.2.2 first (``git checkout v2.2.2``), with the [V2 Migration Guide](doc/UPGRADE_V2.md).
 
 ## 📦 Included Applications
 
 | Application          | Web Interface              | Docker image                                                           | Version (image tag) | Notes               |
 -----------------------|----------------------------|------------------------------------------------------------------------|-------------------------|---------------------|
-| Plex                 | plex.yourdomain.com        | [linuxserver/plex](https://hub.docker.com/r/linuxserver/plex)          | *latest*                | Media Streaming     |
+| Plex                 | - (port 32400 of the host) | [linuxserver/plex](https://hub.docker.com/r/linuxserver/plex)          | *latest*                | Media Streaming, see [documentation](doc/apps/plex.md) |
 | Deluge               | deluge.yourdomain.com      | [linuxserver/deluge](https://hub.docker.com/r/linuxserver/deluge)      | *latest*                | Torrents downloader |
 | Flood               | flood.yourdomain.com      | [jesec/flood](https://hub.docker.com/r/jesec/flood)      | *latest*      | Web client for Deluge (experimental) |
 | qBitTorrent | qbittorrent.yourdomain.com          | [hotio/qbittorrent](https://hotio.dev/containers/qbittorrent/)    | *latest* | Torrents downloader + VuTorrent alternative WebUI built-in |
@@ -42,12 +42,10 @@ Still on version 1? Read the [V2 Migration Guide](doc/UPGRADE_V2.md) first.
 | Radarr               | radarr.yourdomain.com      | [linuxserver/radarr](https://hub.docker.com/r/linuxserver/radarr)      | *develop*                | Movies monitor      |
 | Bazarr               | bazarr.yourdomain.com      | [linuxserver/bazarr](https://hub.docker.com/r/linuxserver/bazarr)      | *latest*                | Subtitles monitor   |
 | Lidarr               | lidarr.yourdomain.com      | [linuxserver/lidarr](https://hub.docker.com/r/linuxserver/lidarr)      | *develop*               | Music monitor       |
-| Readarr               | readarr.yourdomain.com      | [linuxserver/readarr](https://hub.docker.com/r/linuxserver/readarr)      | *nightly*               | Ebook and comic monitor       |
 | Calibre | calibre-admin.yourdomain.com | [linuxserver/calibre](https://hub.docker.com/r/linuxserver/calibre)  | *latest* | eBook management |
 | Calibre-web | calibre.yourdomain.com | [linuxserver/calibre-web](https://hub.docker.com/r/linuxserver/calibre-web)  | *nightly* | Book management UI |
 | Komga               | komga.yourdomain.com      | [gotson/komga](https://hub.docker.com/r/gotson/komga)      | *latest*               | Comic Book Manager       |
 | Kavita               | Kavita.yourdomain.com      | [linuxserver/kavita](https://docs.linuxserver.io/images/docker-kavita/)      | *latest*               | Comic Book Manager       |
-| Ombi               | ombi.yourdomain.com      | [linuxserver/ombi](https://hub.docker.com/r/linuxserver/ombi)      | *latest*               | Plex content requests       |
 | Seerr               | seerr.yourdomain.com      | [seerr-team/seerr](https://ghcr.io/seerr-team/seerr)      | *latest*               | Plex content requests       |
 | Jackett              | jackett.yourdomain.com     | [linuxserver/jackett](https://hub.docker.com/r/linuxserver/jackett)    | *latest*                | Tracker indexer     |
 | FlareSolverr | - | [flaresolverr/flaresolverr](https://ghcr.io/flaresolverr/flaresolverr) | *latest* | Proxy to bypass Cloudflare protection for Jackett / Prowlarr indexers |
@@ -61,15 +59,12 @@ Still on version 1? Read the [V2 Migration Guide](doc/UPGRADE_V2.md) first.
 | NextCloud-db (MariaDB) | *not reachable*   | [mariadb](https://hub.docker.com/r/_/mariadb)  | *10*                | DB for Nextcloud    |
 | Filebrowser | files.yourdomain.com | [filebrowser/filebrowser](https://hub.docker.com/r/filebrowser/filebrowser)  | *s6*                | Files explorer  |
 | Paperless-ngx  | paperless.yourdomain.com | [paperless-ngx/paperless-ngx](https://ghcr.io/paperless-ngx/paperless-ngx) | *latest* | Documents management and archiving (**BETA**) |
-| Portainer            | portainer.yourdomain.com   | [portainer/portainer](https://hub.docker.com/r/portainer/portainer)    | *latest*                | Container management|
 | Netdata              | - (port 19999 of the host) | [netdata/netdata](https://hub.docker.com/r/netdata/netdata)            | *latest*                | Server monitoring   |
 | Duplicati            | duplicati.yourdomain.com   | [linuxserver/duplicati](https://hub.docker.com/r/linuxserver/duplicati)| *latest*                | Backups             |
 | Heimdall            | yourdomain.com   | [linuxserver/heimdall](https://hub.docker.com/r/linuxserver/heimdall)| *latest*                | Main dashboard      |
-| Homarr            | homarr.yourdomain.com   | [ajnart/homarr](https://ghcr.io/ajnart/homarr)| *latest*                | Main dashboard (alt)     |
 | Homepage            | homepage.yourdomain.com   | [gethomepage/homepage](https://ghcr.io/gethomepage/homepage)| *latest*                | Main dashboard (alt)     |
 | Syncthing         | syncthing.yourdomain.com |  [linuxserver/syncthing](https://hub.docker.com/r/linuxserver/syncthing) | *latest* | P2P files sharing |
 | Jellyfin | jellyfin.yourdomain.com | [linuxserver/jellyfin](https://hub.docker.com/r/linuxserver/jellyfin) | *latest* | Media Streaming |
-| Immich | immich.yourdomain.com | [imagegenius/immich](https://ghcr.io/imagegenius/immich) | *latest* | Photos management |
 | Actual Budget | budget.yourdomain.com | [actualbudget/actual-server](https://ghcr.io/actualbudget/actual-server) | *latest* | Personal finance |
 | Mealie | mealie.yourdomain.com | [mealie-recipes/mealie](https://ghcr.io/mealie-recipes/mealie) | *latest* | Recipes manager |
 | Stirling PDF | pdf.yourdomain.com | [stirlingtools/stirling-pdf](https://hub.docker.com/r/stirlingtools/stirling-pdf) | *latest* | PDF tools |
@@ -85,11 +80,11 @@ Still on version 1? Read the [V2 Migration Guide](doc/UPGRADE_V2.md) first.
 
 ## 🌐 Traefik
 
-The front-end reverse proxy (Traefik - **check [this guide](doc/traefik_v2_upgrade.md) if you still have the seedbox with Traefik v1**)  routes based on the lowest level subdomain (e.g. `deluge.example.com` would route to deluge). Since this is how the router works, it is recommended for you to get a top level domain. If you do not have one, you can edit your domains locally by changing your hosts file or use a browser plugin that changes the host header.
+The front-end reverse proxy (Traefik) routes based on the lowest level subdomain (e.g. `deluge.example.com` would route to deluge). Since this is how the router works, it is recommended for you to get a top level domain. If you do not have one, you can edit your domains locally by changing your hosts file or use a browser plugin that changes the host header.
 
 Traefik takes care of valid Let's Encrypt certificates and auto-renewal.
 
-Note: Plex is also available directly through the `32400` port without going through the reverse proxy.
+Note: Plex runs on the network of the host and is available directly through the `32400` port, without going through the reverse proxy. See [Plex documentation](doc/apps/plex.md) to publish it on `plex.yourdomain.com`.
 
 You can also add your own Traefik rules to integrate with other services (deployed wihthin docker or somewhere else on your LAN, or even on the Internet).
 Check the [Configuration Guide](doc/configuration.md).
@@ -99,18 +94,16 @@ Check the [Configuration Guide](doc/configuration.md).
 ### Dependencies
 
 - [Docker](https://github.com/docker/docker) >= 20.10
-- [Docker Compose](https://github.com/docker/compose) >= 2.27.0
-- [local-persist Docker plugin](https://github.com/MatchbookLab/local-persist): installed directly on host (not in container). This is a volume plugin that extends the default local driver’s functionality by allowing you specify a mountpoint anywhere on the host, which enables the files to always persist, even if the volume is removed via `docker volume rm`. Use *systemd* install for Ubuntu. **Since v2.2 the install script is bundled in seedbox's init script.**
+- [Docker Compose](https://docs.docker.com/compose/install/) >= 2.27.2, as a Docker plugin (``docker compose`` command). The old ``docker-compose`` binary is not supported anymore.
 - [jq](https://stedolan.github.io/jq/download/) >= 1.5
 - [yq](https://github.com/mikefarah/yq/releases) >= 4
 
 ### Prepare your host
 
-Before running, please create the volumes which will be statically mapped to the ones on the host:
-For example:
+Before running, create the directories which will hold your data (configuration of the services and media), and give them to your user. For example:
 
 ```sh
-sudo su -c "mkdir /data && mkdir /data/config && mkdir /data/torrents"
+sudo mkdir -p /data/config /data/torrents && sudo chown -R $USER: /data
 ./init.sh
 ```
 
@@ -133,12 +126,16 @@ All services and dynamic configuration will be automatically created without fur
 
 Make sure you install the dependencies and finish configuration before doing this.
 
+Old Docker images pile up after updates. Set ``DOCKER_PRUNE_AFTER_UPDATE=true`` in your ``.env`` to remove unused images and volumes after each run. It is disabled by default because it applies to the whole host: images and volumes which do not belong to the seedbox are removed too.
+
 ### Where is my data?
 
-All data is saved in the docker volumes `seedbox_config` or
-`seedbox_torrents`.
-These volumes are mapped to the `config` and `torrents` folders located in `/data` on the host. You can change these paths in your ``.env`` file (``HOST_CONFIG_PATH`` and ``HOST_MEDIA_PATH``).
-Thanks to the **local-persist** Docker plugin, the data located in these volumes is persistent, meaning that volumes are not deleted, even when using the ```docker-compose down``` command. It would be a shame to loose everything by running a simple docker command ;-)
+Everything is stored in plain directories of your host, set in your ``.env`` file:
+
+* ``HOST_CONFIG_PATH`` (``/data/config`` by default): the configuration and the data of each service, one directory per service (``/data/config/sonarr``, ``/data/config/Plex``...). This is what you want to back up.
+* ``HOST_MEDIA_PATH`` (``/data/torrents`` by default): your media and downloads. It can also be a [NFS share](doc/configuration.md#media-on-nfs-server).
+
+These directories are mounted as they are in the containers: Docker never deletes their content, whatever you do with the containers (``docker compose down``, ``docker volume prune``...). No Docker plugin is needed.
 
 # Configure your apps
 

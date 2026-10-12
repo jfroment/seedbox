@@ -18,7 +18,7 @@ git pull
 
 > ⚠️ Run ``./run-seedbox.sh`` right after ``git pull``: the configuration files that your running Traefik reads are moved by the update, so your services may not be reachable between the two commands.
 
-The migration is automatic: on the first run, ``run-seedbox.sh`` detects the v2 format and calls ``tools/migrate-v3.sh``. Nothing is deleted: files are moved, and your ``config.yaml`` is saved in ``backup/`` before being converted. After the migration, the generated Traefik rules and the containers are the same as before.
+The migration is automatic: on the first run, ``run-seedbox.sh`` detects the v2 format and calls ``tools/migrate-v3.sh``. Nothing is deleted: files are moved, and your ``config.yaml`` is saved in ``.seedbox/backup/`` before being converted. After the migration, the generated Traefik rules and the containers are the same as before.
 
 ## What the migration does
 
@@ -29,11 +29,11 @@ The migration is automatic: on the first run, ``run-seedbox.sh`` detects the v2 
 | ``services/custom/<file>.yaml`` | ``services/<name>/custom/compose.yaml`` | ``<name>`` is the name of the service in ``config.yaml``. ``customFile`` is not needed anymore and is removed |
 | ``samples/custom-traefik/*`` | ``services/traefik/custom/rules/*`` | Including your ``.disabled`` files |
 | ``traefik/traefik.yaml``, ``traefik/custom/middlewares.yaml``, ``traefik/custom/tls.yaml`` | ``services/traefik/custom/traefik.yaml``, ``middlewares.yaml``, ``tls.yaml`` | Yours now, created from the templates of ``services/traefik/`` |
-| ``traefik/`` (mounted in the Traefik container) | ``services/traefik/generated-config/`` | Generated on each run. The old directory is moved to ``backup/`` once Traefik is updated |
+| ``traefik/`` (mounted in the Traefik container) | ``services/traefik/generated-config/`` | Generated on each run. The old directory is moved to ``.seedbox/backup/`` once Traefik is updated |
 | ``samples/docker-compose.sample.nfs.yaml`` | ``docker-compose.nfs.sample.yaml`` | |
 | ``services/generated/``, ``env/`` | ``.seedbox/generated/`` | Nothing to do, these files are generated on each run. The old directories are removed |
-| ``config.yaml``, list of services with all their parameters | ``config.yaml``, only your changes | Previous version saved in ``backup/config.v2.<date>.yaml`` |
-| ``.env.custom``, with variables prefixed by the name of the service | ``services/<name>/custom/service.env``, one file per service, without prefix | ``.env.custom`` is moved to ``backup/.env.custom.v2.<date>`` |
+| ``config.yaml``, list of services with all their parameters | ``config.yaml``, only your changes | Previous version saved in ``.seedbox/backup/config.v2.<date>.yaml`` |
+| ``.env.custom``, with variables prefixed by the name of the service | ``services/<name>/custom/service.env``, one file per service, without prefix | ``.env.custom`` is moved to ``.seedbox/backup/.env.custom.v2.<date>`` |
 
 ### config.yaml
 
@@ -113,19 +113,77 @@ PAPERLESS_OCR_LANGUAGE=eng,fra
 VPN_SERVICE_PROVIDER=custom
 ```
 
-The migration creates these files from your ``.env.custom`` (for all services, enabled or not), then moves ``.env.custom`` to ``backup/``. Only the variables are migrated: your comments and commented variables stay in the backup. If some variables have a prefix which does not match any service, the migration lists them: nothing was using them in v2 either.
+The migration creates these files from your ``.env.custom`` (for all services, enabled or not), then moves ``.env.custom`` to ``.seedbox/backup/``. Only the variables are migrated: your comments and commented variables stay in the backup. If some variables have a prefix which does not match any service, the migration lists them: nothing was using them in v2 either.
 
 ## After the migration
 
-Everything works without any other action (except if you were using Overseerr, see the first point), but you may want to:
+Everything works without any other action, except for the first points (removed services, Docker Compose, cleaning). Then you may want to:
 
-* **Replace Overseerr by Seerr**: Overseerr is not bundled anymore. If ``overseerr`` is in your ``config.yaml``, the script stops because its file does not exist: rename it to ``seerr``. Seerr uses its own directory (``$HOST_CONFIG_PATH/seerr``): see the [Seerr migration guide](https://docs.seerr.dev/migration-guide) to keep your data.
+* **Removed services**: Overseerr, Readarr, Ombi, Homarr and Portainer are not bundled anymore (see the [changelog](../CHANGELOG.md)). If one of them is enabled in your ``config.yaml``, the script stops because its file does not exist anymore. Either remove it from your ``config.yaml``, or keep it as your own service: its rules are already in your ``config.yaml``, you just need its docker-compose file back, from the previous version.
+
+  ```sh
+  # Example with Portainer (same thing with readarr, ombi, homarr or overseerr)
+  mkdir -p services/portainer/custom
+  git show v2.2.2:services/portainer.yaml > services/portainer/custom/compose.yaml
+  ```
+
+  It is now a service of yours, like any other one: see [Add your own service](configuration.md#add-your-own-service). The suggested replacements are Seerr for Overseerr and Ombi (rename ``overseerr`` to ``seerr`` in your ``config.yaml``; Seerr uses its own directory, ``$HOST_CONFIG_PATH/seerr``: see the [Seerr migration guide](https://docs.seerr.dev/migration-guide) to keep your data), Dockhand for Portainer (see [its documentation](apps/dockhand.md)) and Homepage or Heimdall for Homarr.
+* **Docker Compose v2**: version 2.27.2 or above is required. ``DOCKER_COMPOSE_BINARY`` is not used anymore, remove it from your ``.env``. The script always uses ``docker compose``, the old ``docker-compose`` binary is not supported.
+* **Name of the Docker Compose project**: it was the name of the directory of the seedbox, it is now always ``seedbox``, so the directory can be renamed or moved. If your directory has another name, the script tells you so and asks before going on: all containers are removed and created again in the new project (containers only, your data is not affected). To avoid it, keep the previous name with ``COMPOSE_PROJECT_NAME=<name of your directory>`` in your ``.env``.
+* **local-persist plugin** is not needed by the seedbox anymore. Nothing to do for bundled services; for your own files, see [local-persist plugin](#local-persist-plugin).
+* **Cleaning of unused images and volumes** is not automatic anymore: set ``DOCKER_PRUNE_AFTER_UPDATE=true`` in your ``.env`` to get the previous behaviour back.
 * **Shorten your ``config.yaml``**: if the same parameter is repeated on most services (``internalOnly: true`` for example), set it once in [``defaults``](configuration.md#how-rules-are-merged).
-* **Use bundled services instead of yours**: some services were added in v3 (Jellyfin, Immich, Vaultwarden, Mealie...). If you already had your own file for one of them, it is now ``services/<name>/custom/compose.yaml`` and is still the one which is used. Delete it to use the bundled one (compare them first).
+* **Use bundled services instead of yours**: some services were added in v3 (Jellyfin, Vaultwarden, Mealie...). If you already had your own file for one of them, it is now ``services/<name>/custom/compose.yaml`` and is still the one which is used. Delete it to use the bundled one (compare them first).
 * **Turn your modified copies of bundled services into overrides**: same thing if you had a custom file for a bundled service (a modified Duplicati for example). It still works, but you do not get the updates of the bundled file. Keep only your changes in a ``compose.override.yaml`` instead: see [Customize a bundled service](configuration.md#customize-a-bundled-service).
 * **Check the paths in your own services**: if the migration says that ``services/custom`` still contains files, they are files used by your services (config files, env files...). They still work where they are, but their place is now next to the service: move them to ``services/<name>/custom/`` and fix the path in its ``compose.yaml``.
 * **Look at the new ``service.sample.env`` files**: they list the optional variables of each service.
 * **Remove ``CHECK_FOR_OUTDATED_CONFIG``** from your ``.env``: it is not used anymore. You are now warned when a sample file changes, and ``tools/sync-templates.sh diff`` shows what changed.
+
+## local-persist plugin
+
+The seedbox does not use the [local-persist](https://github.com/MatchbookLab/local-persist) Docker plugin anymore. Bundled services now mount the directories of ``HOST_CONFIG_PATH`` directly, at the same place as before: **your data does not move and there is nothing to migrate**. Docker never deletes the content of a directory mounted this way, whatever you do with containers and volumes.
+
+The plugin is not removed from your machine by the upgrade, because some of your own files may still use it:
+
+* your ``docker-compose.yaml``, for media volumes (``torrents``, ``downloads``, ``documents``)
+* your own services and override files (``services/<name>/custom/``)
+
+They still work as long as the plugin is installed, and ``run-seedbox.sh`` lists them on each run. To get rid of the plugin:
+
+1. In your ``docker-compose.yaml``, replace the ``volumes`` section by the one of [docker-compose.sample.yaml](../docker-compose.sample.yaml) (or of ``docker-compose.nfs.sample.yaml`` if your media are on a NFS share). The ``config`` volume is not used by bundled services anymore: only keep it if your own services use it.
+
+   ```yaml
+   volumes:
+     torrents:
+       driver_opts:
+         type: none
+         o: bind
+         device: $HOST_MEDIA_PATH
+     # ...same thing for downloads and documents
+   ```
+
+2. In your own files, mount the directory itself instead of a volume:
+
+   ```yaml
+   services:
+     myservice:
+       volumes:
+         # Before: "- configmyservice:/config", with a "configmyservice" volume using the local-persist driver
+         - ${HOST_CONFIG_PATH}/myservice:/config
+   ```
+
+3. Run ``./run-seedbox.sh``. For each media volume, Docker Compose asks ``Volume "seedbox_torrents" exists but doesn't match configuration in compose file. Recreate (data will be lost)?``. Answer ``y``: despite the message, only the Docker volume (a pointer to your directory) is created again, and the plugin never deletes the content of the directory. If you answer ``n``, the previous volume is kept and still needs the plugin.
+4. Remove the volumes which are not used anymore (their content stays on your disk), then uninstall the plugin once the list is empty:
+
+   ```sh
+   docker volume ls --filter driver=local-persist
+   docker volume rm <name> [<name>...]
+
+   # Installation made by the init script of the seedbox (systemd)
+   sudo systemctl disable --now docker-volume-local-persist
+   sudo rm /etc/systemd/system/docker-volume-local-persist.service /usr/bin/docker-volume-local-persist
+   sudo systemctl daemon-reload
+   ```
 
 ## If git pull fails
 
@@ -152,4 +210,4 @@ cat my-changes.patch
 
 ## Rollback
 
-Go back to the previous version with git (``git checkout v2.2.2``), restore your ``config.yaml`` and ``.env.custom`` from ``backup/`` and move your files back from ``services/<name>/custom/`` and ``services/traefik/custom/rules/`` to ``services/custom/`` and ``samples/custom-traefik/``. Then run ``./run-seedbox.sh``.
+Go back to the previous version with git (``git checkout v2.2.2``), restore your ``config.yaml`` and ``.env.custom`` from ``.seedbox/backup/`` and move your files back from ``services/<name>/custom/`` and ``services/traefik/custom/rules/`` to ``services/custom/`` and ``samples/custom-traefik/``. Then run ``./run-seedbox.sh``.

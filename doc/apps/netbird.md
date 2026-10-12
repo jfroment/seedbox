@@ -196,9 +196,8 @@ As a host is handled either by Traefik or by Netbird, there are two possibilitie
 
 ```yaml
 services:
-  # Plex is only published by Netbird, on plex.yourdomain.com: no Traefik rule at all
+  # Plex has no Traefik rule (see its documentation): it is only published by Netbird, on plex.yourdomain.com
   plex:
-    traefik: false
   # Seerr keeps its Traefik rule for the LAN (seerr.yourdomain.com),
   # and is published by Netbird with another host (requests.yourdomain.com)
   seerr:
@@ -221,7 +220,7 @@ In *Reverse Proxy* > *Services*, add a service:
 
 The kinds of targets and all options are described in [Netbird documentation](https://docs.netbird.io/manage/reverse-proxy).
 
-> **Plex** runs on the network of the host (``network_mode: host``): its target is the peer of your server, port ``32400``.
+> **Plex** runs on the network of the host (``network_mode: host``): its target is the peer of your server, port ``32400``. You also have to disable *Remote Access* in Plex settings: see [Plex documentation](plex.md#publish-plex-on-plexyourdomaincom-https-port-443).
 
 ### Make all your public services go through Netbird
 
@@ -236,9 +235,8 @@ services:
   sonarr:
   radarr:
   seerr:
-  # ...and what is public is not handled by Traefik
+  # ...and what is public is not handled by Traefik (Plex has no Traefik rule)
   plex:
-    traefik: false
 ```
 
 "Private networks" are the IP ranges of the ``internal-only`` middleware, in your ``services/traefik/custom/middlewares.yaml``. Check that they match your LAN, and add the range of your Netbird network (``100.64.0.0/10`` by default) if your devices connected to the VPN must reach these services:

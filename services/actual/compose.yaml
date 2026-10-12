@@ -2,12 +2,6 @@ services:
   actual:
     image: ghcr.io/actualbudget/actual-server:latest
     container_name: actual
-    restart: always
+    restart: unless-stopped
     volumes:
-      - actualdata:/data
-    
-volumes:
-  actualdata:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/actual
+      - ${HOST_CONFIG_PATH}/actual:/data

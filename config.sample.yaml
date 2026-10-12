@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=./config.schema.json
 # Seedbox configuration. Full documentation: doc/configuration.md
 #
 # Every service has default values (Traefik rules, dependencies) in its own directory: see
@@ -40,8 +41,6 @@ services:
   bazarr:
   lidarr:
     enabled: false
-  readarr:
-    enabled: false
   calibre:
     enabled: false
   calibre-web:
@@ -51,8 +50,6 @@ services:
   kavita:
     enabled: false
   mylar:
-  ombi:
-    enabled: false
   seerr:
   tautulli:
   ntfy:
@@ -65,8 +62,6 @@ services:
   filebrowser:
     enabled: false
   paperless:
-    enabled: false
-  immich:
     enabled: false
   actual:
     enabled: false
@@ -81,7 +76,6 @@ services:
   # Certificate Authority to create client certificates (mTLS): see doc/apps/vaultls.md
   vaultls:
     enabled: false
-  portainer:
   # Needs access to the Docker socket: see doc/apps/dockhand.md
   dockhand:
     enabled: false
@@ -92,8 +86,6 @@ services:
     enabled: false
   # Beware: its default host is your domain itself (${TRAEFIK_DOMAIN})
   heimdall:
-    enabled: false
-  homarr:
     enabled: false
   homepage:
     enabled: false

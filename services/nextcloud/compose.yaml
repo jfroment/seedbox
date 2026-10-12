@@ -5,23 +5,12 @@ services:
       - mariadb
     image: linuxserver/nextcloud
     container_name: nextcloud
-    restart: always
+    restart: unless-stopped
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
     volumes:
-      - confignextcloud:/config
-      - nextclouddata:/data
+      - ${HOST_CONFIG_PATH}/nextcloud:/config
+      - ${HOST_CONFIG_PATH}/nextcloud-data:/data
       - torrents:/torrents
-      - config:/seedbox-config
-
-volumes:
-  confignextcloud:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/nextcloud
-  nextclouddata:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/nextcloud-data

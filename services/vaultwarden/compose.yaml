@@ -4,7 +4,7 @@ services:
     container_name: vaultwarden
     restart: unless-stopped
     volumes:
-      - vaultwarden-data:/data
+      - ${HOST_CONFIG_PATH}/vaultwarden:/data
     environment:
       - DOMAIN=https://vault.${TRAEFIK_DOMAIN}
       - SIGNUPS_ALLOWED=false
@@ -14,9 +14,3 @@ services:
       options:
         max-size: "500m"
         max-file: "2"
-
-volumes:
-  vaultwarden-data:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/vaultwarden

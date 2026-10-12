@@ -2,12 +2,12 @@ services:
   plex:
     image: ghcr.io/linuxserver/plex
     container_name: plex
-    restart: always
+    restart: unless-stopped
     network_mode: host
     devices:
       - /dev/dri:/dev/dri # for hardware transcoding
     volumes:
-      - configplex:/config
+      - ${HOST_CONFIG_PATH}/Plex:/config
       - torrents:/torrents
       - /dev/shm:/transcode
     environment:
@@ -15,9 +15,3 @@ services:
       - PUID=${PUID}
       - TZ=${TZ}
       - VERSION=latest
-
-volumes:
-  configplex:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/Plex

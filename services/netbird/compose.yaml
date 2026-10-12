@@ -33,7 +33,7 @@ services:
       - '127.0.0.1:8081:80'
       - '3478:3478/udp'
     volumes:
-      - netbirddata:/var/lib/netbird
+      - ${HOST_CONFIG_PATH}/netbird:/var/lib/netbird
       - ./services/netbird/custom/config.yaml:/etc/netbird/config.yaml
     command: ["--config", "/etc/netbird/config.yaml"]
     logging:
@@ -51,7 +51,7 @@ services:
         - SYS_RESOURCE
     restart: unless-stopped
     volumes:
-      - netbird-client-data:/var/lib/netbird
+      - ${HOST_CONFIG_PATH}/netbird-docker-agent:/var/lib/netbird
     env_file:
       - ./services/netbird/custom/docker-agent.env
     environment:
@@ -67,10 +67,10 @@ services:
     container_name: traefik-certs-dumper
     depends_on:
       - traefik
-    restart: always
+    restart: unless-stopped
     volumes:
-      - configtraefik:/traefik:ro
-      - traefik-certificates:/dump
+      - ${HOST_CONFIG_PATH}/traefik:/traefik:ro
+      - ${HOST_CONFIG_PATH}/traefik-certificates:/dump
     # Certificates must stay readable by netbird-proxy (user 1000) even when the owner of the files is changed
     # afterwards: some containers set the owner of the whole config directory to PUID:PGID when they start.
     # So the hook gives the files to the user of the proxy, and read access to the PGID group (the proxy is in it).
@@ -90,8 +90,8 @@ services:
       COLLECTIONS: crowdsecurity/linux
       GID: "${GUID-1000}"
     volumes:
-      - crowdsec-config:/etc/crowdsec
-      - crowdsec-data:/var/lib/crowdsec/data
+      - ${HOST_CONFIG_PATH}/crowdsec-config:/etc/crowdsec
+      - ${HOST_CONFIG_PATH}/crowdsec-data:/var/lib/crowdsec/data
     healthcheck:
       test: ["CMD", "cscli", "lapi", "status"]
       interval: 10s
@@ -126,26 +126,4 @@ services:
     group_add:
       - "${PGID}"
     volumes:
-      - traefik-certificates:/certs:ro
-
-volumes:
-  netbirddata: 
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/netbird
-  netbird-client-data:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/netbird-docker-agent
-  traefik-certificates:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/traefik-certificates
-  crowdsec-config:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/crowdsec-config
-  crowdsec-data:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/crowdsec-data
+      - ${HOST_CONFIG_PATH}/traefik-certificates:/certs:ro

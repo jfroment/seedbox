@@ -1,11 +1,7 @@
 .DS_Store
 
-**/tunnel-options.sh
 **/.env
-**/traefik/http_auth
 backup/
-services.conf
-
 config.yaml
 
 # Your own files: custom directory of each service
@@ -19,7 +15,6 @@ services/custom/
 .seedbox/
 services/traefik/generated-config/
 
-authelia/*
 .env.custom
 *.env
 !*.sample.env

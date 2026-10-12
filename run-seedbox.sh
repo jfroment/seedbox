@@ -2,6 +2,9 @@
 
 set -e
 
+# Always work from the directory of the seedbox, wherever the script is called from (cron, absolute path...)
+cd "$(dirname "$0")"
+
 # Load common functions
 source tools/tools.sh
 
@@ -70,8 +73,19 @@ mkdir -p ${TRAEFIK_BUILD_DIR}/dynamic
 cp services/traefik/custom/traefik.yaml ${TRAEFIK_BUILD_DIR}/traefik.yaml
 cp services/traefik/custom/middlewares.yaml services/traefik/custom/tls.yaml ${TRAEFIK_BUILD_DIR}/dynamic/
 
+# Load the variables of .env used by this script. They are read by Docker Compose itself (see read_env_files in
+# tools/tools.sh), so the script and the containers always see the same values.
+ENV_VARS=$(read_env_files .env)
+for var in HTTP_USER HTTP_PASSWORD TRAEFIK_CUSTOM_ACME_RESOLVER HOST_CONFIG_PATH HOST_MEDIA_PATH DOWNLOAD_SUBFOLDER PUID PGID \
+           FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON DOCKER_PRUNE_AFTER_UPDATE COMPOSE_PROJECT_NAME; do
+  printf -v "${var}" '%s' "$(env_value ${var} "${ENV_VARS}")"
+done
+
+# Name of the Docker Compose project: always the same, whatever the name of the directory of the seedbox
+[[ -z $COMPOSE_PROJECT_NAME ]] && COMPOSE_PROJECT_NAME="seedbox"
+export COMPOSE_PROJECT_NAME
+
 # Create http_auth file according to values in .env file
-source .env
 echo "${HTTP_USER}:${HTTP_PASSWORD}" > ${TRAEFIK_BUILD_DIR}/http_auth
 
 # Cleanup generated files before start, in case there was a change we start from scratch at every script execution
@@ -89,14 +103,10 @@ if [[ ! -z ${TRAEFIK_CUSTOM_ACME_RESOLVER} ]]; then
   yq '(.certificatesResolvers.le.acme.dnsChallenge.provider="'${TRAEFIK_CUSTOM_ACME_RESOLVER}'")' -i ${TRAEFIK_BUILD_DIR}/traefik.yaml
 fi
 
-# Docker-compose settings
-export COMPOSE_HTTP_TIMEOUT=240
-
-# Retro-compatibility
+# Default values
 [[ -z $HOST_CONFIG_PATH ]] && export HOST_CONFIG_PATH="/data/config"
 [[ -z $HOST_MEDIA_PATH ]] && export HOST_MEDIA_PATH="/data/torrents"
 [[ -z $DOWNLOAD_SUBFOLDER ]] && export DOWNLOAD_SUBFOLDER="deluge"
-[[ -z $DOCKER_COMPOSE_BINARY ]] && export DOCKER_COMPOSE_BINARY="docker-compose"
 
 ###############################################################################################
 ###################################### Pre-flight checks ######################################
@@ -107,6 +117,30 @@ echo "[$0] ***** Checking configuration... *****"
 # Build the complete configuration (config.json): for each service, default values come from the service.yaml
 # file of its directory, then config.yaml overrides them.
 yq eval -o json config.yaml > config.user.json
+
+# Check that config.yaml only uses known parameters (they are described in config.schema.json): a typo in a
+# parameter like "internalOnly" would otherwise be silently ignored
+unknown=$(jq -r --slurpfile schema config.schema.json '
+  $schema[0] as $s
+  | ($s.properties | keys) as $top
+  | ($s."$defs".service.properties | keys) as $service
+  | ($s."$defs".rule.properties | keys) as $rule
+  | (. // {}) as $config
+  | ($config | keys[] | select(. as $k | $top | index($k) | not) | "\"\(.)\" at the top level"),
+    ($config.defaults // {} | keys[] | select(. as $k | $rule | index($k) | not) | "\"\(.)\" in \"defaults\""),
+    ($config.services // {} | to_entries[] | .key as $name | (.value // {}) as $v
+      | if ($v | type) != "object" then "service \"\($name)\": its parameters must be a map"
+        else
+          ($v | keys[] | select(. as $k | $service | index($k) | not) | "\"\(.)\" in service \"\($name)\""),
+          ($v.rules // [] | if type != "array" then "service \"\($name)\": \"rules\" must be a list"
+            else (.[] | select(type == "object") | keys[] | select(. as $k | $rule | index($k) | not) | "\"\(.)\" in a rule of service \"\($name)\"") end)
+        end)' config.user.json)
+if [[ -n ${unknown} ]]; then
+  echo "[$0] ERROR. Unknown parameters in your config.yaml file (typo?):"
+  echo "${unknown}" | sed "s#^#[$0]   - #"
+  echo "[$0] See doc/configuration.md#configuration-structure-and-parameters for the list of parameters."
+  exit 1
+fi
 defaults=$(jq -c '.defaults // {}' config.user.json)
 : > config.services.tmp
 for name in $(jq -r '.services // {} | keys_unsorted[]' config.user.json); do
@@ -228,6 +262,7 @@ for json in $(jq -c ".services[]" config.json); do
   echo-debug "[$0]    File: \"$file\"..."
   if [[ ! -f ${file} ]]; then
     echo "[$0] ERROR. File \"${file}\" not found for service \"${name}\". Please check your config.yaml file (\"customFile\" is relative to the directory of the service)."
+    echo "[$0] If this service was removed from the seedbox (see CHANGELOG.md), remove it from your config.yaml or keep it as your own service: see doc/configuration.md#add-your-own-service"
     exit 1
   fi
 
@@ -282,9 +317,7 @@ for json in $(jq -c ".services[]" config.json); do
       echo "ERROR. You set variable \"FLOOD_AUTOCREATE_USER_IN_DELUGE_DAEMON\" to true but you did not specify \"FLOOD_PASSWORD\" in services/flood/custom/service.env."
       exit 1
     fi
-    set -a
-    source ${envFile}
-    set +a
+    FLOOD_PASSWORD=$(env_value FLOOD_PASSWORD "$(read_env_files ${envFile})")
     # User for Deluge daemon RPC has to be created in deluge auth config file
     if [[ ! -z ${FLOOD_PASSWORD} ]]; then
       DELUGE_CONFIG_FILE="$HOST_CONFIG_PATH/deluge/auth"
@@ -321,43 +354,20 @@ EOF
     echo-debug "[$0] Service ${name} has a command with environment variables..."
     # Extract variable names to test them
     yq ".services.${name}.command[]" ${file} | { grep "\\$.*\}" || true; } | sed -n -e 's/.*${\(\w\+\)}.*/\1/p' > .seedbox/generated/${name}-cmd.env.1.tmp
-    (
-      # Check if these variables are defined in generated .env files (global or custom)
-      set -a
-      # Only source custom envfile if it exists
-      if [[ -f ${envFile} ]]; then
-        source ${envFile}
+    # Check if these variables are defined in .env or in the environment file of the service (if it exists)
+    if [[ -f ${envFile} ]]; then
+      knownVars=$(read_env_files .env ${envFile})
+    else
+      knownVars=${ENV_VARS}
+    fi
+    while read p; do
+      # If the command references a variable which is not known, throw an error
+      if ! echo "${knownVars}" | grep -q "^${p}="; then
+        echo "ERROR. Variable \"$p\" is referenced in \"command\" for service ${name} (file $file) but this variable is not defined in .env (or in ${envFile}). Please correct it or add a variable which will be used."
+        exit 1
       fi
-      source .env
-      set +a
-      while read p; do
-        # If the command references a variable which is not known, throw an error
-        if [[ -z ${!p+x} ]]; then
-          echo "ERROR. Variable \"$p\" is referenced in \"command\" for service ${name} (file $file) but this variable is not defined in .env (or in ${envFile}). Please correct it or add a variable which will be used."
-          exit 1
-        fi
-      done < .seedbox/generated/${name}-cmd.env.1.tmp
-
-      # Does not work for now because of how docker handles merges for arrays. Original values with variables stay.
-      # Disabled for now
-      if [[ "0" == "1" ]]; then
-        # Extract command block from original service yaml file
-        yq ".services.${name}.command[]" ${file} > .seedbox/generated/${name}-cmd.env.2.tmp
-        # Envsubst this file
-        envsubst < .seedbox/generated/${name}-cmd.env.2.tmp > .seedbox/generated/${name}-cmd.env.3.tmp
-        # Convert this file to a props file, used to source a new proper YAML file
-        i=0
-        while read line; do
-          echo "services.${name}.command.$i: $line" >> .seedbox/generated/${name}-cmd.env.4.tmp
-          i=$((i+1))
-        done < .seedbox/generated/${name}-cmd.env.3.tmp
-        # Generate a proper override file with substituted variables
-        yq -p=props .seedbox/generated/${name}-cmd.env.4.tmp -o yaml > .seedbox/generated/${name}-command.yaml
-      fi
-    )
+    done < .seedbox/generated/${name}-cmd.env.1.tmp
     rm -f .seedbox/generated/*.tmp
-    # echo-debug "[$0] Adding override file for service ${name} / command with subsituted environment variables..."
-    # ALL_SERVICES="${ALL_SERVICES} -f .seedbox/generated/${name}-command.yaml"
   fi
 
   # Handle case for command in a single line, not in array
@@ -533,15 +543,87 @@ done
 
 echo-debug "[$0] Here is the list of all files which are going to be processed: ${ALL_SERVICES}"
 
+# Create a directory which does not exist yet, owned by the user of the containers (PUID and PGID of .env)
+create_data_dir() {
+  #$1 => directory
+  local dir=$1 top=$1
+  [[ -e ${dir} ]] && return 0
+  # First directory which has to be created (the parents of $1 may be missing too)
+  while [[ ! -e $(dirname ${top}) ]]; do
+    top=$(dirname ${top})
+  done
+  mkdir -p ${dir} 2>/dev/null || return 1
+  echo "[$0] Created directory ${dir}"
+  if [[ -n ${PUID} && -n ${PGID} && "$(id -u):$(id -g)" != "${PUID}:${PGID}" ]]; then
+    # Another user than the one running this script: only root can do it (sudo is used if it does not ask for a password)
+    if ! chown -R ${PUID}:${PGID} ${top} 2>/dev/null && ! sudo -n chown -R ${PUID}:${PGID} ${top} 2>/dev/null; then
+      DIRS_TO_CHOWN="${DIRS_TO_CHOWN} ${top}"
+    fi
+  fi
+}
+
+resolvedConfig=$(docker compose --env-file ${GLOBAL_ENV_FILE} ${ALL_SERVICES} config --format json)
+
+# Directories of services in the config directory: Docker would create the missing ones as root, and services
+# which do not run as root could not write in them
+for dir in $(echo "${resolvedConfig}" | jq -r --arg config "${HOST_CONFIG_PATH%/}/" '[.services[].volumes[]? | select(.type == "bind") | .source | select(startswith($config))] | unique | .[]'); do
+  if ! create_data_dir ${dir}; then
+    echo "[$0] ⚠️  Directory ${dir} does not exist and cannot be created by your user: Docker will create it, owned by root."
+  fi
+done
+
+# Media volumes which are plain directories of the host (see docker-compose.yaml): Docker does not create them
+for dir in $(echo "${resolvedConfig}" | jq -r '.volumes // {} | .[] | select(.driver_opts.o == "bind") | .driver_opts.device'); do
+  if ! create_data_dir ${dir}; then
+    echo "[$0] ERROR. Directory \"${dir}\" does not exist and cannot be created. Create it (sudo mkdir -p ${dir}) and give it to your user, then re-run this script."
+    exit 1
+  fi
+done
+
+if [[ -n ${DIRS_TO_CHOWN} ]]; then
+  echo "[$0] ⚠️  These new directories could not be given to the user of the containers (PUID and PGID of your .env). Services which do not run as root cannot write in them until you run:"
+  echo "[$0]      sudo chown -R ${PUID}:${PGID}${DIRS_TO_CHOWN}"
+fi
+
+# local-persist Docker plugin is not used by the seedbox anymore. Your own files may still use it.
+if grep -lq "local-persist" docker-compose.yaml services/*/custom/*.yaml 2>/dev/null; then
+  echo "[$0] ℹ️  Some of your files still use volumes of the local-persist Docker plugin, which is not needed by the seedbox anymore:"
+  grep -l "local-persist" docker-compose.yaml services/*/custom/*.yaml 2>/dev/null | sed "s#^#[$0]      #"
+  echo "[$0]    They still work as long as the plugin is installed. To get rid of it: doc/UPGRADE_V3.md#local-persist-plugin"
+fi
+
+# Before v3, the name of the Docker Compose project was the name of the directory of the seedbox. If the existing
+# containers of this directory belong to another project, Docker Compose cannot update them: they must be
+# removed first (containers only, not their data), then they are created again in the new project.
+previousProjects=$(docker ps -a --filter "label=com.docker.compose.project.working_dir=$(pwd)" --format '{{.Label "com.docker.compose.project"}}' | sort -u | { grep -vx "${COMPOSE_PROJECT_NAME}" || true; })
+if [[ -n ${previousProjects} ]]; then
+  echo "[$0] ⚠️  The containers of this seedbox belong to the Docker Compose project \"$(echo ${previousProjects})\", but the project is now \"${COMPOSE_PROJECT_NAME}\"."
+  echo "[$0]    To continue, all these containers are stopped and removed, then created again by this script."
+  echo "[$0]    Your data is not affected, but services are unavailable in the meantime."
+  echo "[$0]    To keep the previous name instead, answer \"n\" and add COMPOSE_PROJECT_NAME=$(echo ${previousProjects} | cut -d' ' -f1) in your .env file."
+  if [[ ! -t 0 ]]; then
+    echo "[$0] ERROR. Not in an interactive terminal: run this script by hand to answer."
+    exit 1
+  fi
+  read -r -p "[$0] Continue? [Y/n] " answer
+  if [[ ! "${answer:-y}" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+    echo "[$0] Aborted. Your containers have not been changed."
+    exit 1
+  fi
+  for project in ${previousProjects}; do
+    docker compose -p ${project} down --remove-orphans
+  done
+fi
+
 echo "[$0] ***** Config OK. Launching services... *****"
 
 if [[ "${SKIP_PULL}" != "1" ]]; then
   echo "[$0] ***** Pulling all images... *****"
-  ${DOCKER_COMPOSE_BINARY} ${ALL_SERVICES} pull
+  docker compose ${ALL_SERVICES} pull
 fi
 
 echo "[$0] ***** Recreating containers if required... *****"
-${DOCKER_COMPOSE_BINARY} --env-file ${GLOBAL_ENV_FILE} ${ALL_SERVICES} up -d --remove-orphans
+docker compose --env-file ${GLOBAL_ENV_FILE} ${ALL_SERVICES} up -d --remove-orphans
 if [[ ${TRAEFIK_RESTART_REQUIRED} == "1" ]] && is_service_enabled traefik; then
   echo "[$0] Traefik static configuration has changed: restarting Traefik..."
   docker restart traefik
@@ -556,15 +638,24 @@ fi
 
 # Traefik config directory of v2 is not used anymore now that Traefik container has been updated
 if [[ -d traefik ]]; then
-  mkdir -p backup
-  mv traefik backup/traefik.v2.$(date +%Y%m%d%H%M%S)
-  echo "[$0] Old Traefik config directory (traefik/) is not used anymore: moved to backup/"
+  mkdir -p .seedbox/backup
+  mv traefik .seedbox/backup/traefik.v2.$(date +%Y%m%d%H%M%S)
+  echo "[$0] Old Traefik config directory (traefik/) is not used anymore: moved to .seedbox/backup/"
 fi
 rm -f .env.concat
 
-echo "[$0] ***** Clean unused images and volumes... *****"
-docker image prune -af
-docker volume prune  -f
+# Remember which version of the seedbox is installed here (to know where future migrations start from)
+if [[ "$(cat .seedbox/version 2>/dev/null)" != "$(cat VERSION)" ]]; then
+  echo "[$0] Seedbox version: $(cat .seedbox/version 2>/dev/null || echo "unknown") => $(cat VERSION)"
+  cp VERSION .seedbox/version
+fi
+
+# Opt-in, as it applies to the whole host: images and volumes which do not belong to the seedbox are removed too
+if [[ ${DOCKER_PRUNE_AFTER_UPDATE} == "true" ]]; then
+  echo "[$0] ***** Clean unused images and volumes... *****"
+  docker image prune -af
+  docker volume prune  -f
+fi
 
 echo "[$0] ***** Done! *****"
 exit 0

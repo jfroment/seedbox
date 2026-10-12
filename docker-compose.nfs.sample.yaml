@@ -2,6 +2,9 @@
 ## Services are now located in separate files, in the services directory.  ##
 #############################################################################
 
+# Name of the Docker Compose project: do not change it once your containers exist (see COMPOSE_PROJECT_NAME in .env)
+name: seedbox
+
 # Common network used by all services
 networks: 
   default:
@@ -16,13 +19,9 @@ networks:
     #       gateway: 172.18.0.1
     #       ip_range: 172.18.128.0/17
 
-# Common volumes used by at least 2 services
+# Media volumes, shared by services ("torrents:/torrents" in their files): here, on a NFS share
 volumes:
-  config:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH
-  torrents: 
+  torrents:
     driver_opts:
       type: nfs
       # Add NFS_IP to your .env with the corresponding value

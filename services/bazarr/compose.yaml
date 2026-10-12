@@ -2,17 +2,11 @@ services:
   bazarr:
     image: ghcr.io/linuxserver/bazarr
     container_name: bazarr
-    restart: always
+    restart: unless-stopped
     volumes:
       - torrents:/torrents
-      - configbazarr:/config
+      - ${HOST_CONFIG_PATH}/bazarr:/config
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-
-volumes:
-  configbazarr:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/bazarr

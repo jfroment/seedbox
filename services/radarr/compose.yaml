@@ -2,18 +2,12 @@ services:
   radarr:
     image: ghcr.io/linuxserver/radarr:develop
     container_name: radarr
-    restart: always
+    restart: unless-stopped
     volumes:
-      - configradarr:/config
+      - ${HOST_CONFIG_PATH}/radarr:/config
       - torrents:/torrents
       - /etc/localtime:/etc/localtime:ro
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-
-volumes:
-  configradarr: 
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/radarr

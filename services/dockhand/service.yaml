@@ -2,4 +2,5 @@
 rules:
   - host: dockhand.${TRAEFIK_DOMAIN}
     httpAuth: false
+    internalOnly: true
     internalPort: 3000

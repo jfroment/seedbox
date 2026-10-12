@@ -2,17 +2,12 @@ services:
   tautulli:
     image: ghcr.io/linuxserver/tautulli
     container_name: tautulli
-    restart: always
+    restart: unless-stopped
     volumes:
-      - configtautulli:/config
-      - config:/logs:ro # Inside of tautulli, bind to logs via "/logs/Plex Media Server/Logs"
+      - ${HOST_CONFIG_PATH}/tautulli:/config
+      # Logs of Plex, to set in Tautulli settings: "/plex/Library/Application Support/Plex Media Server/Logs"
+      - ${HOST_CONFIG_PATH}/Plex:/plex:ro
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-
-volumes:
-  configtautulli:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/tautulli

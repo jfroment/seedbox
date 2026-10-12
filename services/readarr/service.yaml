@@ -1,5 +1,0 @@
-# Default values of this service. Do not edit: override them in config.yaml (see doc/configuration.md)
-rules:
-  - host: readarr.${TRAEFIK_DOMAIN}
-    httpAuth: true
-    internalPort: 8787

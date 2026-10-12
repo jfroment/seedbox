@@ -10,7 +10,7 @@
 
 ## What is it for?
 
-[Dockhand](https://hub.docker.com/r/fnsys/dockhand) is a web interface to manage the containers of your server: state, logs, restart, images, volumes... It is an alternative to Portainer.
+[Dockhand](https://hub.docker.com/r/fnsys/dockhand) is a web interface to manage the containers of your server: state, logs, restart, images, volumes... It replaces Portainer, which is not bundled anymore since v3.
 
 To do so, it uses the Docker socket of the host (``/var/run/docker.sock``), which is mounted in its container. Its data is stored in ``$HOST_CONFIG_PATH/dockhand``.
 
@@ -50,16 +50,19 @@ Run ``./run-seedbox.sh`` to apply it. This file is yours (ignored by git): see [
 
 ## Restrict the access
 
-Whoever can use Dockhand controls Docker, so the whole server. Its default rule has no http authentication, as Dockhand has its own: do not leave it reachable from the Internet without thinking about it. The simplest way is to keep it on your private networks:
+Whoever can use Dockhand controls Docker, so the whole server. This is why its default rule is only reachable from your private networks (``internalOnly: true``), like the other administration tools. It has no http authentication, as Dockhand has its own.
+
+If you really need it from outside, prefer a VPN (see [Netbird](netbird.md)). Otherwise, publish it by setting ``internalOnly: false``, ideally with a client certificate (``mtls: true``, see [VaulTLS and client certificates](vaultls.md)):
 
 ```yaml
 services:
   dockhand:
     rules:
-      - internalOnly: true
+      - internalOnly: false
+        mtls: true
 ```
 
-You can also require a client certificate (``mtls: true``, see [VaulTLS and client certificates](vaultls.md)) or add the http authentication of the seedbox on top (``httpAuth: true``). All parameters are described in the [Configuration Guide](../configuration.md#configyaml-your-choices).
+All parameters are described in the [Configuration Guide](../configuration.md#configyaml-your-choices).
 
 ## Troubleshooting
 

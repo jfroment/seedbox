@@ -8,10 +8,10 @@ services:
       # - gotenberg
       # - tika
     volumes:
-      - configpaperless:/usr/src/paperless/data
+      - ${HOST_CONFIG_PATH}/paperless:/usr/src/paperless/data
       - documents:/usr/src/paperless/media
-      - configpaperlessexport:/usr/src/paperless/export
-      - configpaperlessconsume:/usr/src/paperless/consume
+      - ${HOST_CONFIG_PATH}/paperless-export:/usr/src/paperless/export
+      - ${HOST_CONFIG_PATH}/paperless-import:/usr/src/paperless/consume
     environment:
       PAPERLESS_REDIS: redis://redis:6379
       #PAPERLESS_TIKA_ENABLED: 1
@@ -46,21 +46,3 @@ services:
   #   image: ghcr.io/paperless-ngx/tika:latest
   #   container_name: tika
   #   restart: unless-stopped
-
-volumes:
-  configpaperless: 
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/paperless
-  configpaperlessexport: 
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/paperless-export
-  configpaperlessconsume: 
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/paperless-import
-  # redisdata:
-  #   driver: local-persist
-  #   driver_opts:
-  #     mountpoint: $HOST_CONFIG_PATH/redis

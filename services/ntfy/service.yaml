@@ -1,5 +1,5 @@
 # Default values of this service. Do not edit: override them in config.yaml (see doc/configuration.md)
 rules:
   - host: ntfy.${TRAEFIK_DOMAIN}
-    httpAuth: true
+    httpAuth: false
     internalPort: 2586

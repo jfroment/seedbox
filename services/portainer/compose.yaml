@@ -1,8 +1,0 @@
-services:
-  portainer:
-    image: portainer/portainer-ce
-    container_name: portainer
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: --host=unix:///var/run/docker.sock

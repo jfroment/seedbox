@@ -2,18 +2,12 @@ services:
   mealie:
     image: ghcr.io/mealie-recipes/mealie
     container_name: mealie
-    restart: always
+    restart: unless-stopped
     volumes:
-      - mealiedata:/app/data/
+      - ${HOST_CONFIG_PATH}/mealie:/app/data/
     environment:
       ALLOW_SIGNUP: "false"
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TZ}
       BASE_URL: https://mealie.${TRAEFIK_DOMAIN}
-
-volumes:
-  mealiedata:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/mealie

@@ -2,18 +2,12 @@ services:
   deluge:
     image: ghcr.io/linuxserver/deluge
     container_name: deluge
-    restart: always
+    restart: unless-stopped
     volumes:
       - torrents:/torrents
-      - configdeluge:/config
+      - ${HOST_CONFIG_PATH}/deluge:/config
       - downloads:/downloads
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TZ}
-
-volumes:
-  configdeluge: 
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/deluge

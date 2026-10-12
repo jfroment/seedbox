@@ -1,5 +1,7 @@
 # Upgrade to V2
 
+> **This guide only works with the version 2 of the seedbox.** The migration tool it uses (``tools/config-updater``) was removed in version 3. If you are still on version 1: run ``git checkout v2.2.2``, follow this guide, check that everything works, then upgrade to the latest version with the [V3 Migration Guide](UPGRADE_V3.md).
+
 **Seedbox version 2 is here!** 🔥
 
 Since there are some breaking changes and a configuration structure migration, a major version was mandatory.

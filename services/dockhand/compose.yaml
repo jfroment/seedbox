@@ -10,10 +10,4 @@ services:
     volumes:
       # The container must be in the group which owns the socket: see doc/apps/dockhand.md
       - /var/run/docker.sock:/var/run/docker.sock
-      - config-dockehand:/app/data
-
-volumes:
-  config-dockehand:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/dockhand
+      - ${HOST_CONFIG_PATH}/dockhand:/app/data

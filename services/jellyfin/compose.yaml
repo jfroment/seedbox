@@ -2,7 +2,7 @@ services:
   jellyfin:
     image: lscr.io/linuxserver/jellyfin
     container_name: jellyfin
-    restart: always
+    restart: unless-stopped
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -10,12 +10,5 @@ services:
     devices:
       - /dev/dri:/dev/dri
     volumes:
-      - configjellyfin:/config
+      - ${HOST_CONFIG_PATH}/jellyfin:/config
       - torrents:/torrents
-
-volumes:
-  configjellyfin:
-    driver: local-persist
-    driver_opts:
-      mountpoint: $HOST_CONFIG_PATH/jellyfin
-    
